@@ -32,6 +32,12 @@ User-provided photos were used to transcribe visible question text into app data
 - Current diagram-backed questions: 問6, 問7, 問10, 問13, 問14, 問22, 問31, 問32, 問33, 問36.
 - For prompt-image questions, option cards use text-only answers so the drawing belongs to the question, not to the answer feedback.
 
+## 2026-04-29 Furigana Review
+
+- Rechecked all entered question text, choices, hints, explanations, and main UI strings through the ruby renderer.
+- Added missing compound readings such as 生き物, 選択肢, 採点準備中, 生育, 分類上, 水中, 地上, 棘皮動物, and related biology terms.
+- Verified that the renderer now produces no unknown `?` readings for the current app text.
+
 ## Image Strategy
 
 - App does not store book scan images.
