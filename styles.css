@@ -674,10 +674,35 @@ button:disabled {
   }
 
   .hero,
-  .category-grid,
   .option-grid,
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .category-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+  }
+
+  .category-card {
+    min-height: 112px;
+    padding: 10px;
+  }
+
+  .category-card strong {
+    margin-top: 8px;
+    font-size: 0.92rem;
+    line-height: 1.25;
+  }
+
+  .category-card small,
+  .photo-pill {
+    font-size: 0.7rem;
+  }
+
+  .category-card .progress-track {
+    height: 6px;
+    margin-top: 10px;
   }
 
   .hero-photo,
