@@ -507,6 +507,20 @@ button:disabled {
   border-radius: 8px;
 }
 
+.prompt-photo {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+  background: #020617;
+}
+
+.prompt-photo img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: contain;
+}
+
 .kr-text {
   margin: 8px 0 0;
   color: #93c5fd;
@@ -867,7 +881,8 @@ body:has(.view-quiz) {
   place-items: center;
 }
 
-.view-quiz .question-box.has-stem-visual .stem-svg {
+.view-quiz .question-box.has-stem-visual .stem-svg,
+.view-quiz .question-box.has-stem-visual .prompt-photo img {
   width: 100%;
   height: 100%;
   max-height: none;
@@ -1167,7 +1182,8 @@ body:has(.view-quiz) {
     max-width: 560px;
   }
 
-  .view-quiz .question-box.has-stem-visual .stem-svg {
+  .view-quiz .question-box.has-stem-visual .stem-svg,
+  .view-quiz .question-box.has-stem-visual .prompt-photo img {
     width: 100%;
     height: 100%;
     max-height: none;

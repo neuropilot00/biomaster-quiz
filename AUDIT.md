@@ -44,6 +44,12 @@ User-provided photos were used to transcribe visible question text into app data
 - Text-only answer choices for those questions are compact buttons below the drawing.
 - Improved the 問13 fish diagram so it better shows the body shape, fins, tail, and side stripes needed for identification.
 
+## 2026-04-29 Prompt Photo Replacement
+
+- Replaced app-drawn prompt diagrams with large real photos of the target answer for all current prompt-image questions.
+- Current prompt-photo questions: 問6, 問7, 問10, 問13, 問14, 問22, 問31, 問32, 問33, 問36.
+- Answer choices remain compact below the main photo.
+
 ## Image Strategy
 
 - App does not store book scan images.

@@ -620,6 +620,19 @@ const optionVisuals = {
   36: [leafDiagram("saw"), leafDiagram("oval"), leafDiagram("plantain"), leafDiagram("narrowPlantain")],
 };
 
+const promptPhotos = {
+  6: "カワウ",
+  7: "トビ",
+  10: "ニホンアマガエル",
+  13: "カツオ",
+  14: "サケ",
+  22: "タニシ",
+  31: "ハクサイ",
+  32: "ミツバ",
+  33: "カシワ",
+  36: "オオバコ",
+};
+
 const photoQuestions = [
   makePhotoQuestion(1, "mammal", "「ひげくじら」をひとつ選びなさい。", ["ザトウクジラ", "シャチ", "ハンドウイルカ", "マッコウクジラ"]),
   makePhotoQuestion(2, "mammal", "シカにもっとも近縁な動物をひとつ選びなさい。", ["イノシシ", "サイ", "タヌキ", "クマ"]),
@@ -710,14 +723,9 @@ const photoQuestions = [
 
 photoQuestions.forEach((question) => {
   const num = Number(question.num.replace(/\D/g, ""));
-  if (stemVisuals[num]) {
-    question.visual = stemVisuals[num];
+  if (promptPhotos[num]) {
+    question.promptPhotoName = promptPhotos[num];
     question.textOnlyOptions = true;
-  }
-  if (optionVisuals[num]) {
-    question.options.forEach((option, index) => {
-      option.visual = optionVisuals[num][index];
-    });
   }
 });
 
@@ -1398,7 +1406,7 @@ function renderQuiz() {
     .join("");
 
   shell(`
-    <section class="quiz-panel ${q.visual ? "stem-visual-mode" : ""}">
+    <section class="quiz-panel ${q.promptPhotoName ? "stem-visual-mode" : ""}">
       <div class="quiz-head">
         <div class="quiz-row">
           <button class="ghost-button" data-view="home">← ホーム</button>
@@ -1410,10 +1418,15 @@ function renderQuiz() {
         </div>
         <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
       </div>
-      <div class="question-box ${q.visual ? "has-stem-visual" : ""}">
+      <div class="question-box ${q.promptPhotoName ? "has-stem-visual" : ""}">
         <p class="question-num">${withRuby(categories[q.category]?.ja || categories[state.category].ja)} · ${withRuby(q.num)} · ${state.index + 1}/${state.session.length}</p>
         <p class="question-text">${withRuby(q.ja)}</p>
-        ${q.visual ? `<div class="stem-visual">${q.visual}</div>` : ""}
+        ${q.promptPhotoName ? `
+          <div class="stem-visual prompt-photo">
+            <span class="image-loading">写真を読み込み中</span>
+            <img src="" alt="${q.promptPhotoName}の実写写真" loading="eager" data-photo data-name="${q.promptPhotoName}" data-category="${q.category}" />
+          </div>
+        ` : ""}
         ${state.showKr ? `<p class="kr-text">${q.kr}</p>` : ""}
       </div>
       <div class="option-grid">${optionCards}</div>
