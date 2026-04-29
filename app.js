@@ -375,7 +375,7 @@ const starterQuestions = [
   },
 ];
 
-function makePhotoQuestion(num, category, ja, options, answer = null, note = "写真から転記。正解は要確認。") {
+function makePhotoQuestion(num, category, ja, options, answer = null, note = null) {
   return {
     id: `book-2026-${String(num).padStart(3, "0")}`,
     grade: num >= 77 ? 3 : 4,
@@ -387,9 +387,41 @@ function makePhotoQuestion(num, category, ja, options, answer = null, note = "�
     answer,
     needsAudit: answer === null,
     options: options.map((name) => ({ ja: name, kr: "", img: "" })),
-    hint: note,
+    hint: note || buildStudyHint(category, ja),
     explanation: answer === null ? "この問題は正解確認待ちです。答え合わせ後にデータを更新します。" : "写真から転記した問題です。解説は後で追加できます。",
   };
+}
+
+function buildStudyHint(category, text) {
+  if (text.includes("近縁") || text.includes("同じ")) {
+    return "名前の似ているものだけで選ばず、同じ科・同じ目など分類上の近さを考えます。写真では体の形、足、くちばし、葉や花のつくりも比べます。";
+  }
+  if (text.includes("シルエット") || text.includes("図") || text.includes("葉")) {
+    return "細かい色ではなく、全体の形を見ます。首やくちばし、尾、葉脈、葉のふちなど、輪郭に出る特徴を先に確認します。";
+  }
+  if (text.includes("正しい記述") || text.includes("誤り")) {
+    return "選択肢を一つずつ読んで、すみか、体のつくり、ふえ方、食べ方のどれを聞いているかに分けて考えます。";
+  }
+  if (text.includes("なんですか")) {
+    return "まず大きな形を見ます。魚なら体形とひれ、鳥ならくちばしと足、植物なら葉・花・実の特徴を比べます。";
+  }
+  if (text.includes("胎生")) {
+    return "胎生は卵を外に産むのではなく、親の体内で子が育ってから生まれることです。";
+  }
+  if (text.includes("産卵") || text.includes("種子") || text.includes("散布")) {
+    return "ふえ方を聞く問題です。卵・種子・胞子のどれか、また風・動物・水のどれで運ばれるかを考えます。";
+  }
+  const categoryHints = {
+    fish: "魚の問題では、すみか、産卵のしかた、ひれ・えら・体形に注目します。",
+    insect: "昆虫の問題では、足の数、翅、口の形、変態、食草に注目します。",
+    plant: "植物の問題では、花・葉・実・根、種子か胞子か、何科かに注目します。",
+    bird: "鳥の問題では、くちばし、足、水かき、巣、渡りの時期に注目します。",
+    mammal: "哺乳類の問題では、食べ物、冬眠、子の育て方、体の特徴に注目します。",
+    amphibian: "両生類の問題では、水辺との関係、幼生と成体の違い、尾の有無に注目します。",
+    reptile: "爬虫類の問題では、うろこ、肺呼吸、卵、体表の乾きやすさに注目します。",
+    all: "分類の問題では、見た目だけでなく、何門・何綱・何目・何科かを思い出します。",
+  };
+  return categoryHints[category] || categoryHints.all;
 }
 
 const photoQuestions = [
@@ -483,7 +515,7 @@ const photoQuestions = [
 const fallbackImages = {
   all: img("Biodiversity_of_Colombia.jpg"),
   fish: img("Guppy_pho_0048.jpg"),
-  insect: img("Papilio_xuthus_formosanus_Male_2014_01.jpg"),
+  insect: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Papilio_xuthus_front_view_2011-07-16.jpg",
   plant: img("Taraxacum_officinale_001.JPG"),
   bird: img("Eastern_spot-billed_duck_in_Tokyo.jpg"),
   mammal: img("Macropus_giganteus_-_Brunkerville.jpg"),
@@ -845,7 +877,7 @@ function renderHome() {
         </div>
       </div>
       <div class="hero-photo">
-        <img src="${img("Papilio_xuthus_formosanus_Male_2014_01.jpg")}" alt="実写のアゲハチョウ" />
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Papilio_xuthus_front_view_2011-07-16.jpg" alt="実写のアゲハチョウ" />
         <span>${withRuby("全選択肢に実写画像を使用")}</span>
       </div>
     </section>
