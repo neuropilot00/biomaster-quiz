@@ -1,0 +1,891 @@
+const categories = {
+  all: { ja: "全カテゴリ", kr: "전체", accent: "#2563eb" },
+  fish: { ja: "魚類", kr: "어류", accent: "#0f766e" },
+  insect: { ja: "昆虫類", kr: "곤충", accent: "#b45309" },
+  plant: { ja: "植物", kr: "식물", accent: "#15803d" },
+  bird: { ja: "鳥類", kr: "조류", accent: "#7c3aed" },
+  mammal: { ja: "哺乳類", kr: "포유류", accent: "#be123c" },
+  amphibian: { ja: "両生類", kr: "양서류", accent: "#16a34a" },
+  reptile: { ja: "爬虫類", kr: "파충류", accent: "#a16207" },
+};
+
+const img = (file) =>
+  `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=720`;
+
+const starterQuestions = [
+  {
+    id: "fish-001",
+    grade: 4,
+    category: "fish",
+    difficulty: "easy",
+    num: "問 53",
+    ja: "胎生の魚をひとつ選びなさい。",
+    kr: "새끼를 직접 낳는 태생 물고기를 고르세요.",
+    answer: 1,
+    options: [
+      { ja: "イワナ", kr: "곤들매기", img: img("Salvelinus_leucomaenis_japonicus-3.jpg") },
+      { ja: "グッピー", kr: "구피", img: img("Guppy_pho_0048.jpg") },
+      { ja: "タナゴ", kr: "납줄개", img: img("Acheilognathus_melanogaster.jpg") },
+      { ja: "ハゼ", kr: "망둑어", img: img("Acanthogobius_flavimanus_Nakagawa.jpg") },
+    ],
+    hint: "観賞魚として人気で、お腹の中で稚魚が育ってから生まれます。",
+    explanation: "グッピーは胎生魚の代表例です。卵ではなく、母体内で稚魚が育ってから生まれます。",
+  },
+  {
+    id: "fish-002",
+    grade: 4,
+    category: "fish",
+    difficulty: "easy",
+    num: "問 54",
+    ja: "成長すると川から海へ下る魚を選びなさい。",
+    kr: "자라면 강에서 바다로 내려가는 물고기를 고르세요.",
+    answer: 2,
+    options: [
+      { ja: "アユ", kr: "은어", img: img("Ayu_oncorhynchus_masou_ishikawa.jpg") },
+      { ja: "メダカ", kr: "송사리", img: img("Oryzias_latipes(Hamamatsu,Shizuoka,Japan).jpg") },
+      { ja: "ウナギ", kr: "뱀장어", img: img("Anguilla_japonica.jpg") },
+      { ja: "コイ", kr: "잉어", img: img("Cyprinus_carpio_2.jpg") },
+    ],
+    hint: "細長い体で、蒲焼きでも知られる魚です。",
+    explanation: "ウナギは川や湖で成長し、産卵のため海へ向かう降河回遊魚です。",
+  },
+  {
+    id: "fish-003",
+    grade: 3,
+    category: "fish",
+    difficulty: "medium",
+    num: "問 55",
+    ja: "軟骨魚類にふくまれるものを選びなさい。",
+    kr: "연골어류에 포함되는 것을 고르세요.",
+    answer: 0,
+    options: [
+      { ja: "アカエイ", kr: "노랑가오리류", img: img("Dasyatis_akajei.jpg") },
+      { ja: "マダイ", kr: "참돔", img: img("Pagrus_major_by_OpenCage.jpg") },
+      { ja: "キンギョ", kr: "금붕어", img: img("Goldfish3.jpg") },
+      { ja: "サケ", kr: "연어", img: img("Oncorhynchus_keta.jpeg") },
+    ],
+    hint: "サメの仲間と同じく、骨格が軟骨でできています。",
+    explanation: "エイの仲間はサメと同じ軟骨魚類です。マダイ、キンギョ、サケは硬骨魚類です。",
+  },
+  {
+    id: "insect-001",
+    grade: 4,
+    category: "insect",
+    difficulty: "easy",
+    num: "問 56",
+    ja: "完全変態をする昆虫を選びなさい。",
+    kr: "완전변태를 하는 곤충을 고르세요.",
+    answer: 3,
+    options: [
+      { ja: "バッタ", kr: "메뚜기", img: img("Oxya_yezoensis.jpg") },
+      { ja: "カマキリ", kr: "사마귀", img: img("Tenodera_aridifolia_2011-09-18.jpg") },
+      { ja: "トンボ", kr: "잠자리", img: img("Anax_parthenope_20100725.jpg") },
+      { ja: "カブトムシ", kr: "장수풍뎅이", img: img("Trypoxylus_dichotomus_male_2015.jpg") },
+    ],
+    hint: "幼虫、さなぎ、成虫の段階があります。",
+    explanation: "カブトムシは卵、幼虫、蛹、成虫の順に育つ完全変態の昆虫です。",
+  },
+  {
+    id: "insect-002",
+    grade: 4,
+    category: "insect",
+    difficulty: "easy",
+    num: "問 57",
+    ja: "腹部に長い産卵管をもつ昆虫を選びなさい。",
+    kr: "배 끝에 긴 산란관이 있는 곤충을 고르세요.",
+    answer: 1,
+    options: [
+      { ja: "アブラゼミ", kr: "유지매미", img: img("Graptopsaltria_nigrofuscata_001.jpg") },
+      { ja: "キリギリス", kr: "여치", img: img("Gampsocleis_buergeri_01.JPG") },
+      { ja: "ナナホシテントウ", kr: "칠성무당벌레", img: img("Coccinella_septempunctata_detail.jpg") },
+      { ja: "アゲハチョウ", kr: "호랑나비", img: img("Papilio_xuthus_formosanus_Male_2014_01.jpg") },
+    ],
+    hint: "草むらで鳴く直翅目の仲間です。",
+    explanation: "キリギリスのメスには、土や植物に卵を産むための長い産卵管があります。",
+  },
+  {
+    id: "insect-003",
+    grade: 3,
+    category: "insect",
+    difficulty: "medium",
+    num: "問 58",
+    ja: "前あしが鎌のように発達した昆虫を選びなさい。",
+    kr: "앞다리가 낫처럼 발달한 곤충을 고르세요.",
+    answer: 2,
+    options: [
+      { ja: "ミンミンゼミ", kr: "민민매미", img: img("Hyalessa_maculaticollis_001.jpg") },
+      { ja: "ショウリョウバッタ", kr: "방아깨비", img: img("Acrida_cinerea_2012-08-11.jpg") },
+      { ja: "オオカマキリ", kr: "왕사마귀", img: img("Tenodera_aridifolia.jpg") },
+      { ja: "ゲンゴロウ", kr: "물방개", img: img("Cybister_japonicus.jpg") },
+    ],
+    hint: "獲物をつかまえるための前あしです。",
+    explanation: "カマキリの前あしは捕獲脚とよばれ、獲物を捕らえるのに適しています。",
+  },
+  {
+    id: "plant-001",
+    grade: 4,
+    category: "plant",
+    difficulty: "easy",
+    num: "問 59",
+    ja: "裸子植物を選びなさい。",
+    kr: "겉씨식물을 고르세요.",
+    answer: 0,
+    options: [
+      { ja: "アカマツ", kr: "소나무류", img: img("Pinus_densiflora_Kumgangsan.jpg") },
+      { ja: "サクラ", kr: "벚나무", img: img("Prunus_serrulata_Blossoms.jpg") },
+      { ja: "タンポポ", kr: "민들레", img: img("Taraxacum_officinale_001.JPG") },
+      { ja: "イネ", kr: "벼", img: img("Oryza_sativa_-_Köhler–s_Medizinal-Pflanzen-232.jpg") },
+    ],
+    hint: "まつぼっくりをつくる植物です。",
+    explanation: "アカマツは種子が子房に包まれない裸子植物です。サクラ、タンポポ、イネは被子植物です。",
+  },
+  {
+    id: "plant-002",
+    grade: 4,
+    category: "plant",
+    difficulty: "easy",
+    num: "問 60",
+    ja: "胞子でふえる植物を選びなさい。",
+    kr: "포자로 번식하는 식물을 고르세요.",
+    answer: 3,
+    options: [
+      { ja: "ヒマワリ", kr: "해바라기", img: img("Sunflower_sky_backdrop.jpg") },
+      { ja: "チューリップ", kr: "튤립", img: img("Tulipa_greigii_Red_Riding_Hood_0.8_R.jpg") },
+      { ja: "アサガオ", kr: "나팔꽃", img: img("Ipomoea_nil_5.jpg") },
+      { ja: "ゼンマイ", kr: "고비류", img: img("Osmunda_japonica_fiddleheads.jpg") },
+    ],
+    hint: "若い芽が丸く巻いているシダ植物です。",
+    explanation: "ゼンマイはシダ植物で、花や種子ではなく胞子でふえます。",
+  },
+  {
+    id: "plant-003",
+    grade: 3,
+    category: "plant",
+    difficulty: "medium",
+    num: "問 61",
+    ja: "単子葉類の特徴として正しいものを選びなさい。",
+    kr: "외떡잎식물의 특징으로 맞는 것을 고르세요.",
+    answer: 2,
+    options: [
+      { ja: "サクラ", kr: "벚나무", img: img("Prunus_jamAsakura2.jpg") },
+      { ja: "アブラナ", kr: "유채", img: img("Brassica_napus_001.JPG") },
+      { ja: "イネ", kr: "벼", img: img("Rice_Plants_(IRRI).jpg") },
+      { ja: "エンドウ", kr: "완두", img: img("Pisum_sativum_blossom.jpg") },
+    ],
+    hint: "葉脈が平行に走る植物です。",
+    explanation: "イネは単子葉類です。平行脈、ひげ根、花弁が3の倍数になりやすい特徴があります。",
+  },
+  {
+    id: "bird-001",
+    grade: 4,
+    category: "bird",
+    difficulty: "easy",
+    num: "問 62",
+    ja: "水かきのある鳥を選びなさい。",
+    kr: "물갈퀴가 있는 새를 고르세요.",
+    answer: 1,
+    options: [
+      { ja: "スズメ", kr: "참새", img: img("Passer_montanus_saturatus.jpg") },
+      { ja: "カルガモ", kr: "흰뺨검둥오리", img: img("Eastern_spot-billed_duck_in_Tokyo.jpg") },
+      { ja: "キジ", kr: "꿩", img: img("Phasianus_colchicus_male.jpg") },
+      { ja: "ツバメ", kr: "제비", img: img("Hirundo_rustica_gutturalis.JPG") },
+    ],
+    hint: "池や川でよく見られるカモの仲間です。",
+    explanation: "カルガモは水上生活に適した水かきのある足をもちます。",
+  },
+  {
+    id: "bird-002",
+    grade: 3,
+    category: "bird",
+    difficulty: "medium",
+    num: "問 63",
+    ja: "猛禽類を選びなさい。",
+    kr: "맹금류를 고르세요.",
+    answer: 3,
+    options: [
+      { ja: "メジロ", kr: "동박새", img: img("Zosterops_japonicus_02.jpg") },
+      { ja: "ハクセキレイ", kr: "알락할미새", img: img("Motacilla_alba_lugens_2.jpg") },
+      { ja: "カワセミ", kr: "물총새", img: img("Alcedo_atthis_-_Salmoragi.jpg") },
+      { ja: "トビ", kr: "솔개", img: img("Black-eared_Kite_800.jpg") },
+    ],
+    hint: "鋭いくちばしと爪で獲物をとらえます。",
+    explanation: "トビはタカ目の猛禽類です。鋭い爪とくちばしをもちます。",
+  },
+  {
+    id: "mammal-001",
+    grade: 4,
+    category: "mammal",
+    difficulty: "easy",
+    num: "問 64",
+    ja: "卵を産む哺乳類を選びなさい。",
+    kr: "알을 낳는 포유류를 고르세요.",
+    answer: 0,
+    options: [
+      { ja: "カモノハシ", kr: "오리너구리", img: img("Ornithorhynchus_anatinus.jpg") },
+      { ja: "コアラ", kr: "코알라", img: img("Koala_climbing_tree.jpg") },
+      { ja: "ニホンザル", kr: "일본원숭이", img: img("Macaca_fuscata_fuscata1.jpg") },
+      { ja: "イルカ", kr: "돌고래", img: img("Tursiops_truncatus_01.jpg") },
+    ],
+    hint: "くちばしのような口をもつ単孔類です。",
+    explanation: "カモノハシは単孔類に属し、哺乳類でありながら卵を産みます。",
+  },
+  {
+    id: "mammal-002",
+    grade: 3,
+    category: "mammal",
+    difficulty: "medium",
+    num: "問 65",
+    ja: "有袋類を選びなさい。",
+    kr: "유대류를 고르세요.",
+    answer: 2,
+    options: [
+      { ja: "キツネ", kr: "여우", img: img("Vulpes_vulpes_laying_in_snow.jpg") },
+      { ja: "リス", kr: "다람쥐", img: img("Sciurus_vulgaris_2.jpg") },
+      { ja: "カンガルー", kr: "캥거루", img: img("Macropus_giganteus_-_Brunkerville.jpg") },
+      { ja: "シカ", kr: "사슴", img: img("Cervus_nippon_centralis_in_Nara_Park.jpg") },
+    ],
+    hint: "子どもを育てる袋をもつことで知られます。",
+    explanation: "カンガルーは有袋類です。未熟な状態で生まれた子を育児嚢で育てます。",
+  },
+  {
+    id: "amphibian-001",
+    grade: 4,
+    category: "amphibian",
+    difficulty: "easy",
+    num: "問 66",
+    ja: "両生類を選びなさい。",
+    kr: "양서류를 고르세요.",
+    answer: 3,
+    options: [
+      { ja: "ヤモリ", kr: "도마뱀붙이", img: img("Gekko_japonicus.JPG") },
+      { ja: "カナヘビ", kr: "장지뱀류", img: img("Takydromus_tachydromoides.jpg") },
+      { ja: "ミシシッピアカミミガメ", kr: "붉은귀거북", img: img("Trachemys_scripta_elegans.jpg") },
+      { ja: "アマガエル", kr: "청개구리", img: img("Hyla_japonica_001.jpg") },
+    ],
+    hint: "幼生は水中でえら呼吸し、成体は肺と皮膚で呼吸します。",
+    explanation: "アマガエルは両生類です。ヤモリ、カナヘビ、カメは爬虫類です。",
+  },
+  {
+    id: "amphibian-002",
+    grade: 3,
+    category: "amphibian",
+    difficulty: "medium",
+    num: "問 67",
+    ja: "有尾目にふくまれるものを選びなさい。",
+    kr: "유미목에 포함되는 것을 고르세요.",
+    answer: 1,
+    options: [
+      { ja: "トノサマガエル", kr: "참개구리류", img: img("Rana_nigromaculata.jpg") },
+      { ja: "アカハライモリ", kr: "일본영원", img: img("Cynops_pyrrhogaster_sasayamae.jpg") },
+      { ja: "ヒキガエル", kr: "두꺼비", img: img("Bufo_japonicus_formosus.jpg") },
+      { ja: "アマガエル", kr: "청개구리", img: img("Hyla_japonica_in_forest.jpg") },
+    ],
+    hint: "成体になっても尾が残る両生類です。",
+    explanation: "イモリやサンショウウオの仲間は有尾目です。カエルの仲間は無尾目です。",
+  },
+  {
+    id: "reptile-001",
+    grade: 4,
+    category: "reptile",
+    difficulty: "easy",
+    num: "問 68",
+    ja: "爬虫類を選びなさい。",
+    kr: "파충류를 고르세요.",
+    answer: 0,
+    options: [
+      { ja: "ニホンカナヘビ", kr: "일본장지뱀", img: img("Takydromus_tachydromoides_200705.jpg") },
+      { ja: "アカハライモリ", kr: "일본영원", img: img("Cynops_pyrrhogaster_001.jpg") },
+      { ja: "アマガエル", kr: "청개구리", img: img("Hyla_japonica_001.jpg") },
+      { ja: "サンショウウオ", kr: "도롱뇽", img: img("Hynobius_nebulosus.jpg") },
+    ],
+    hint: "体表はうろこでおおわれ、肺で呼吸します。",
+    explanation: "ニホンカナヘビは爬虫類です。イモリ、カエル、サンショウウオは両生類です。",
+  },
+  {
+    id: "reptile-002",
+    grade: 3,
+    category: "reptile",
+    difficulty: "medium",
+    num: "問 69",
+    ja: "ヤモリについて正しいものを選びなさい。",
+    kr: "도마뱀붙이에 대해 맞는 것을 고르세요.",
+    answer: 2,
+    options: [
+      { ja: "両生類である", kr: "양서류이다", img: img("Cynops_pyrrhogaster_sasayamae.jpg") },
+      { ja: "えらで呼吸する", kr: "아가미로 호흡한다", img: img("Rana_japonica_tadpole.jpg") },
+      { ja: "爬虫類である", kr: "파충류이다", img: img("Gekko_japonicus_in_Mie_Prefecture.jpg") },
+      { ja: "胎生魚である", kr: "태생어이다", img: img("Guppy_pho_0048.jpg") },
+    ],
+    hint: "家の壁や窓で見られ、肺で呼吸します。",
+    explanation: "ヤモリは爬虫類です。名前が似ているイモリは両生類なので注意しましょう。",
+  },
+  {
+    id: "mix-001",
+    grade: 4,
+    category: "all",
+    difficulty: "easy",
+    num: "問 70",
+    ja: "昆虫ではないものを選びなさい。",
+    kr: "곤충이 아닌 것을 고르세요.",
+    answer: 2,
+    options: [
+      { ja: "ナナホシテントウ", kr: "칠성무당벌레", img: img("Coccinella_septempunctata_01.JPG") },
+      { ja: "アゲハチョウ", kr: "호랑나비", img: img("Papilio_xuthus_Larva_2011-10-01.jpg") },
+      { ja: "クモ", kr: "거미", img: img("Argiope_bruennichi_female.jpg") },
+      { ja: "カブトムシ", kr: "장수풍뎅이", img: img("Trypoxylus_dichotomus_male_2015.jpg") },
+    ],
+    hint: "足の数に注目します。昆虫は6本です。",
+    explanation: "クモは昆虫ではなくクモ綱です。昆虫は頭・胸・腹に分かれ、成虫の足は6本です。",
+  },
+  {
+    id: "mix-002",
+    grade: 3,
+    category: "all",
+    difficulty: "hard",
+    num: "問 71",
+    ja: "鳥類と哺乳類に共通する特徴を選びなさい。",
+    kr: "조류와 포유류에 공통되는 특징을 고르세요.",
+    answer: 1,
+    options: [
+      { ja: "体表にうろこがある", kr: "몸 표면에 비늘이 있다", img: img("Takydromus_tachydromoides_200705.jpg") },
+      { ja: "恒温動物である", kr: "항온동물이다", img: img("Eastern_spot-billed_duck_in_Tokyo.jpg") },
+      { ja: "幼生はえら呼吸する", kr: "유생은 아가미 호흡을 한다", img: img("Rana_japonica_tadpole.jpg") },
+      { ja: "胞子でふえる", kr: "포자로 번식한다", img: img("Osmunda_japonica_fiddleheads.jpg") },
+    ],
+    hint: "外の温度が変わっても体温を比較的一定に保ちます。",
+    explanation: "鳥類と哺乳類はどちらも恒温動物です。体温を一定に保つしくみがあります。",
+  },
+  {
+    id: "mix-003",
+    grade: 3,
+    category: "all",
+    difficulty: "hard",
+    num: "問 72",
+    ja: "種子をつくらない生物を選びなさい。",
+    kr: "씨앗을 만들지 않는 생물을 고르세요.",
+    answer: 3,
+    options: [
+      { ja: "アカマツ", kr: "소나무류", img: img("Pinus_densiflora2.jpg") },
+      { ja: "サクラ", kr: "벚나무", img: img("Prunus_serrulata_Blossoms.jpg") },
+      { ja: "イネ", kr: "벼", img: img("Rice_Plants_(IRRI).jpg") },
+      { ja: "ワラビ", kr: "고사리", img: img("Pteridium_aquilinum_002.JPG") },
+    ],
+    hint: "シダ植物は胞子でふえます。",
+    explanation: "ワラビはシダ植物で、種子ではなく胞子でふえます。",
+  },
+];
+
+function makePhotoQuestion(num, category, ja, options, answer = null, note = "写真から転記。正解は要確認。") {
+  return {
+    id: `book-2026-${String(num).padStart(3, "0")}`,
+    grade: num >= 77 ? 3 : 4,
+    category,
+    difficulty: num >= 77 ? "hard" : num >= 41 ? "medium" : "easy",
+    num: `問 ${num}`,
+    ja,
+    kr: "",
+    answer,
+    needsAudit: answer === null,
+    options: options.map((name) => ({ ja: name, kr: "", img: "" })),
+    hint: note,
+    explanation: answer === null ? "この問題は正解確認待ちです。答え合わせ後にデータを更新します。" : "写真から転記した問題です。解説は後で追加できます。",
+  };
+}
+
+const photoQuestions = [
+  makePhotoQuestion(1, "mammal", "「ひげくじら」をひとつ選びなさい。", ["ザトウクジラ", "シャチ", "ハンドウイルカ", "マッコウクジラ"]),
+  makePhotoQuestion(2, "mammal", "シカにもっとも近縁な動物をひとつ選びなさい。", ["イノシシ", "サイ", "タヌキ", "クマ"]),
+  makePhotoQuestion(3, "reptile", "体がかたい鱗（うろこ）でおおわれている動物をひとつ選びなさい。", ["アリクイ", "センザンコウ", "ハリネズミ", "ヤマアラシ"]),
+  makePhotoQuestion(4, "bird", "ウミネコにもっとも近縁な鳥をひとつ選びなさい。", ["ウミウ", "ユリカモメ", "ヤマセミ", "ライチョウ"]),
+  makePhotoQuestion(5, "bird", "ガチョウにもっとも近縁な鳥をひとつ選びなさい。", ["ガン", "サギ", "シギ", "ツル"]),
+  makePhotoQuestion(6, "bird", "ウのシルエットをひとつ選びなさい。", ["シルエット1", "シルエット2", "シルエット3", "シルエット4"]),
+  makePhotoQuestion(7, "bird", "このシルエットの鳥はなんですか。", ["オナガガモ", "キジバト", "トビ", "キジ"]),
+  makePhotoQuestion(8, "bird", "みずかきが発達していない鳥をひとつ選びなさい。", ["アヒル", "オシドリ", "カワウ", "カワセミ"]),
+  makePhotoQuestion(9, "amphibian", "サンショウウオにもっとも近縁な動物をひとつ選びなさい。", ["イモリ", "カナヘビ", "アカガエル", "トカゲ"]),
+  makePhotoQuestion(10, "amphibian", "アマガエルの鳴く姿の図をひとつ選びなさい。", ["図1", "図2", "図3", "図4"]),
+  makePhotoQuestion(11, "fish", "キンギョと同じ仲間（同じ科）の魚をひとつ選びなさい。", ["アユ", "コイ", "ドジョウ", "ナマズ"]),
+  makePhotoQuestion(12, "fish", "イワナと同じなかま（同じ科）の魚をひとつ選びなさい。", ["サクラマス", "マイワシ", "オイカワ", "ウグイ"]),
+  makePhotoQuestion(13, "fish", "この魚はなんですか。", ["カツオ", "クロマグロ", "ブリ", "ボラ"]),
+  makePhotoQuestion(14, "fish", "この魚はなんですか。", ["サケ", "ウツボ", "サンマ", "フナ"]),
+  makePhotoQuestion(15, "fish", "コイの呼吸器官をひとつ選びなさい。", ["うろこ", "えら", "肺", "ひれ"]),
+  makePhotoQuestion(16, "insect", "翅（はね）をもたない昆虫をひとつ選びなさい。", ["アブラムシ", "シミ", "シロアリ", "ハネカクシ"]),
+  makePhotoQuestion(17, "insect", "テントウムシにもっとも近縁な動物をひとつ選びなさい。", ["アワフキムシ", "ザトウムシ", "ツリガネムシ", "ハリガネムシ"]),
+  makePhotoQuestion(18, "insect", "他と異なるグループ（異なる目）の昆虫をひとつ選びなさい。", ["アゲハ（ナミアゲハ）", "オオミズアオ", "ドクガ", "トビケラ"]),
+  makePhotoQuestion(19, "insect", "カブトムシの成虫の餌の食べ方について、正しい記述をひとつ選びなさい。", ["ブラシ状の口でなめる", "ストロー状の口で吸う", "左右に動くあごでかむ", "上下に動くあごでかむ"]),
+  makePhotoQuestion(20, "all", "ミジンコが属するグループ（門）をひとつ選びなさい。", ["環形動物", "節足動物", "線形動物", "扁形動物"]),
+  makePhotoQuestion(21, "all", "ヒトデにもっとも近縁な動物をひとつ選びなさい。", ["ウニ", "フジツボ", "クラゲ", "ホヤ"]),
+  makePhotoQuestion(22, "all", "この動物はなんですか。", ["トコブシ", "カワニナ", "ホラガイ", "タニシ"]),
+  makePhotoQuestion(23, "insect", "クモの記述として正しいものをひとつ選びなさい。", ["頭胸部と腹部に分かれ、頭胸部に6本の脚がついている", "頭胸部と腹部に分かれ、頭胸部に8本の脚がついている", "頭部、胸部、腹部に分かれ、腹部に6本の脚がついている", "頭部、胸部、腹部に分かれ、腹部に8本の脚がついている"]),
+  makePhotoQuestion(24, "plant", "被子植物をひとつ選びなさい。", ["ヒノキ", "マンネンスギ", "スギ", "イチイ"]),
+  makePhotoQuestion(25, "plant", "離弁花である植物をひとつ選びなさい。", ["アサガオ", "サツキ", "タンポポ", "ハマナス"]),
+  makePhotoQuestion(26, "plant", "バラ科の植物をひとつ選びなさい。", ["カキノキ", "アンズ", "ミカン", "ブドウ"]),
+  makePhotoQuestion(27, "plant", "カリフラワーと同じなかま（同じ科）の野菜をひとつ選びなさい。", ["ジャガイモ", "ニンニク", "キャベツ", "レタス"]),
+  makePhotoQuestion(28, "plant", "クズと同じ仲間（同じ科）の植物をひとつ選びなさい。", ["オオイヌノフグリ", "ハギ", "ブタクサ", "ヘビイチゴ"]),
+  makePhotoQuestion(29, "plant", "サトイモと同じなかま（同じ科）の植物をひとつ選びなさい。", ["カブ", "コンニャク", "サツマイモ", "ハス"]),
+  makePhotoQuestion(30, "plant", "アヤメと同じなかま（同じ科）の植物をひとつ選びなさい。", ["シクラメン", "シュンラン", "ハナショウブ", "ジャノヒゲ"]),
+  makePhotoQuestion(31, "plant", "この野菜はなんですか。", ["キャベツ", "セロリ", "コマツナ", "ハクサイ"]),
+  makePhotoQuestion(32, "plant", "この野菜はなんですか。", ["チンゲンサイ", "ニラ", "ホウレンソウ", "ミツバ"]),
+  makePhotoQuestion(33, "plant", "この葉はなんですか。", ["クヌギ", "カシワ", "ケヤキ", "ツバキ"]),
+  makePhotoQuestion(34, "plant", "花弁が黄色い植物をひとつ選びなさい。", ["アセビ", "クサボケ", "ヤマツツジ", "ヤマブキ"]),
+  makePhotoQuestion(35, "plant", "小さな花が多数集まってひとつの花のようにみえる植物をひとつ選びなさい。", ["ケシ", "チューリップ", "シャクヤク", "ヒマワリ"]),
+  makePhotoQuestion(36, "plant", "オオバコの葉はどれですか。", ["葉1", "葉2", "葉3", "葉4"]),
+  makePhotoQuestion(37, "plant", "葉が複葉である植物をひとつ選びなさい。", ["イロハモミジ", "スズカケノキ", "フジ", "ヤツデ"]),
+  makePhotoQuestion(38, "plant", "葉に蜜腺がある植物をひとつ選びなさい。", ["イチョウ", "ヤマボウシ", "サクラ", "カツラ"]),
+  makePhotoQuestion(39, "plant", "地下茎に栄養分を貯蔵する植物をひとつ選びなさい。", ["サツマイモ", "ジャガイモ", "ダイコン", "ゴボウ"]),
+  makePhotoQuestion(40, "plant", "果実が赤く熟す植物をひとつ選びなさい。", ["アオキ", "カリン", "ヤツデ", "キンカン"]),
+  makePhotoQuestion(41, "plant", "アマモについて正しい記述をひとつ選びなさい。", ["海に生育する種子植物", "海に生育する藻類", "川に生育する種子植物", "川に生育する藻類"]),
+  makePhotoQuestion(42, "plant", "次の記述にあてはまる植物をひとつ選びなさい。春の七草のひとつで、ゴギョウ（オギョウ）とも呼ばれる。春に黄色の花をつけ、草が綿毛に覆われ白っぽくみえる。", ["カブ", "セリ", "ハコベ", "ハハコグサ"]),
+  makePhotoQuestion(43, "plant", "コケ植物をひとつ選びなさい。", ["サギゴケ", "ゼニゴケ", "マンネンスギ", "モウセンゴケ"]),
+  makePhotoQuestion(44, "plant", "紅藻をひとつ選びなさい。", ["ワカメ", "テングサ", "ヒジキ", "ホンダワラ"]),
+  makePhotoQuestion(45, "plant", "キノコではないものをひとつ選びなさい。", ["キヌガサタケ", "ショウロ", "マイタケ", "スズタケ"]),
+  makePhotoQuestion(47, "mammal", "滑空する動物をひとつ選びなさい。", ["オコジョ", "テン", "ムササビ", "ヤマネ"]),
+  makePhotoQuestion(48, "mammal", "肉食性の哺乳類をひとつ選びなさい。", ["オットセイ", "カバ", "サイ", "ジュゴン"]),
+  makePhotoQuestion(49, "mammal", "冬眠をしない動物をひとつ選びなさい。", ["アブラコウモリ", "ヤマネ", "シマリス", "キツネ"]),
+  makePhotoQuestion(50, "bird", "本州での夏鳥をひとつ選びなさい。", ["スズメ", "カワラヒワ", "メジロ", "ホトトギス"]),
+  makePhotoQuestion(51, "bird", "カワセミについて正しい記述の組み合わせをひとつ選びなさい。", ["A-B", "A-D", "B-C", "B-D"]),
+  makePhotoQuestion(52, "bird", "木の上に小枝を集めて巣をつくる鳥をひとつ選びなさい。", ["コサギ", "コゲラ", "ツバメ", "ヒバリ"]),
+  makePhotoQuestion(53, "fish", "胎生の魚をひとつ選びなさい。", ["イワナ", "グッピー", "タナゴ", "ハゼ"], 1),
+  makePhotoQuestion(54, "fish", "巣をつくる魚をひとつ選びなさい。", ["イトヨ", "ドジョウ", "モツゴ", "フナ"]),
+  makePhotoQuestion(55, "fish", "産卵のために海から河川に遡上する魚をひとつ選びなさい。", ["イワシ", "クサフグ", "サケ", "ナマズ"], 2),
+  makePhotoQuestion(56, "insect", "アゲハ（ナミアゲハ）の幼虫の食草となるものをひとつ選びなさい。", ["カタバミ", "ナツミカン", "ニンジン", "ハクサイ"], 1),
+  makePhotoQuestion(57, "insect", "鳴かない昆虫をひとつ選びなさい。", ["アブラゼミ", "カンタン", "コオロギ", "ナナフシ"]),
+  makePhotoQuestion(58, "insect", "社会性昆虫でないものをひとつ選びなさい。", ["アリ", "カマキリ", "シロアリ", "ミツバチ"], 1),
+  makePhotoQuestion(59, "insect", "オオムラサキについて正しい記述の組み合わせをひとつ選びなさい。", ["A-B", "B-C", "B-D", "C-D"]),
+  makePhotoQuestion(60, "all", "陸上生活にもっとも適応しているカニをひとつ選びなさい。", ["アカテガニ", "ハナサキガニ", "ケガニ", "タラバガニ"]),
+  makePhotoQuestion(61, "all", "肉食性の動物をひとつ選びなさい。", ["ダンゴムシ", "ミミズ", "ムカデ", "ヤスデ"]),
+  makePhotoQuestion(62, "all", "哺乳類の消化管内に寄生する生物をひとつ選びなさい。", ["カイチュウ", "ハリガネムシ", "フィラリア", "マラリア原虫"]),
+  makePhotoQuestion(63, "plant", "雌雄異株の植物をひとつ選びなさい。", ["イチョウ", "スギ", "マツ", "クリ"]),
+  makePhotoQuestion(64, "plant", "地中に果実をつける植物をひとつ選びなさい。", ["アズキ", "ジャガイモ", "ダイズ", "ラッカセイ"]),
+  makePhotoQuestion(65, "plant", "主として風によって種子が散布される植物をひとつ選びなさい。", ["アザミ", "オナモミ", "ヤハズエンドウ（カラスノエンドウ）", "スミレ"]),
+  makePhotoQuestion(66, "plant", "種子をはじきとばす植物をひとつ選びなさい。", ["ヌスビトハギ", "センダングサ", "カタバミ", "ホオズキ"]),
+  makePhotoQuestion(67, "plant", "主に動物によって種子が散布される植物をひとつ選びなさい。", ["アケビ", "アカマツ", "カエデ", "ポプラ"]),
+  makePhotoQuestion(68, "plant", "木本植物をひとつ選びなさい。", ["モモ", "バナナ", "パイナップル", "メロン"]),
+  makePhotoQuestion(69, "plant", "水底に根を張り、葉や茎の一部が空中に出ている植物（抽水植物）をひとつ選びなさい。", ["エノコログサ", "ガマ", "コバンソウ", "ノビル"]),
+  makePhotoQuestion(70, "plant", "水底に根を張り、葉を水面に浮かべている植物（浮葉植物）をひとつ選びなさい。", ["カヤツリグサ", "ススキ", "ヒシ", "スヒシバ"]),
+  makePhotoQuestion(71, "plant", "食虫植物をひとつ選びなさい。", ["ウツボカズラ", "サルトリイバラ", "ホタルブクロ", "ムシトリナデシコ"]),
+  makePhotoQuestion(72, "plant", "本州の海岸林を構成する植物をひとつ選びなさい。", ["ハイマツ", "カラマツ", "クロマツ", "トドマツ"]),
+  makePhotoQuestion(73, "plant", "日本では主に高山帯に生育する植物をひとつ選びなさい。", ["ツリフネソウ", "カンアオイ", "クロユリ", "ホタルブクロ"]),
+  makePhotoQuestion(74, "plant", "夕方に開花する植物をひとつ選びなさい。", ["オシロイバナ", "ヒルガオ", "ホウセンカ", "マツバボタン"]),
+  makePhotoQuestion(75, "plant", "ヤマノイモの記述として誤りであるものをひとつ選びなさい。", ["つる性の植物である", "雌雄別株である", "一年草である", "食用になる「むかご」をつける"]),
+  makePhotoQuestion(76, "all", "卵生の動物をひとつ選びなさい。", ["ワニ", "コウモリ", "ジュゴン", "コアラ"]),
+  makePhotoQuestion(77, "all", "生物の分類階級で「目」のひとつ下位の階級をひとつ選びなさい。", ["科", "属", "界", "綱"]),
+  makePhotoQuestion(78, "all", "生物の学名は二名法により表されます。二名法を確立した人の名前をひとつ選びなさい。", ["アリストテレス", "シーボルト", "ダーウィン", "リンネ"]),
+  makePhotoQuestion(79, "insect", "カブトムシの標本の作製方法として、もっとも適しているものをひとつ選びなさい。", ["解剖して筋肉や内臓を取り出し、綿をつめる", "ホルマリンで固定し、アルコール液浸標本にする", "湯で煮沸して筋肉や内臓を取り出し、綿をつめる", "筋肉や内臓は取り出さず、形を整えて乾燥させる"]),
+  makePhotoQuestion(80, "plant", "オーストラリア原産の植物をひとつ選びなさい。", ["オオオニバス", "サボテン", "メタセコイア", "ユーカリ"]),
+  makePhotoQuestion(81, "all", "環境省のレッドリストの説明として、正しいものをひとつ選びなさい。", ["日本において、外来生物とされている生物の種のリスト", "日本において、狩猟鳥獣とされている野生生物の種のリスト", "日本において、絶滅のおそれのある野生生物の種のリスト", "日本において、農林業被害をおこしている野生生物の種のリスト"]),
+  makePhotoQuestion(82, "all", "日本における外来種をひとつ選びなさい。", ["オオバコ", "カワラナデシコ", "カワラノギク", "ハルジオン"]),
+  makePhotoQuestion(83, "plant", "ミツマタの伝統的な用途はなんですか。", ["染料の原料", "和紙の原料", "薬用", "食用"]),
+  makePhotoQuestion(84, "plant", "春の七草に含まれる植物をひとつ選びなさい。", ["オオイヌノフグリ", "スミレ", "カタクリ", "ナズナ"]),
+  makePhotoQuestion(85, "all", "次の記述の（ア）にあてはまるものをひとつ選びなさい。ファーブル（1823-1915）は身近な（ア）の観察記録を全10巻で著した。", ["哺乳類", "両生類", "魚類", "昆虫類"]),
+  makePhotoQuestion(86, "plant", "植物が光合成によって糖をつくりだす際の原料として、正しい組み合わせをひとつ選びなさい。", ["酸素・二酸化炭素", "酸素・二酸化炭素・水", "酸素・水", "二酸化炭素・水"]),
+];
+
+const fallbackImages = {
+  all: img("Biodiversity_of_Colombia.jpg"),
+  fish: img("Guppy_pho_0048.jpg"),
+  insect: img("Papilio_xuthus_formosanus_Male_2014_01.jpg"),
+  plant: img("Taraxacum_officinale_001.JPG"),
+  bird: img("Eastern_spot-billed_duck_in_Tokyo.jpg"),
+  mammal: img("Macropus_giganteus_-_Brunkerville.jpg"),
+  amphibian: img("Hyla_japonica_001.jpg"),
+  reptile: img("Takydromus_tachydromoides_200705.jpg"),
+};
+
+const questions = photoQuestions.sort((a, b) => Number(a.num.replace(/\D/g, "")) - Number(b.num.replace(/\D/g, "")));
+
+const letters = ["A", "B", "C", "D"];
+const app = document.querySelector("#app");
+
+const state = {
+  view: "home",
+  grade: 4,
+  category: "all",
+  showKr: true,
+  session: [],
+  index: 0,
+  answers: [],
+  startedAt: 0,
+  lastResult: null,
+  progress: loadProgress(),
+};
+
+function loadProgress() {
+  try {
+    return JSON.parse(localStorage.getItem("biomaster-progress")) || { sessions: [], answers: {} };
+  } catch {
+    return { sessions: [], answers: {} };
+  }
+}
+
+function saveProgress() {
+  localStorage.setItem("biomaster-progress", JSON.stringify(state.progress));
+}
+
+function availableQuestions(category, grade) {
+  return questions.filter((q) => {
+    const categoryMatch = category === "all" || q.category === category || q.category === "all";
+    return categoryMatch && q.grade <= grade;
+  });
+}
+
+function shuffle(items) {
+  return [...items].sort(() => Math.random() - 0.5);
+}
+
+function startQuiz(category) {
+  const pool = availableQuestions(category, state.grade).sort((a, b) => Number(a.num.replace(/\D/g, "")) - Number(b.num.replace(/\D/g, "")));
+
+  state.category = category;
+  state.session = pool;
+  state.index = 0;
+  state.answers = new Array(state.session.length).fill(null);
+  state.startedAt = Date.now();
+  state.view = "quiz";
+  render();
+}
+
+function submitAnswer(choice) {
+  if (state.answers[state.index] !== null) return;
+  state.answers[state.index] = choice;
+  render();
+}
+
+function nextQuestion() {
+  if (state.index < state.session.length - 1) {
+    state.index += 1;
+    render();
+    return;
+  }
+  finishQuiz();
+}
+
+function finishQuiz() {
+  const audited = state.session.filter((q) => q.answer !== null);
+  const correct = state.session.reduce((sum, q, i) => sum + (q.answer !== null && state.answers[i] === q.answer ? 1 : 0), 0);
+  const wrongIds = state.session.filter((q, i) => q.answer !== null && state.answers[i] !== q.answer).map((q) => q.id);
+  const result = {
+    id: String(Date.now()),
+    date: new Date().toISOString(),
+    category: state.category,
+    grade: state.grade,
+    total: audited.length || state.session.length,
+    correct,
+    wrongIds,
+    timeSeconds: Math.round((Date.now() - state.startedAt) / 1000),
+  };
+
+  state.session.forEach((q, i) => {
+    if (q.answer === null) return;
+    const record = state.progress.answers[q.id] || { correct: 0, wrong: 0, streak: 0 };
+    if (state.answers[i] === q.answer) {
+      record.correct += 1;
+      record.streak += 1;
+    } else {
+      record.wrong += 1;
+      record.streak = 0;
+    }
+    state.progress.answers[q.id] = record;
+  });
+
+  state.progress.sessions = [result, ...state.progress.sessions].slice(0, 30);
+  state.lastResult = result;
+  saveProgress();
+  state.view = "result";
+  render();
+}
+
+function percent(value, total) {
+  return total ? Math.round((value / total) * 100) : 0;
+}
+
+function masteredCount(pool) {
+  return pool.filter((q) => q.answer !== null && (state.progress.answers[q.id]?.streak || 0) >= 3).length;
+}
+
+function render() {
+  if (state.view === "quiz") renderQuiz();
+  else if (state.view === "result") renderResult();
+  else if (state.view === "stats") renderStats();
+  else renderHome();
+}
+
+function shell(content) {
+  app.innerHTML = `
+    <main class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="brand-mark">Bio</div>
+          <div>
+            <h1>BioMaster</h1>
+            <p>生物分類技能検定 対策 · 아들용 실사 사진 퀴즈</p>
+          </div>
+        </div>
+        <button class="lang-toggle" data-action="toggle-lang">${state.showKr ? "한국어 ON" : "한국어 OFF"}</button>
+      </header>
+      ${content}
+    </main>
+  `;
+}
+
+function renderHome() {
+  const grade4Active = state.grade === 4 ? "active" : "";
+  const grade3Active = state.grade === 3 ? "active" : "";
+  const cards = Object.entries(categories)
+    .map(([key, cat]) => {
+      const pool = availableQuestions(key, state.grade);
+      const done = masteredCount(pool);
+      const pct = percent(done, pool.length);
+      return `
+        <button class="category-card" data-start="${key}" style="border-top: 4px solid ${cat.accent}">
+          <div class="category-head">
+            <span class="photo-pill">実写写真つき</span>
+            <span>${pool.length}問</span>
+          </div>
+          <strong>${cat.ja}</strong>
+          ${state.showKr ? `<small>${cat.kr}</small>` : ""}
+          <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <small>習得 ${pct}%</small>
+        </button>
+      `;
+    })
+    .join("");
+
+  shell(`
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">PHOTO QUIZ · 生き物分類</p>
+        <h2>写真を見て、分類の特徴で答える練習アプリ</h2>
+        <p class="support">問題文は日本語、必要なら韓国語の補助文も表示します。選択肢はすべて実写画像なので、名前暗記だけでなく姿を見て分類できるように作っています。</p>
+        <div class="controls">
+          <div class="segmented" aria-label="grade">
+            <button class="${grade4Active}" data-grade="4">4級</button>
+            <button class="${grade3Active}" data-grade="3">3級</button>
+          </div>
+          <button class="primary-button" data-start="all">全カテゴリを始める</button>
+          <button class="ghost-button" data-view="stats">成績を見る</button>
+        </div>
+      </div>
+      <div class="hero-photo">
+        <img src="${img("Papilio_xuthus_formosanus_Male_2014_01.jpg")}" alt="実写のアゲハチョウ" />
+        <span>全選択肢に実写画像を使用</span>
+      </div>
+    </section>
+    <section class="study-panel">
+      <div class="section-title">
+        <h3>カテゴリを選ぶ</h3>
+        <p>間違えた問題は次回出やすくなります</p>
+      </div>
+      <div class="category-grid">${cards}</div>
+    </section>
+  `);
+}
+
+function renderQuiz() {
+  const q = state.session[state.index];
+  const selected = state.answers[state.index];
+  const answered = selected !== null;
+  const correctCount = state.session.reduce((sum, item, i) => sum + (item.answer !== null && state.answers[i] === item.answer ? 1 : 0), 0);
+  const wrongCount = state.answers.filter((answer, i) => answer !== null && state.session[i].answer !== null && answer !== state.session[i].answer).length;
+  const progress = percent(state.index + (answered ? 1 : 0), state.session.length);
+  const optionCards = q.options
+    .map((option, i) => {
+      let cardState = "idle";
+      if (answered && q.answer === null && i === selected) cardState = "reveal";
+      if (answered && q.answer !== null && i === q.answer) cardState = selected === q.answer ? "correct" : "reveal";
+      if (answered && q.answer !== null && i === selected && selected !== q.answer) cardState = "wrong";
+      const badge = cardState === "correct" || cardState === "reveal" ? "✓" : cardState === "wrong" ? "×" : "";
+      return `
+        <button class="option-card ${cardState}" data-choice="${i}" ${answered ? "disabled" : ""}>
+          <div class="option-image">
+            <span class="image-loading">写真を読み込み中</span>
+            <img src="${option.img || ""}" alt="${option.ja}の実写写真" loading="eager" data-photo data-name="${option.ja}" data-category="${q.category}" />
+          </div>
+          ${badge ? `<span class="state-badge">${badge}</span>` : ""}
+          <div class="option-body">
+            <div class="option-name"><span class="letter">${letters[i]}</span><span>${option.ja}</span></div>
+            ${state.showKr ? `<small>${option.kr}</small>` : ""}
+          </div>
+        </button>
+      `;
+    })
+    .join("");
+
+  shell(`
+    <section class="quiz-panel">
+      <div class="quiz-head">
+        <div class="quiz-row">
+          <button class="ghost-button" data-view="home">← ホーム</button>
+          <div class="score-pills">
+            <span class="ok-pill">✓ ${correctCount}</span>
+            <span class="bad-pill">× ${wrongCount}</span>
+          </div>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+      </div>
+      <div class="question-box">
+        <p class="question-num">${categories[q.category]?.ja || categories[state.category].ja} · ${q.num} · ${state.index + 1}/${state.session.length}</p>
+        <p class="question-text">${q.ja}</p>
+        ${state.showKr ? `<p class="kr-text">${q.kr}</p>` : ""}
+      </div>
+      <div class="option-grid">${optionCards}</div>
+      <details class="hint-box">
+        <summary>ヒントを見る</summary>
+        <p>${q.hint}</p>
+      </details>
+      ${answered ? `<div class="explain-box"><strong>${q.answer === null ? "正解確認待ちです。" : selected === q.answer ? "正解です。" : "答えは " + q.options[q.answer].ja + " です。"}</strong><br />${q.explanation}</div>` : ""}
+      <div class="quiz-actions">
+        <button class="danger-button" data-view="home">やめる</button>
+        <button class="primary-button" data-next ${answered ? "" : "disabled"}>${state.index === state.session.length - 1 ? "結果を見る" : "次へ"}</button>
+      </div>
+    </section>
+  `);
+  wireImages();
+}
+
+function renderResult() {
+  const result = state.lastResult;
+  const pct = percent(result.correct, result.total);
+  const wrongItems = result.wrongIds
+    .map((id) => questions.find((q) => q.id === id))
+    .filter(Boolean)
+    .map((q) => `<div class="wrong-item"><strong>${q.num} ${q.ja}</strong><br /><small>答え: ${q.options[q.answer].ja}</small></div>`)
+    .join("");
+  shell(`
+    <section class="result-panel">
+      <div class="section-title">
+        <h3>${pct >= 80 ? "よくできました" : pct >= 50 ? "もう少しで安定します" : "復習チャンスです"}</h3>
+        <p>${result.timeSeconds}秒</p>
+      </div>
+      <div class="result-score"><strong>${pct}%</strong></div>
+      <div class="stats-grid">
+        <div class="stat-card">正解<b>${result.correct}</b></div>
+        <div class="stat-card">不正解<b>${result.total - result.correct}</b></div>
+        <div class="stat-card">問題数<b>${result.total}</b></div>
+      </div>
+      <div class="wrong-list">
+        ${wrongItems || `<div class="wrong-item"><strong>間違えた問題はありません。</strong><br /><small>この調子です。</small></div>`}
+      </div>
+      <div class="quiz-actions">
+        <button class="ghost-button" data-view="home">ホームへ</button>
+        <button class="primary-button" data-retry>もう一度</button>
+      </div>
+    </section>
+  `);
+}
+
+function renderStats() {
+  const answeredIds = Object.keys(state.progress.answers);
+  const mastered = answeredIds.filter((id) => state.progress.answers[id].streak >= 3).length;
+  const totalAnswered = Object.values(state.progress.answers).reduce((sum, item) => sum + item.correct + item.wrong, 0);
+  const pendingAudit = questions.filter((q) => q.answer === null).length;
+  const recent = state.progress.sessions
+    .slice(0, 8)
+    .map((s) => {
+      const date = new Date(s.date).toLocaleDateString("ja-JP", { month: "2-digit", day: "2-digit" });
+      return `<div class="history-row"><span>${date} · ${categories[s.category].ja} · ${s.grade}級</span><b>${s.correct}/${s.total}</b></div>`;
+    })
+    .join("");
+  const mastery = Object.entries(categories)
+    .filter(([key]) => key !== "all")
+    .map(([key, cat]) => {
+      const pool = availableQuestions(key, state.grade);
+      const pct = percent(masteredCount(pool), pool.length);
+      return `<div class="mastery-row"><span>${cat.ja}${state.showKr ? ` · ${cat.kr}` : ""}</span><b>${pct}%</b><div class="progress-track" style="grid-column:1 / -1"><div class="progress-fill" style="width:${pct}%"></div></div></div>`;
+    })
+    .join("");
+  shell(`
+    <section class="stats-panel">
+      <div class="section-title">
+        <h3>成績ダッシュボード</h3>
+        <button class="ghost-button" data-view="home">ホームへ</button>
+      </div>
+      <div class="stats-grid">
+        <div class="stat-card">解いた回数<b>${totalAnswered}</b></div>
+        <div class="stat-card">習得済み<b>${mastered}</b></div>
+        <div class="stat-card">正解確認待ち<b>${pendingAudit}</b></div>
+      </div>
+      <div class="section-title" style="margin-top:22px">
+        <h3>カテゴリ別 習熟度</h3>
+        <p>3回連続正解で習得</p>
+      </div>
+      <div class="mastery-list">${mastery}</div>
+      <div class="section-title" style="margin-top:22px">
+        <h3>最近の記録</h3>
+        <button class="danger-button" data-reset>記録リセット</button>
+      </div>
+      <div class="history-list">${recent || `<div class="history-row"><span>まだ記録がありません</span><b>0</b></div>`}</div>
+    </section>
+  `);
+}
+
+function wireImages() {
+  document.querySelectorAll("[data-photo]").forEach((photo) => {
+    const status = photo.previousElementSibling;
+    photo.addEventListener("load", () => status.classList.add("hidden"));
+    photo.addEventListener("error", () => {
+      const fallback = fallbackImages[photo.dataset.category] || fallbackImages.all;
+      if (photo.src !== fallback) {
+        photo.src = fallback;
+        status.textContent = "関連写真を読み込み中";
+        return;
+      }
+      status.textContent = "画像を読み込めません";
+      status.className = "image-error";
+      photo.classList.add("hidden");
+    });
+    if (!photo.getAttribute("src")) resolveOptionImage(photo, status);
+    if (photo.complete && photo.naturalWidth > 0) status.classList.add("hidden");
+  });
+}
+
+async function resolveOptionImage(photo, status) {
+  const name = normalizeImageQuery(photo.dataset.name || "");
+  const fallback = fallbackImages[photo.dataset.category] || fallbackImages.all;
+  if (!name) {
+    photo.src = fallback;
+    return;
+  }
+  try {
+    const response = await fetch(`https://ja.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
+    if (!response.ok) throw new Error("summary not found");
+    const data = await response.json();
+    photo.src = data?.thumbnail?.source || data?.originalimage?.source || fallback;
+  } catch {
+    photo.src = fallback;
+  } finally {
+    status.textContent = "写真を読み込み中";
+  }
+}
+
+function normalizeImageQuery(name) {
+  if (/^(A|B|C|D)-/.test(name) || /^図\d$/.test(name) || /^葉\d$/.test(name) || /^シルエット\d$/.test(name)) return "";
+  return name.replace(/（.*?）|\(.*?\)/g, "").replace(/[0-9.]/g, "").trim();
+}
+
+document.addEventListener("click", (event) => {
+  const target = event.target.closest("button");
+  if (!target) return;
+  if (target.dataset.action === "toggle-lang") {
+    state.showKr = !state.showKr;
+    render();
+  }
+  if (target.dataset.grade) {
+    state.grade = Number(target.dataset.grade);
+    render();
+  }
+  if (target.dataset.start) startQuiz(target.dataset.start);
+  if (target.dataset.choice) submitAnswer(Number(target.dataset.choice));
+  if (target.dataset.next !== undefined) nextQuestion();
+  if (target.dataset.view) {
+    state.view = target.dataset.view;
+    render();
+  }
+  if (target.dataset.retry !== undefined) startQuiz(state.category);
+  if (target.dataset.reset !== undefined) {
+    state.progress = { sessions: [], answers: {} };
+    saveProgress();
+    render();
+  }
+});
+
+render();
