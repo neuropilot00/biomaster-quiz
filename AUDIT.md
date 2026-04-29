@@ -50,6 +50,11 @@ User-provided photos were used to transcribe visible question text into app data
 - Current prompt-photo questions: 問6, 問7, 問10, 問13, 問14, 問22, 問31, 問32, 問33, 問36.
 - Answer choices remain compact below the main photo.
 
+## 2026-04-29 Frog Diagram Exception
+
+- 問10 is a diagram-comparison question, so it cannot be replaced by a real photo.
+- Restored four answer-choice diagrams for the frog calling posture and redrew them to clearly show throat sac, side sacs, no sac, and paired sacs.
+
 ## Image Strategy
 
 - App does not store book scan images.

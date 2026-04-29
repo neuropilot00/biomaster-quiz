@@ -558,19 +558,34 @@ const birdSilhouette = (shape) => {
 };
 
 const frogCall = (sac) => {
-  const bubbles = {
-    bigThroat: `<ellipse cx="104" cy="93" rx="38" ry="35" fill="#e5e7eb" stroke="#020617" stroke-width="5"/>`,
-    side: `<ellipse cx="78" cy="80" rx="30" ry="24" fill="#e5e7eb" stroke="#020617" stroke-width="5"/>`,
+  const sacs = {
+    throat: `
+      <ellipse cx="92" cy="108" rx="50" ry="44" fill="#eef2f7" stroke="#020617" stroke-width="5"/>
+    `,
+    side: `
+      <ellipse cx="55" cy="84" rx="33" ry="31" fill="#eef2f7" stroke="#020617" stroke-width="5"/>
+      <ellipse cx="183" cy="94" rx="38" ry="35" fill="#eef2f7" stroke="#020617" stroke-width="5"/>
+    `,
     none: "",
-    both: `<ellipse cx="64" cy="80" rx="24" ry="22" fill="#e5e7eb" stroke="#020617" stroke-width="5"/><ellipse cx="177" cy="80" rx="24" ry="22" fill="#e5e7eb" stroke="#020617" stroke-width="5"/>`,
+    both: `
+      <ellipse cx="48" cy="86" rx="34" ry="32" fill="#eef2f7" stroke="#020617" stroke-width="5"/>
+      <ellipse cx="197" cy="94" rx="38" ry="35" fill="#eef2f7" stroke="#020617" stroke-width="5"/>
+    `,
   };
   return svgWrap(`
-    ${bubbles[sac]}
-    <path d="M83 69 C103 34 171 37 190 75 C167 99 113 101 83 69 Z" fill="#e5e7eb" stroke="#020617" stroke-width="5"/>
-    <circle cx="105" cy="49" r="13" fill="#f8fafc" stroke="#020617" stroke-width="4"/><circle cx="105" cy="49" r="5" fill="#020617"/>
-    <path d="M123 78 C143 91 164 88 181 73" fill="none" stroke="#020617" stroke-width="4" stroke-linecap="round"/>
-    <path d="M188 82 C213 96 217 122 206 138" fill="none" stroke="#020617" stroke-width="5" stroke-linecap="round"/>
-  `, "0 0 240 150");
+    ${sacs[sac]}
+    <path d="M61 79 C83 42 151 35 199 67 C184 92 125 104 73 91 C64 89 58 84 61 79 Z" fill="#f8fafc" stroke="#020617" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M180 67 C206 80 222 103 218 134" fill="none" stroke="#020617" stroke-width="5" stroke-linecap="round"/>
+    <path d="M159 103 C180 113 195 128 201 147" fill="none" stroke="#020617" stroke-width="5" stroke-linecap="round"/>
+    <circle cx="83" cy="50" r="16" fill="#f8fafc" stroke="#020617" stroke-width="5"/>
+    <circle cx="151" cy="51" r="17" fill="#f8fafc" stroke="#020617" stroke-width="5"/>
+    <circle cx="84" cy="50" r="8" fill="#020617"/>
+    <circle cx="151" cy="51" r="8" fill="#020617"/>
+    <circle cx="87" cy="47" r="2.4" fill="#f8fafc"/>
+    <circle cx="154" cy="48" r="2.4" fill="#f8fafc"/>
+    <path d="M96 82 C118 96 151 94 177 75" fill="none" stroke="#020617" stroke-width="4" stroke-linecap="round"/>
+    <path d="M72 69 C78 66 83 64 89 62 M107 66 C97 71 86 71 76 67" fill="none" stroke="#020617" stroke-width="3" stroke-linecap="round"/>
+  `, "0 0 260 160");
 };
 
 const leafDiagram = (kind) => {
@@ -616,14 +631,13 @@ const stemVisuals = {
 
 const optionVisuals = {
   6: [birdSilhouette("cormorant"), birdSilhouette("passerine"), birdSilhouette("kingfisher"), birdSilhouette("heron")],
-  10: [frogCall("bigThroat"), frogCall("side"), frogCall("none"), frogCall("both")],
+  10: [frogCall("throat"), frogCall("side"), frogCall("none"), frogCall("both")],
   36: [leafDiagram("saw"), leafDiagram("oval"), leafDiagram("plantain"), leafDiagram("narrowPlantain")],
 };
 
 const promptPhotos = {
   6: "カワウ",
   7: "トビ",
-  10: "ニホンアマガエル",
   13: "カツオ",
   14: "サケ",
   22: "タニシ",
@@ -726,6 +740,11 @@ photoQuestions.forEach((question) => {
   if (promptPhotos[num]) {
     question.promptPhotoName = promptPhotos[num];
     question.textOnlyOptions = true;
+  }
+  if (optionVisuals[num]) {
+    question.options.forEach((option, index) => {
+      option.visual = optionVisuals[num][index];
+    });
   }
 });
 
