@@ -787,6 +787,7 @@ const fallbackImages = {
 
 const optionImageOverrides = {
   ガン: img("Greater white-fronted goose (Anser albifrons) in flight.jpg"),
+  シミ: img("Lepisma saccharina.jpg"),
   アオキ: img("Aucuba_japonica0.jpg"),
   カリン: img("Pseudocydonia_sinensis_fruit.jpg"),
   ヤツデ: img("Fatsia_japonica1.jpg"),

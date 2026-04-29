@@ -103,6 +103,10 @@ User-provided photos were used to transcribe visible question text into app data
 - Removed unnecessary prompt photos from text-only questions such as 問23.
 - Saved per-question progress immediately after each answer so results survive browser refreshes more reliably.
 
+## 2026-04-29 Image Override Fix
+
+- Fixed 問16 option `シミ` so it uses a silverfish photo instead of the generic butterfly fallback image.
+
 ## Image Strategy
 
 - App does not store book scan images.
