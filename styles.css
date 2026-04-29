@@ -1095,13 +1095,13 @@ body:has(.view-quiz) {
   }
 
   .app-shell:not(.view-quiz) .hero {
-    grid-template-columns: minmax(0, 1.55fr) minmax(180px, 0.45fr);
+    grid-template-columns: minmax(0, 1.65fr) minmax(150px, 0.35fr);
     gap: 10px;
     min-height: 0;
   }
 
   .app-shell:not(.view-quiz) .hero-copy {
-    padding: 13px 16px;
+    padding: 10px 14px;
   }
 
   .app-shell:not(.view-quiz) .eyebrow {
@@ -1110,7 +1110,7 @@ body:has(.view-quiz) {
   }
 
   .app-shell:not(.view-quiz) .hero-copy h2 {
-    font-size: clamp(1.45rem, 3vw, 2.05rem);
+    font-size: clamp(1.32rem, 2.6vw, 1.8rem);
     line-height: 1.03;
   }
 
@@ -1130,7 +1130,7 @@ body:has(.view-quiz) {
 
   .app-shell:not(.view-quiz) .hero-photo,
   .app-shell:not(.view-quiz) .hero-photo img {
-    min-height: 154px;
+    min-height: 112px;
   }
 
   .app-shell:not(.view-quiz) .hero-photo span {
@@ -1141,8 +1141,8 @@ body:has(.view-quiz) {
   }
 
   .app-shell:not(.view-quiz) .study-panel {
-    margin-top: 8px;
-    padding: 10px;
+    margin-top: 9px;
+    padding: 12px;
     min-height: 0;
     overflow: hidden;
   }
@@ -1164,23 +1164,22 @@ body:has(.view-quiz) {
   }
 
   .app-shell:not(.view-quiz) .category-card {
-    min-height: 76px;
-    padding: 8px;
+    min-height: 96px;
+    padding: 10px;
   }
 
   .app-shell:not(.view-quiz) .category-card strong {
-    margin-top: 5px;
-    font-size: 0.84rem;
+    margin-top: 7px;
+    font-size: 0.96rem;
   }
 
   .app-shell:not(.view-quiz) .category-card small,
   .app-shell:not(.view-quiz) .photo-pill,
   .app-shell:not(.view-quiz) .new-pill,
   .app-shell:not(.view-quiz) .category-head span {
-    font-size: 0.64rem;
+    font-size: 0.72rem;
   }
 
-  .app-shell:not(.view-quiz) .category-card > small,
   .app-shell:not(.view-quiz) .category-card .progress-track {
     display: none;
   }
@@ -1202,12 +1201,17 @@ body:has(.view-quiz) {
   }
 
   .view-quiz .ghost-button,
-  .view-quiz .danger-button,
-  .view-quiz .primary-button,
   .view-quiz .music-mini {
     min-height: 34px;
     padding: 0 10px;
     font-size: 0.9rem;
+  }
+
+  .view-quiz .danger-button,
+  .view-quiz .primary-button {
+    min-height: 52px;
+    padding: 0 16px;
+    font-size: 1.08rem;
   }
 
   .view-quiz .score-pills {
@@ -1272,10 +1276,10 @@ body:has(.view-quiz) {
 
   .view-quiz .hint-box,
   .view-quiz .explain-box {
-    padding: 8px;
-    font-size: 0.82rem;
-    line-height: 1.25;
-    max-height: 58px;
+    padding: 10px;
+    font-size: 0.92rem;
+    line-height: 1.32;
+    max-height: 92px;
   }
 
   .view-quiz .hint-box p {

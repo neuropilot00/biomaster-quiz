@@ -83,6 +83,12 @@ User-provided photos were used to transcribe visible question text into app data
 - Reduced quiz controls, question text, option buttons, hint, and explanation heights so answered screens fit in one viewport.
 - Pinned explicit prompt photos for visually sensitive questions such as 問13, 問22, and 問36 to avoid cropped automatic thumbnails.
 
+## 2026-04-29 Tablet Touch Target Rebalance
+
+- Restored larger category cards in tablet compact home mode while reducing the hero/photo area instead.
+- Increased tablet quiz hint/explanation height for readability.
+- Restored larger Next/Stop buttons in tablet landscape quiz mode so they are easier for children to tap.
+
 ## Image Strategy
 
 - App does not store book scan images.
