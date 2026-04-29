@@ -30,6 +30,18 @@ body {
     var(--paper);
 }
 
+ruby {
+  ruby-position: over;
+}
+
+rt {
+  color: #bfdbfe;
+  font-size: 0.58em;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: 0;
+}
+
 button,
 select {
   font: inherit;
@@ -469,6 +481,7 @@ button:disabled {
   align-items: center;
   gap: 8px;
   font-weight: 900;
+  line-height: 1.35;
 }
 
 .letter {

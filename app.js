@@ -496,6 +496,185 @@ const questions = photoQuestions.sort((a, b) => Number(a.num.replace(/\D/g, ""))
 const letters = ["A", "B", "C", "D"];
 const app = document.querySelector("#app");
 
+const rubyEntries = [
+  ["生物分類技能検定", "せいぶつぶんるいぎのうけんてい"],
+  ["生物分類", "せいぶつぶんるい"],
+  ["技能検定", "ぎのうけんてい"],
+  ["分類階級", "ぶんるいかいきゅう"],
+  ["環境省", "かんきょうしょう"],
+  ["外来生物", "がいらいせいぶつ"],
+  ["外来種", "がいらいしゅ"],
+  ["野生生物", "やせいせいぶつ"],
+  ["絶滅", "ぜつめつ"],
+  ["哺乳類", "ほにゅうるい"],
+  ["両生類", "りょうせいるい"],
+  ["昆虫類", "こんちゅうるい"],
+  ["魚類", "ぎょるい"],
+  ["鳥類", "ちょうるい"],
+  ["爬虫類", "はちゅうるい"],
+  ["植物", "しょくぶつ"],
+  ["動物", "どうぶつ"],
+  ["生物", "せいぶつ"],
+  ["分類", "ぶんるい"],
+  ["近縁", "きんえん"],
+  ["同じ科", "おなじか"],
+  ["仲間", "なかま"],
+  ["胎生", "たいせい"],
+  ["魚", "さかな"],
+  ["産卵", "さんらん"],
+  ["河川", "かせん"],
+  ["遡上", "そじょう"],
+  ["幼虫", "ようちゅう"],
+  ["食草", "しょくそう"],
+  ["社会性昆虫", "しゃかいせいこんちゅう"],
+  ["昆虫", "こんちゅう"],
+  ["成虫", "せいちゅう"],
+  ["記述", "きじゅつ"],
+  ["正しい", "ただしい"],
+  ["誤り", "あやまり"],
+  ["組み合わせ", "くみあわせ"],
+  ["選びなさい", "えらびなさい"],
+  ["選び", "えらび"],
+  ["一つ", "ひとつ"],
+  ["ひとつ", "ひとつ"],
+  ["写真", "しゃしん"],
+  ["問題", "もんだい"],
+  ["解説", "かいせつ"],
+  ["正解", "せいかい"],
+  ["不正解", "ふせいかい"],
+  ["確認", "かくにん"],
+  ["葉", "は"],
+  ["複葉", "ふくよう"],
+  ["蜜腺", "みつせん"],
+  ["地下茎", "ちかけい"],
+  ["栄養分", "えいようぶん"],
+  ["貯蔵", "ちょぞう"],
+  ["果実", "かじつ"],
+  ["花弁", "かべん"],
+  ["黄色", "きいろ"],
+  ["紅藻", "こうそう"],
+  ["藻類", "そうるい"],
+  ["種子植物", "しゅししょくぶつ"],
+  ["被子植物", "ひししょくぶつ"],
+  ["離弁花", "りべんか"],
+  ["木本植物", "もくほんしょくぶつ"],
+  ["食虫植物", "しょくちゅうしょくぶつ"],
+  ["海岸林", "かいがんりん"],
+  ["高山帯", "こうざんたい"],
+  ["開花", "かいか"],
+  ["卵生", "らんせい"],
+  ["標本", "ひょうほん"],
+  ["作製方法", "さくせいほうほう"],
+  ["解剖", "かいぼう"],
+  ["筋肉", "きんにく"],
+  ["内臓", "ないぞう"],
+  ["乾燥", "かんそう"],
+  ["固定", "こてい"],
+  ["原産", "げんさん"],
+  ["伝統的", "でんとうてき"],
+  ["用途", "ようと"],
+  ["和紙", "わし"],
+  ["原料", "げんりょう"],
+  ["光合成", "こうごうせい"],
+  ["糖", "とう"],
+  ["二酸化炭素", "にさんかたんそ"],
+  ["酸素", "さんそ"],
+  ["水", "みず"],
+  ["属", "ぞく"],
+  ["科", "か"],
+  ["界", "かい"],
+  ["綱", "こう"],
+  ["目", "もく"],
+  ["学名", "がくめい"],
+  ["二名法", "にめいほう"],
+  ["確立", "かくりつ"],
+  ["身近", "みぢか"],
+  ["観察記録", "かんさつきろく"],
+  ["消化管", "しょうかかん"],
+  ["寄生", "きせい"],
+  ["肉食性", "にくしょくせい"],
+  ["冬眠", "とうみん"],
+  ["夏鳥", "なつどり"],
+  ["滑空", "かっくう"],
+  ["小枝", "こえだ"],
+  ["巣", "す"],
+  ["鳴く", "なく"],
+  ["姿", "すがた"],
+  ["図", "ず"],
+  ["翅", "はね"],
+  ["鱗", "うろこ"],
+  ["呼吸器官", "こきゅうきかん"],
+  ["口", "くち"],
+  ["餌", "えさ"],
+  ["食べ方", "たべかた"],
+  ["動く", "うごく"],
+  ["上下", "じょうげ"],
+  ["左右", "さゆう"],
+  ["頭胸部", "とうきょうぶ"],
+  ["腹部", "ふくぶ"],
+  ["頭部", "とうぶ"],
+  ["胸部", "きょうぶ"],
+  ["脚", "あし"],
+  ["本", "ほん"],
+  ["門", "もん"],
+  ["群", "ぐん"],
+  ["陸上生活", "りくじょうせいかつ"],
+  ["適応", "てきおう"],
+  ["水底", "すいてい"],
+  ["根", "ね"],
+  ["水面", "すいめん"],
+  ["浮かべ", "うかべ"],
+  ["抽水植物", "ちゅうすいしょくぶつ"],
+  ["浮葉植物", "ふようしょくぶつ"],
+  ["散布", "さんぷ"],
+  ["風", "かぜ"],
+  ["主", "おも"],
+  ["川", "かわ"],
+  ["海", "うみ"],
+  ["春", "はる"],
+  ["七草", "ななくさ"],
+  ["黄色", "きいろ"],
+  ["花", "はな"],
+  ["草", "くさ"],
+  ["綿毛", "わたげ"],
+  ["覆われ", "おおわれ"],
+  ["白", "しろ"],
+];
+
+function withRuby(text) {
+  if (!text) return "";
+  const placeholders = [];
+  let output = escapeHtml(text);
+  rubyEntries
+    .slice()
+    .sort((a, b) => b[0].length - a[0].length)
+    .forEach(([word, reading]) => {
+      const escapedWord = escapeRegExp(escapeHtml(word));
+      output = output.replace(new RegExp(escapedWord, "g"), (match) => {
+        const token = `__RUBY_${placeholders.length}__`;
+        placeholders.push(`<ruby>${match}<rt>${reading}</rt></ruby>`);
+        return token;
+      });
+    });
+  placeholders.forEach((html, index) => {
+    output = output.replace(`__RUBY_${index}__`, html);
+  });
+  return output;
+}
+
+function escapeHtml(text) {
+  return String(text)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function escapeRegExp(text) {
+  return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
 const state = {
   view: "home",
   grade: 4,
@@ -617,7 +796,7 @@ function shell(content) {
           <div class="brand-mark">Bio</div>
           <div>
             <h1>BioMaster</h1>
-            <p>生物分類技能検定 対策 · 아들용 실사 사진 퀴즈</p>
+            <p>${withRuby("生物分類技能検定")} ${withRuby("対策")} · 아들용 실사 사진 퀴즈</p>
           </div>
         </div>
         <button class="lang-toggle" data-action="toggle-lang">${state.showKr ? "한국어 ON" : "한국어 OFF"}</button>
@@ -638,13 +817,13 @@ function renderHome() {
       return `
         <button class="category-card" data-start="${key}" style="border-top: 4px solid ${cat.accent}">
           <div class="category-head">
-            <span class="photo-pill">実写写真つき</span>
-            <span>${pool.length}問</span>
+            <span class="photo-pill">${withRuby("実写写真")}つき</span>
+            <span>${pool.length}${withRuby("問")}</span>
           </div>
-          <strong>${cat.ja}</strong>
+          <strong>${withRuby(cat.ja)}</strong>
           ${state.showKr ? `<small>${cat.kr}</small>` : ""}
           <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
-          <small>習得 ${pct}%</small>
+          <small>${withRuby("習得")} ${pct}%</small>
         </button>
       `;
     })
@@ -653,27 +832,27 @@ function renderHome() {
   shell(`
     <section class="hero">
       <div class="hero-copy">
-        <p class="eyebrow">PHOTO QUIZ · 生き物分類</p>
-        <h2>写真を見て、分類の特徴で答える練習アプリ</h2>
-        <p class="support">問題文は日本語、必要なら韓国語の補助文も表示します。選択肢はすべて実写画像なので、名前暗記だけでなく姿を見て分類できるように作っています。</p>
+        <p class="eyebrow">PHOTO QUIZ · ${withRuby("生き物分類")}</p>
+        <h2>${withRuby("写真を見て、分類の特徴で答える練習アプリ")}</h2>
+        <p class="support">${withRuby("問題文は日本語、必要なら韓国語の補助文も表示します。選択肢はすべて実写画像なので、名前暗記だけでなく姿を見て分類できるように作っています。")}</p>
         <div class="controls">
           <div class="segmented" aria-label="grade">
-            <button class="${grade4Active}" data-grade="4">4級</button>
-            <button class="${grade3Active}" data-grade="3">3級</button>
+            <button class="${grade4Active}" data-grade="4">4${withRuby("級")}</button>
+            <button class="${grade3Active}" data-grade="3">3${withRuby("級")}</button>
           </div>
-          <button class="primary-button" data-start="all">全カテゴリを始める</button>
-          <button class="ghost-button" data-view="stats">成績を見る</button>
+          <button class="primary-button" data-start="all">${withRuby("全カテゴリを始める")}</button>
+          <button class="ghost-button" data-view="stats">${withRuby("成績を見る")}</button>
         </div>
       </div>
       <div class="hero-photo">
         <img src="${img("Papilio_xuthus_formosanus_Male_2014_01.jpg")}" alt="実写のアゲハチョウ" />
-        <span>全選択肢に実写画像を使用</span>
+        <span>${withRuby("全選択肢に実写画像を使用")}</span>
       </div>
     </section>
     <section class="study-panel">
       <div class="section-title">
-        <h3>カテゴリを選ぶ</h3>
-        <p>間違えた問題は次回出やすくなります</p>
+        <h3>カテゴリを${withRuby("選ぶ")}</h3>
+        <p>${withRuby("間違えた問題は次回出やすくなります")}</p>
       </div>
       <div class="category-grid">${cards}</div>
     </section>
@@ -702,7 +881,7 @@ function renderQuiz() {
           </div>
           ${badge ? `<span class="state-badge">${badge}</span>` : ""}
           <div class="option-body">
-            <div class="option-name"><span class="letter">${letters[i]}</span><span>${option.ja}</span></div>
+            <div class="option-name"><span class="letter">${letters[i]}</span><span>${withRuby(option.ja)}</span></div>
             ${state.showKr ? `<small>${option.kr}</small>` : ""}
           </div>
         </button>
@@ -723,19 +902,19 @@ function renderQuiz() {
         <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
       </div>
       <div class="question-box">
-        <p class="question-num">${categories[q.category]?.ja || categories[state.category].ja} · ${q.num} · ${state.index + 1}/${state.session.length}</p>
-        <p class="question-text">${q.ja}</p>
+        <p class="question-num">${withRuby(categories[q.category]?.ja || categories[state.category].ja)} · ${withRuby(q.num)} · ${state.index + 1}/${state.session.length}</p>
+        <p class="question-text">${withRuby(q.ja)}</p>
         ${state.showKr ? `<p class="kr-text">${q.kr}</p>` : ""}
       </div>
       <div class="option-grid">${optionCards}</div>
       <details class="hint-box">
-        <summary>ヒントを見る</summary>
-        <p>${q.hint}</p>
+        <summary>${withRuby("ヒントを見る")}</summary>
+        <p>${withRuby(q.hint)}</p>
       </details>
-      ${answered ? `<div class="explain-box"><strong>${q.answer === null ? "正解確認待ちです。" : selected === q.answer ? "正解です。" : "答えは " + q.options[q.answer].ja + " です。"}</strong><br />${q.explanation}</div>` : ""}
+      ${answered ? `<div class="explain-box"><strong>${q.answer === null ? withRuby("正解確認待ちです。") : selected === q.answer ? withRuby("正解です。") : withRuby("答えは ") + withRuby(q.options[q.answer].ja) + withRuby(" です。")}</strong><br />${withRuby(q.explanation)}</div>` : ""}
       <div class="quiz-actions">
         <button class="danger-button" data-view="home">やめる</button>
-        <button class="primary-button" data-next ${answered ? "" : "disabled"}>${state.index === state.session.length - 1 ? "結果を見る" : "次へ"}</button>
+        <button class="primary-button" data-next ${answered ? "" : "disabled"}>${state.index === state.session.length - 1 ? withRuby("結果を見る") : withRuby("次へ")}</button>
       </div>
     </section>
   `);
@@ -748,26 +927,26 @@ function renderResult() {
   const wrongItems = result.wrongIds
     .map((id) => questions.find((q) => q.id === id))
     .filter(Boolean)
-    .map((q) => `<div class="wrong-item"><strong>${q.num} ${q.ja}</strong><br /><small>答え: ${q.options[q.answer].ja}</small></div>`)
+    .map((q) => `<div class="wrong-item"><strong>${withRuby(q.num)} ${withRuby(q.ja)}</strong><br /><small>${withRuby("答え")}: ${withRuby(q.options[q.answer].ja)}</small></div>`)
     .join("");
   shell(`
     <section class="result-panel">
       <div class="section-title">
-        <h3>${pct >= 80 ? "よくできました" : pct >= 50 ? "もう少しで安定します" : "復習チャンスです"}</h3>
-        <p>${result.timeSeconds}秒</p>
+        <h3>${withRuby(pct >= 80 ? "よくできました" : pct >= 50 ? "もう少しで安定します" : "復習チャンスです")}</h3>
+        <p>${result.timeSeconds}${withRuby("秒")}</p>
       </div>
       <div class="result-score"><strong>${pct}%</strong></div>
       <div class="stats-grid">
-        <div class="stat-card">正解<b>${result.correct}</b></div>
-        <div class="stat-card">不正解<b>${result.total - result.correct}</b></div>
-        <div class="stat-card">問題数<b>${result.total}</b></div>
+        <div class="stat-card">${withRuby("正解")}<b>${result.correct}</b></div>
+        <div class="stat-card">${withRuby("不正解")}<b>${result.total - result.correct}</b></div>
+        <div class="stat-card">${withRuby("問題数")}<b>${result.total}</b></div>
       </div>
       <div class="wrong-list">
-        ${wrongItems || `<div class="wrong-item"><strong>間違えた問題はありません。</strong><br /><small>この調子です。</small></div>`}
+        ${wrongItems || `<div class="wrong-item"><strong>${withRuby("間違えた問題はありません。")}</strong><br /><small>${withRuby("この調子です。")}</small></div>`}
       </div>
       <div class="quiz-actions">
         <button class="ghost-button" data-view="home">ホームへ</button>
-        <button class="primary-button" data-retry>もう一度</button>
+        <button class="primary-button" data-retry>${withRuby("もう一度")}</button>
       </div>
     </section>
   `);
@@ -782,7 +961,7 @@ function renderStats() {
     .slice(0, 8)
     .map((s) => {
       const date = new Date(s.date).toLocaleDateString("ja-JP", { month: "2-digit", day: "2-digit" });
-      return `<div class="history-row"><span>${date} · ${categories[s.category].ja} · ${s.grade}級</span><b>${s.correct}/${s.total}</b></div>`;
+      return `<div class="history-row"><span>${date} · ${withRuby(categories[s.category].ja)} · ${s.grade}${withRuby("級")}</span><b>${s.correct}/${s.total}</b></div>`;
     })
     .join("");
   const mastery = Object.entries(categories)
@@ -790,30 +969,30 @@ function renderStats() {
     .map(([key, cat]) => {
       const pool = availableQuestions(key, state.grade);
       const pct = percent(masteredCount(pool), pool.length);
-      return `<div class="mastery-row"><span>${cat.ja}${state.showKr ? ` · ${cat.kr}` : ""}</span><b>${pct}%</b><div class="progress-track" style="grid-column:1 / -1"><div class="progress-fill" style="width:${pct}%"></div></div></div>`;
+      return `<div class="mastery-row"><span>${withRuby(cat.ja)}${state.showKr ? ` · ${cat.kr}` : ""}</span><b>${pct}%</b><div class="progress-track" style="grid-column:1 / -1"><div class="progress-fill" style="width:${pct}%"></div></div></div>`;
     })
     .join("");
   shell(`
     <section class="stats-panel">
       <div class="section-title">
-        <h3>成績ダッシュボード</h3>
+        <h3>${withRuby("成績ダッシュボード")}</h3>
         <button class="ghost-button" data-view="home">ホームへ</button>
       </div>
       <div class="stats-grid">
-        <div class="stat-card">解いた回数<b>${totalAnswered}</b></div>
-        <div class="stat-card">習得済み<b>${mastered}</b></div>
-        <div class="stat-card">正解確認待ち<b>${pendingAudit}</b></div>
+        <div class="stat-card">${withRuby("解いた回数")}<b>${totalAnswered}</b></div>
+        <div class="stat-card">${withRuby("習得済み")}<b>${mastered}</b></div>
+        <div class="stat-card">${withRuby("正解確認待ち")}<b>${pendingAudit}</b></div>
       </div>
       <div class="section-title" style="margin-top:22px">
-        <h3>カテゴリ別 習熟度</h3>
-        <p>3回連続正解で習得</p>
+        <h3>${withRuby("カテゴリ別 習熟度")}</h3>
+        <p>3${withRuby("回連続正解で習得")}</p>
       </div>
       <div class="mastery-list">${mastery}</div>
       <div class="section-title" style="margin-top:22px">
-        <h3>最近の記録</h3>
-        <button class="danger-button" data-reset>記録リセット</button>
+        <h3>${withRuby("最近の記録")}</h3>
+        <button class="danger-button" data-reset>${withRuby("記録リセット")}</button>
       </div>
-      <div class="history-list">${recent || `<div class="history-row"><span>まだ記録がありません</span><b>0</b></div>`}</div>
+      <div class="history-list">${recent || `<div class="history-row"><span>${withRuby("まだ記録がありません")}</span><b>0</b></div>`}</div>
     </section>
   `);
 }
