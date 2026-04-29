@@ -375,7 +375,7 @@ const starterQuestions = [
   },
 ];
 
-function makePhotoQuestion(num, category, ja, options, answer = null, note = null) {
+function makePhotoQuestion(num, category, ja, options, answer = null, note = null, addedAt = "2026-04-29") {
   return {
     id: `book-2026-${String(num).padStart(3, "0")}`,
     grade: num >= 77 ? 3 : 4,
@@ -386,6 +386,7 @@ function makePhotoQuestion(num, category, ja, options, answer = null, note = nul
     kr: "",
     answer,
     needsAudit: answer === null,
+    addedAt,
     options: options.map((name) => ({ ja: name, kr: "", img: "" })),
     hint: note || buildStudyHint(category, ja),
     explanation: answer === null ? "この問題は正解確認待ちです。答え合わせ後にデータを更新します。" : "写真から転記した問題です。解説は後で追加できます。",
@@ -524,6 +525,7 @@ const fallbackImages = {
 };
 
 const questions = photoQuestions.sort((a, b) => Number(a.num.replace(/\D/g, "")) - Number(b.num.replace(/\D/g, "")));
+const NEW_WINDOW_DAYS = 14;
 
 const letters = ["A", "B", "C", "D"];
 const app = document.querySelector("#app");
@@ -852,6 +854,17 @@ function percent(value, total) {
   return total ? Math.round((value / total) * 100) : 0;
 }
 
+function isNewQuestion(question) {
+  if (!question.addedAt) return false;
+  const addedTime = new Date(`${question.addedAt}T00:00:00`).getTime();
+  if (Number.isNaN(addedTime)) return false;
+  return Date.now() - addedTime <= NEW_WINDOW_DAYS * 24 * 60 * 60 * 1000;
+}
+
+function newCountForCategory(category, grade) {
+  return availableQuestions(category, grade).filter(isNewQuestion).length;
+}
+
 function masteredCount(pool) {
   return pool.filter((q) => q.answer !== null && (state.progress.answers[q.id]?.streak || 0) >= 3).length;
 }
@@ -889,10 +902,12 @@ function renderHome() {
       const pool = availableQuestions(key, state.grade);
       const done = masteredCount(pool);
       const pct = percent(done, pool.length);
+      const newCount = newCountForCategory(key, state.grade);
       return `
         <button class="category-card" data-start="${key}" style="border-top: 4px solid ${cat.accent}">
           <div class="category-head">
             <span class="photo-pill">${withRuby("実写写真")}つき</span>
+            ${newCount ? `<span class="new-pill">NEW ${newCount}</span>` : ""}
             <span>${pool.length}${withRuby("問")}</span>
           </div>
           <strong>${withRuby(cat.ja)}</strong>

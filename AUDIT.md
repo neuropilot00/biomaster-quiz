@@ -31,7 +31,8 @@ User-provided photos were used to transcribe visible question text into app data
 2. Enter `answer` as zero-based index when confirmed: A=0, B=1, C=2, D=3.
 3. Leave `answer` as `null` when the answer key is not confirmed.
 4. Add explicit `img` URLs to options only when automatic Wikipedia images are not good enough.
-5. Commit with a short message, for example `Add questions 87-92`.
+5. Set `addedAt` for newly entered questions so the home category shows `NEW`.
+6. Commit with a short message, for example `Add questions 87-92`.
 
 ## Known Limitations
 
