@@ -60,7 +60,7 @@ button:disabled {
 .app-shell {
   width: min(100%, 1120px);
   margin: 0 auto;
-  padding: 18px;
+  padding: 12px 18px;
 }
 
 .topbar {
@@ -68,7 +68,7 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 0 18px;
+  padding: 8px 0 12px;
 }
 
 .topbar-actions {
@@ -85,8 +85,8 @@ button:disabled {
 }
 
 .brand-mark {
-  width: 44px;
-  height: 44px;
+  width: 38px;
+  height: 38px;
   border-radius: 10px;
   display: grid;
   place-items: center;
@@ -98,15 +98,15 @@ button:disabled {
 
 .brand h1 {
   margin: 0;
-  font-size: clamp(1.35rem, 3vw, 2.3rem);
+  font-size: clamp(1.25rem, 2.4vw, 2rem);
   line-height: 1;
   letter-spacing: 0;
 }
 
 .brand p {
-  margin: 5px 0 0;
+  margin: 3px 0 0;
   color: var(--muted);
-  font-size: 0.95rem;
+  font-size: 0.82rem;
 }
 
 .lang-toggle,
@@ -181,8 +181,8 @@ button:disabled {
 
 .hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
-  gap: 18px;
+  grid-template-columns: minmax(0, 1.45fr) minmax(220px, 0.55fr);
+  gap: 12px;
   align-items: stretch;
 }
 
@@ -198,11 +198,11 @@ button:disabled {
 }
 
 .hero-copy {
-  padding: 24px;
+  padding: 18px 20px;
 }
 
 .eyebrow {
-  margin: 0 0 10px;
+  margin: 0 0 8px;
   color: var(--teal);
   font-size: 0.84rem;
   font-weight: 900;
@@ -211,23 +211,23 @@ button:disabled {
 .hero-copy h2 {
   margin: 0;
   max-width: 680px;
-  font-size: clamp(1.7rem, 4vw, 3.35rem);
+  font-size: clamp(1.55rem, 3.2vw, 2.65rem);
   line-height: 1.05;
   letter-spacing: 0;
 }
 
 .hero-copy .support {
   max-width: 720px;
-  margin: 14px 0 0;
+  margin: 10px 0 0;
   color: var(--muted);
-  font-size: 1.02rem;
-  line-height: 1.7;
+  font-size: 0.88rem;
+  line-height: 1.45;
 }
 
 .hero-photo {
   position: relative;
   overflow: hidden;
-  min-height: 330px;
+  min-height: 218px;
   border-radius: 8px;
   box-shadow: var(--shadow);
   background: #111827;
@@ -248,7 +248,7 @@ button:disabled {
   z-index: 1;
   width: 100%;
   height: 100%;
-  min-height: 330px;
+  min-height: 218px;
   object-fit: cover;
   display: block;
 }
@@ -270,8 +270,8 @@ button:disabled {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 10px;
-  margin-top: 20px;
+  gap: 8px;
+  margin-top: 14px;
 }
 
 .segmented {
@@ -283,7 +283,7 @@ button:disabled {
 }
 
 .segmented button {
-  min-height: 38px;
+  min-height: 34px;
   border: 0;
   border-radius: 6px;
   padding: 0 14px;
@@ -315,8 +315,8 @@ button:disabled {
 }
 
 .study-panel {
-  margin-top: 18px;
-  padding: 18px;
+  margin-top: 12px;
+  padding: 14px;
 }
 
 .section-title {
@@ -324,7 +324,7 @@ button:disabled {
   align-items: end;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 12px;
+  margin-bottom: 10px;
 }
 
 .section-title h3 {
@@ -341,12 +341,12 @@ button:disabled {
 .category-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: 10px;
 }
 
 .category-card {
-  min-height: 130px;
-  padding: 14px;
+  min-height: 104px;
+  padding: 11px;
   text-align: left;
   color: var(--ink);
   border: 1px solid var(--line);
@@ -369,13 +369,14 @@ button:disabled {
 
 .category-card strong {
   display: block;
-  margin-top: 12px;
-  font-size: 1.02rem;
+  margin-top: 8px;
+  font-size: 0.96rem;
+  line-height: 1.2;
 }
 
 .category-card small {
   display: block;
-  margin-top: 4px;
+  margin-top: 2px;
   color: var(--muted);
 }
 
@@ -1025,7 +1026,20 @@ body:has(.view-quiz) {
   }
 
   .hero-copy {
-    grid-column: 1 / -1;
+    grid-column: auto;
+  }
+
+  .hero {
+    grid-template-columns: minmax(0, 1.25fr) minmax(180px, 0.75fr);
+  }
+
+  .hero-copy h2 {
+    font-size: clamp(1.45rem, 4.4vw, 2.2rem);
+  }
+
+  .hero-photo,
+  .hero-photo img {
+    min-height: 190px;
   }
 
   .quiz-actions .primary-button {
@@ -1075,14 +1089,31 @@ body:has(.view-quiz) {
     grid-template-columns: 1fr;
   }
 
+  .hero {
+    gap: 8px;
+  }
+
+  .hero-copy {
+    padding: 14px;
+  }
+
+  .hero-copy h2 {
+    font-size: 1.5rem;
+    line-height: 1.08;
+  }
+
+  .hero-copy .support {
+    display: none;
+  }
+
   .category-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 8px;
   }
 
   .category-card {
-    min-height: 112px;
-    padding: 10px;
+    min-height: 92px;
+    padding: 9px;
   }
 
   .category-card strong {
@@ -1109,7 +1140,7 @@ body:has(.view-quiz) {
 
   .hero-photo,
   .hero-photo img {
-    min-height: 240px;
+    min-height: 126px;
   }
 
   .option-card {

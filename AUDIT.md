@@ -65,6 +65,12 @@ User-provided photos were used to transcribe visible question text into app data
 - Corrected 問23 from 昆虫類 to 全カテゴリ because クモ is not an insect and the app has no arachnid category.
 - Corrected 問76 from 全カテゴリ to 爬虫類, 問82 from 全カテゴリ to 植物, and 問85 from 全カテゴリ to 昆虫類.
 
+## 2026-04-29 Home Single-Screen Layout
+
+- Compressed the home screen so the header, intro, hero image, and category grid fit into one viewport more reliably.
+- Widened the intro text column and reduced the hero image width/height so the headline wraps less.
+- Reduced category-card height and mobile hero copy to keep the 2-column category grid visible sooner.
+
 ## Image Strategy
 
 - App does not store book scan images.
