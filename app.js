@@ -586,16 +586,22 @@ const leafDiagram = (kind) => {
 
 const fishDiagram = (kind) => {
   const marks = kind === "katsuo"
-    ? `<path d="M82 85 C132 105 191 111 247 93 M82 96 C139 119 189 121 237 105 M93 73 C150 82 206 84 262 75" stroke="#020617" stroke-width="3" fill="none"/>`
+    ? `<path d="M82 87 C122 102 179 106 242 93 M83 98 C130 119 190 120 239 106 M88 76 C145 84 203 84 267 76 M113 61 C151 65 196 66 237 61" stroke="#020617" stroke-width="4" fill="none" stroke-linecap="round"/>
+       <path d="M211 62 C225 54 242 53 257 59" stroke="#020617" stroke-width="3" fill="none"/>
+       <g fill="#020617">${Array.from({ length: 9 }, (_, i) => `<circle cx="${206 + i * 8}" cy="${55 + i * 2}" r="2.6"/>`).join("")}</g>`
     : `<path d="M94 84 C130 76 161 78 193 91 M106 99 C146 111 182 111 218 98" stroke="#020617" stroke-width="3" fill="none"/><path d="M169 40 L188 17 L198 47" fill="#e5e7eb" stroke="#020617" stroke-width="4"/>`;
   return svgWrap(`
-    <path d="M35 78 C73 31 190 29 265 72 L305 47 L294 81 L306 112 L264 92 C190 136 74 125 35 78 Z" fill="#e5e7eb" stroke="#020617" stroke-width="5"/>
-    <circle cx="66" cy="72" r="6" fill="#020617"/>
-    <path d="M88 86 C73 99 58 99 48 86" fill="none" stroke="#020617" stroke-width="4"/>
-    <path d="M130 108 L113 135 L158 114" fill="#e5e7eb" stroke="#020617" stroke-width="4"/>
-    <path d="M220 94 L235 121 L247 91" fill="#e5e7eb" stroke="#020617" stroke-width="4"/>
+    <path d="M25 78 C72 26 188 24 269 67 L317 36 L301 80 L320 120 L267 96 C186 138 73 129 25 78 Z" fill="#eef2f7" stroke="#020617" stroke-width="6" stroke-linejoin="round"/>
+    <path d="M77 57 C95 38 121 36 141 50" fill="none" stroke="#020617" stroke-width="4"/>
+    <circle cx="62" cy="71" r="7" fill="#020617"/>
+    <path d="M82 89 C67 101 51 101 40 88" fill="none" stroke="#020617" stroke-width="5" stroke-linecap="round"/>
+    <path d="M118 55 L100 22 L153 51" fill="#eef2f7" stroke="#020617" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M169 50 L151 17 L203 51" fill="#eef2f7" stroke="#020617" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M135 105 L112 143 L167 114" fill="#eef2f7" stroke="#020617" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M228 95 L244 127 L258 88" fill="#eef2f7" stroke="#020617" stroke-width="5" stroke-linejoin="round"/>
+    <path d="M91 52 C105 84 100 108 81 124" fill="none" stroke="#020617" stroke-width="4"/>
     ${marks}
-  `, "0 0 330 150");
+  `, "0 0 340 160");
 };
 
 const stemVisuals = {
@@ -1392,7 +1398,7 @@ function renderQuiz() {
     .join("");
 
   shell(`
-    <section class="quiz-panel">
+    <section class="quiz-panel ${q.visual ? "stem-visual-mode" : ""}">
       <div class="quiz-head">
         <div class="quiz-row">
           <button class="ghost-button" data-view="home">← ホーム</button>

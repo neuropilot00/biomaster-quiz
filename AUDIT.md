@@ -38,6 +38,12 @@ User-provided photos were used to transcribe visible question text into app data
 - Added missing compound readings such as 生き物, 選択肢, 採点準備中, 生育, 分類上, 水中, 地上, 棘皮動物, and related biology terms.
 - Verified that the renderer now produces no unknown `?` readings for the current app text.
 
+## 2026-04-29 Prompt Diagram Layout Fix
+
+- For questions where the prompt drawing is the main evidence, the drawing now uses the main screen space.
+- Text-only answer choices for those questions are compact buttons below the drawing.
+- Improved the 問13 fish diagram so it better shows the body shape, fins, tail, and side stripes needed for identification.
+
 ## Image Strategy
 
 - App does not store book scan images.
