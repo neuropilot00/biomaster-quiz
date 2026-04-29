@@ -15,8 +15,9 @@ User-provided photos were used to transcribe visible question text into app data
 - Duplicate/reference page: 問 53-58 was also provided separately and merged into the ordered question bank
 - Question order: preserved by numeric `問` order
 - Answer status:
-  - Confirmed/entered answers: 問 53, 問 55, 問 56, 問 58
-  - Needs answer verification: all other entered questions
+  - Inferred and entered from biology knowledge / visible question context: most visible questions
+  - Still needs visual/key verification: diagram-only or ambiguous image questions such as 問 36, plus missing 問 46
+  - Explanations are study-oriented and should be refined whenever an official answer key page is provided
 
 ## Image Strategy
 
