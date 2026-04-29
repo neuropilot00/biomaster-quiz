@@ -91,16 +91,26 @@ User-provided photos were used to transcribe visible question text into app data
 
 ## 2026-04-29 Spider Statement Question Fix
 
-- Changed 問23 from image-per-choice mode to prompt-photo mode.
-- The spider photo is now shown once in the question area, and the four choices remain readable text statements.
+- Changed 問23 from image-per-choice mode to text-only mode.
+- The four choices remain readable text statements without unrelated image loading.
 - This prevents the app from trying to load photos for long statement choices such as `頭胸部と腹部...`.
+
+## 2026-04-29 Irregular Question Handling Update
+
+- Changed statement/classification/formula/person questions to text-only choices so the app does not show unrelated fallback photos.
+- Added A/B/C/D statement blocks for combination questions such as 問51 and 問59.
+- Replaced generated diagrams for 問6, 問7, 問10, and 問36 with clipped source-problem images placed in the main question area.
+- Removed unnecessary prompt photos from text-only questions such as 問23.
+- Saved per-question progress immediately after each answer so results survive browser refreshes more reliably.
 
 ## Image Strategy
 
 - App does not store book scan images.
-- Each option card attempts to load a real image from Japanese Wikipedia page summaries by option name.
-- If a specific option image is not found, the app falls back to a category-level real image.
-- This keeps future updates easy: add text and options first, then add explicit image URLs only when an automatic image is poor.
+- Most organism option cards attempt to load a real image from Japanese Wikipedia page summaries by option name.
+- If a question is text-only, its choices intentionally show no images.
+- If the original prompt depends on a silhouette or diagram, a clipped source image can be stored under `assets/stems/` and attached as `stemVisual`.
+- If a specific organism image is not found, the app falls back to a category-level real image.
+- This keeps future updates easy: add text and options first, mark text-only or stem-visual exceptions, then add explicit image URLs only when an automatic image is poor.
 
 ## Update Workflow
 
@@ -113,7 +123,7 @@ User-provided photos were used to transcribe visible question text into app data
 
 ## Known Limitations
 
-- Some options are abstract choices such as `A-B`, `図1`, or classification ranks. These use fallback real images until a custom question image strategy is added.
+- 問46 question text is still missing.
 - Korean translations are blank for newly transcribed book questions. The app already supports Korean display, so translations can be added later without UI changes.
 - The current app is static and online image loading depends on Wikipedia/Wikimedia availability.
 - GitHub Pages deployment is intended to use `Deploy from a branch` with `main` and `/root`.

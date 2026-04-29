@@ -11,6 +11,8 @@ const categories = {
 
 const img = (file) =>
   `https://commons.wikimedia.org/wiki/Special:FilePath/${encodeURIComponent(file)}?width=720`;
+const localImg = (file) => `./assets/stems/${file}`;
+const clipVisual = (file, alt) => `<img class="stem-clip" src="${localImg(file)}" alt="${alt}" loading="eager" />`;
 
 const starterQuestions = [
   {
@@ -483,6 +485,23 @@ function makePhotoQuestion(num, category, ja, options, answer = null, note = nul
   };
 }
 
+const textOnlyQuestionNums = new Set([6, 7, 10, 15, 19, 20, 23, 36, 41, 51, 59, 75, 77, 78, 79, 81, 83, 85, 86]);
+
+const statementBlocks = {
+  51: [
+    ["A", "水中生活者である。"],
+    ["B", "おもに魚を食べる。"],
+    ["C", "樹上に巣をつくる。"],
+    ["D", "全長（くちばしの先から尾羽の先まで）はキジバトより短い。"],
+  ],
+  59: [
+    ["A", "幼虫はおもにクヌギの葉を食べる。"],
+    ["B", "幼虫の状態で越冬する。"],
+    ["C", "成虫はおもに花の蜜を吸う。"],
+    ["D", "成虫の翅（はね）を広げた大きさはモンシロチョウより大きい。"],
+  ],
+};
+
 function buildExplanation(num, text, options, answer) {
   const known = {
     11: "正解はコイです。キンギョはフナの仲間をもとに作られた魚で、コイと同じコイ科にふくまれます。",
@@ -548,11 +567,11 @@ const svgWrap = (body, viewBox = "0 0 320 140") => `
 
 const birdSilhouette = (shape) => {
   const shapes = {
-    cormorant: `<path d="M80 112 C92 76 94 42 75 20 C92 22 105 42 108 66 C122 61 138 63 151 74 C131 82 118 91 112 106 C103 128 88 132 80 112 Z" fill="#020617"/><path d="M75 24 L45 18 L75 36 Z" fill="#020617"/><path d="M92 115 L83 136 M102 113 L113 136" stroke="#020617" stroke-width="7" stroke-linecap="round"/>`,
+    cormorant: `<path d="M101 133 C83 108 83 74 101 45 C111 29 125 18 143 12 C136 33 136 52 148 69 C159 84 169 99 163 118 C154 145 118 154 101 133 Z" fill="#020617"/><path d="M137 17 C155 12 171 14 190 22 L142 31 Z" fill="#020617"/><path d="M111 129 L97 148 M129 132 L146 149" stroke="#020617" stroke-width="7" stroke-linecap="round"/><path d="M99 92 C74 108 57 124 42 146 L109 125 Z" fill="#020617"/>`,
     passerine: `<path d="M58 92 C78 52 129 54 164 88 C137 96 105 111 76 116 C60 120 50 107 58 92 Z" fill="#020617"/><path d="M146 86 L222 112 L151 105 Z" fill="#020617"/><path d="M68 88 L34 77 L66 77 Z" fill="#020617"/><path d="M98 113 L82 136 M111 111 L121 135" stroke="#020617" stroke-width="5" stroke-linecap="round"/>`,
     kingfisher: `<path d="M88 84 C108 61 142 59 169 81 C145 103 107 107 86 96 Z" fill="#020617"/><path d="M88 85 L22 76 L88 72 Z" fill="#020617"/><path d="M155 84 L214 89 L159 97 Z" fill="#020617"/><path d="M122 103 L113 130 M134 101 L142 128" stroke="#020617" stroke-width="5" stroke-linecap="round"/>`,
     heron: `<path d="M132 122 C151 91 147 66 129 40 C140 24 158 13 173 10 C159 35 169 65 191 88 C174 101 160 116 154 137 Z" fill="#020617"/><path d="M171 12 L226 23 L174 25 Z" fill="#020617"/><path d="M148 132 L129 139 M161 132 L184 139" stroke="#020617" stroke-width="6" stroke-linecap="round"/>`,
-    kite: `<path d="M58 69 C103 21 161 22 258 57 C174 62 137 88 92 118 C96 92 79 78 58 69 Z" fill="#020617"/><path d="M119 85 L94 132 L141 101 Z" fill="#020617"/><path d="M145 84 L181 128 L167 93 Z" fill="#020617"/>`,
+    kite: `<path d="M30 78 C75 40 112 35 148 55 C189 33 229 43 268 79 C219 74 181 83 148 106 C115 83 78 74 30 78 Z" fill="#020617"/><path d="M142 99 L112 141 L148 122 L184 141 L154 99 Z" fill="#020617"/><path d="M139 55 C143 44 153 44 158 55 C154 62 144 62 139 55 Z" fill="#020617"/>`,
   };
   return svgWrap(shapes[shape], "0 0 280 150");
 };
@@ -620,32 +639,27 @@ const fishDiagram = (kind) => {
 };
 
 const stemVisuals = {
-  7: birdSilhouette("kite"),
+  6: clipVisual("q06-bird-silhouettes.jpg", "ウのシルエット選択図"),
+  7: clipVisual("q07-kite-silhouette.jpg", "トビのシルエット"),
+  10: clipVisual("q10-frog-calls.jpg", "アマガエルの鳴く姿の選択図"),
   13: fishDiagram("katsuo"),
   14: fishDiagram("salmon"),
   22: svgWrap(`<path d="M82 108 C80 52 126 18 174 28 C225 42 234 95 196 121 C159 145 104 136 82 108 Z" fill="#e5e7eb" stroke="#020617" stroke-width="5"/><path d="M93 109 C127 64 164 50 199 63 M101 119 C137 82 174 78 205 96 M123 41 C138 76 132 105 106 127 M151 31 C158 70 153 105 128 134 M176 33 C179 68 174 98 151 135 M203 52 C198 82 188 111 172 133" stroke="#020617" stroke-width="3" fill="none"/>`, "0 0 300 150"),
   31: svgWrap(`<path d="M67 92 C48 62 82 31 121 43 C136 17 190 28 190 61 C226 55 247 100 217 119 C184 151 95 143 67 92 Z" fill="#f1f5f9" stroke="#020617" stroke-width="5"/><path d="M90 101 C122 73 163 73 195 103 M92 87 C128 49 168 55 197 87 M109 116 C137 97 167 98 191 117 M122 45 C131 77 125 103 105 125 M166 42 C157 80 164 107 187 128" stroke="#020617" stroke-width="3" fill="none"/>`, "0 0 300 150"),
   32: svgWrap(`<path d="M55 119 C103 92 136 74 177 38 M63 123 C112 104 157 92 225 87 M60 126 C103 119 146 121 209 135" stroke="#020617" stroke-width="8" stroke-linecap="round"/><path d="M176 38 C160 14 193 7 198 32 C218 17 241 40 220 57 C225 80 190 81 186 59 C162 68 149 49 176 38 Z" fill="#e5e7eb" stroke="#020617" stroke-width="4"/><path d="M224 86 C214 58 249 52 255 79 C277 69 292 96 269 111 C270 134 236 130 238 106 C215 110 204 93 224 86 Z" fill="#e5e7eb" stroke="#020617" stroke-width="4"/>`, "0 0 320 150"),
   33: leafDiagram("oak"),
+  36: clipVisual("q36-leaf-row.jpg", "オオバコの葉の選択図"),
 };
 
-const optionVisuals = {
-  6: [birdSilhouette("cormorant"), birdSilhouette("passerine"), birdSilhouette("kingfisher"), birdSilhouette("heron")],
-  10: [frogCall("throat"), frogCall("side"), frogCall("none"), frogCall("both")],
-  36: [leafDiagram("saw"), leafDiagram("oval"), leafDiagram("plantain"), leafDiagram("narrowPlantain")],
-};
+const optionVisuals = {};
 
 const promptPhotos = {
-  6: { name: "カワウ" },
-  7: { name: "トビ" },
   13: { name: "カツオ", img: img("Katsuwonus_pelamis.jpg") },
   14: { name: "サケ" },
   22: { name: "タニシ", img: img("Cipangopaludina_japonica_-_Osaka_Museum_of_Natural_History_-_DSC07741.JPG") },
-  23: { name: "クモ", img: img("Araneus_diadematus-commons.JPG") },
-  31: { name: "ハクサイ" },
-  32: { name: "ミツバ" },
-  33: { name: "カシワ" },
-  36: { name: "オオバコ", img: img("Leaf_of_Plantago_asiatica.jpg") },
+  31: { name: "ハクサイ", img: localImg("q31-hakusai.jpg") },
+  32: { name: "ミツバ", img: localImg("q32-mitsuba.jpg") },
+  33: { name: "カシワ", img: localImg("q33-kashiwa.jpg") },
 };
 
 const photoQuestions = [
@@ -738,6 +752,16 @@ const photoQuestions = [
 
 photoQuestions.forEach((question) => {
   const num = Number(question.num.replace(/\D/g, ""));
+  if (textOnlyQuestionNums.has(num)) {
+    question.textOnlyOptions = true;
+  }
+  if (statementBlocks[num]) {
+    question.statementBlock = statementBlocks[num];
+    question.textOnlyOptions = true;
+  }
+  if (stemVisuals[num] && !promptPhotos[num]) {
+    question.stemVisual = stemVisuals[num];
+  }
   if (promptPhotos[num]) {
     question.promptPhotoName = promptPhotos[num].name;
     question.promptPhotoImg = promptPhotos[num].img || "";
@@ -759,6 +783,15 @@ const fallbackImages = {
   mammal: img("Macropus_giganteus_-_Brunkerville.jpg"),
   amphibian: img("Hyla_japonica_001.jpg"),
   reptile: img("Takydromus_tachydromoides_200705.jpg"),
+};
+
+const optionImageOverrides = {
+  ガン: img("Greater white-fronted goose (Anser albifrons) in flight.jpg"),
+  アオキ: img("Aucuba_japonica0.jpg"),
+  カリン: img("Pseudocydonia_sinensis_fruit.jpg"),
+  ヤツデ: img("Fatsia_japonica1.jpg"),
+  キンカン: img("Kumquat.jpeg"),
+  カンタン: img("Oecanthus_longicauda_Male.jpg"),
 };
 
 const questions = photoQuestions.sort((a, b) => Number(a.num.replace(/\D/g, "")) - Number(b.num.replace(/\D/g, "")));
@@ -889,6 +922,7 @@ const rubyEntries = [
   ["滑空", "かっくう"],
   ["小枝", "こえだ"],
   ["巣", "す"],
+  ["尾羽", "おばね"],
   ["鳴く", "なく"],
   ["姿", "すがた"],
   ["図", "ず"],
@@ -1079,6 +1113,7 @@ const state = {
   session: [],
   index: 0,
   answers: [],
+  recordedAnswers: [],
   startedAt: 0,
   lastResult: null,
   progress: loadProgress(),
@@ -1210,7 +1245,11 @@ function loadProgress() {
 }
 
 function saveProgress() {
-  localStorage.setItem("biomaster-progress", JSON.stringify(state.progress));
+  try {
+    localStorage.setItem("biomaster-progress", JSON.stringify(state.progress));
+  } catch {
+    // Storage can fail in private/in-app browsers; keep the in-memory score usable.
+  }
 }
 
 function availableQuestions(category, grade) {
@@ -1231,6 +1270,7 @@ function startQuiz(category) {
   state.session = pool;
   state.index = 0;
   state.answers = new Array(state.session.length).fill(null);
+  state.recordedAnswers = new Array(state.session.length).fill(false);
   state.startedAt = Date.now();
   state.view = "quiz";
   render();
@@ -1241,8 +1281,24 @@ function submitAnswer(choice) {
   const q = state.session[state.index];
   const isCorrect = q.answer !== null && choice === q.answer;
   state.answers[state.index] = choice;
+  recordQuestionAnswer(q, choice, state.index);
   render();
   if (isCorrect) launchConfetti();
+}
+
+function recordQuestionAnswer(q, choice, index) {
+  if (state.recordedAnswers[index] || q.answer === null) return;
+  const record = state.progress.answers[q.id] || { correct: 0, wrong: 0, streak: 0 };
+  if (choice === q.answer) {
+    record.correct += 1;
+    record.streak += 1;
+  } else {
+    record.wrong += 1;
+    record.streak = 0;
+  }
+  state.progress.answers[q.id] = record;
+  state.recordedAnswers[index] = true;
+  saveProgress();
 }
 
 function nextQuestion() {
@@ -1268,19 +1324,6 @@ function finishQuiz() {
     wrongIds,
     timeSeconds: Math.round((Date.now() - state.startedAt) / 1000),
   };
-
-  state.session.forEach((q, i) => {
-    if (q.answer === null) return;
-    const record = state.progress.answers[q.id] || { correct: 0, wrong: 0, streak: 0 };
-    if (state.answers[i] === q.answer) {
-      record.correct += 1;
-      record.streak += 1;
-    } else {
-      record.wrong += 1;
-      record.streak = 0;
-    }
-    state.progress.answers[q.id] = record;
-  });
 
   state.progress.sessions = [result, ...state.progress.sessions].slice(0, 30);
   state.lastResult = result;
@@ -1395,9 +1438,13 @@ function renderQuiz() {
   const q = state.session[state.index];
   const selected = state.answers[state.index];
   const answered = selected !== null;
+  const hasStemVisual = Boolean(q.promptPhotoName || q.stemVisual);
   const correctCount = state.session.reduce((sum, item, i) => sum + (item.answer !== null && state.answers[i] === item.answer ? 1 : 0), 0);
   const wrongCount = state.answers.filter((answer, i) => answer !== null && state.session[i].answer !== null && answer !== state.session[i].answer).length;
   const progress = percent(state.index + (answered ? 1 : 0), state.session.length);
+  const statementBlock = q.statementBlock
+    ? `<div class="statement-block">${q.statementBlock.map(([label, text]) => `<p><b>${label}.</b> ${withRuby(text)}</p>`).join("")}</div>`
+    : "";
   const optionCards = q.options
     .map((option, i) => {
       let cardState = "idle";
@@ -1427,7 +1474,7 @@ function renderQuiz() {
     .join("");
 
   shell(`
-    <section class="quiz-panel ${q.promptPhotoName ? "stem-visual-mode" : ""}">
+    <section class="quiz-panel ${hasStemVisual ? "stem-visual-mode" : ""} ${q.textOnlyOptions ? "text-option-mode" : ""}">
       <div class="quiz-head">
         <div class="quiz-row">
           <button class="ghost-button" data-view="home">← ホーム</button>
@@ -1439,9 +1486,11 @@ function renderQuiz() {
         </div>
         <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
       </div>
-      <div class="question-box ${q.promptPhotoName ? "has-stem-visual" : ""}">
+      <div class="question-box ${hasStemVisual ? "has-stem-visual" : ""}">
         <p class="question-num">${withRuby(categories[q.category]?.ja || categories[state.category].ja)} · ${withRuby(q.num)} · ${state.index + 1}/${state.session.length}</p>
         <p class="question-text">${withRuby(q.ja)}</p>
+        ${statementBlock}
+        ${q.stemVisual ? `<div class="stem-visual option-diagram">${q.stemVisual}</div>` : ""}
         ${q.promptPhotoName ? `
           <div class="stem-visual prompt-photo">
             <span class="image-loading">写真を読み込み中</span>
@@ -1568,11 +1617,15 @@ async function resolveOptionImage(photo, status) {
     photo.src = fallback;
     return;
   }
+  if (optionImageOverrides[name]) {
+    photo.src = optionImageOverrides[name];
+    return;
+  }
   try {
     const response = await fetch(`https://ja.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
     if (!response.ok) throw new Error("summary not found");
     const data = await response.json();
-    photo.src = data?.thumbnail?.source || data?.originalimage?.source || fallback;
+    photo.src = data?.originalimage?.source || data?.thumbnail?.source || fallback;
   } catch {
     photo.src = fallback;
   } finally {
