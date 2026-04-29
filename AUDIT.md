@@ -89,6 +89,12 @@ User-provided photos were used to transcribe visible question text into app data
 - Increased tablet quiz hint/explanation height for readability.
 - Restored larger Next/Stop buttons in tablet landscape quiz mode so they are easier for children to tap.
 
+## 2026-04-29 Spider Statement Question Fix
+
+- Changed 問23 from image-per-choice mode to prompt-photo mode.
+- The spider photo is now shown once in the question area, and the four choices remain readable text statements.
+- This prevents the app from trying to load photos for long statement choices such as `頭胸部と腹部...`.
+
 ## Image Strategy
 
 - App does not store book scan images.

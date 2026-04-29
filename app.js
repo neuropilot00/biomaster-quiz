@@ -641,6 +641,7 @@ const promptPhotos = {
   13: { name: "カツオ", img: img("Katsuwonus_pelamis.jpg") },
   14: { name: "サケ" },
   22: { name: "タニシ", img: img("Cipangopaludina_japonica_-_Osaka_Museum_of_Natural_History_-_DSC07741.JPG") },
+  23: { name: "クモ", img: img("Araneus_diadematus-commons.JPG") },
   31: { name: "ハクサイ" },
   32: { name: "ミツバ" },
   33: { name: "カシワ" },
