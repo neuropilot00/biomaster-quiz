@@ -1255,7 +1255,7 @@ function saveProgress() {
 
 function availableQuestions(category, grade) {
   return questions.filter((q) => {
-    const categoryMatch = category === "all" || q.category === category || q.category === "all";
+    const categoryMatch = category === "all" || q.category === category;
     return categoryMatch && q.grade <= grade;
   });
 }

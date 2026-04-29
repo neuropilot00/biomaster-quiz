@@ -107,6 +107,11 @@ User-provided photos were used to transcribe visible question text into app data
 
 - Fixed 問16 option `シミ` so it uses a silverfish photo instead of the generic butterfly fallback image.
 
+## 2026-04-30 Category Count Fix
+
+- Fixed category-specific question counts so `全カテゴリ` shows all questions, while each biology category shows only its own questions.
+- Correct visible 4級 distribution is now: 全カテゴリ 85, 魚類 8, 昆虫類 10, 植物 40, 鳥類 8, 哺乳類 6, 両生類 2, 爬虫類 1.
+
 ## Image Strategy
 
 - App does not store book scan images.
