@@ -19,6 +19,13 @@ User-provided photos were used to transcribe visible question text into app data
   - Still needs visual/key verification: diagram-only or ambiguous image questions such as 問 36, plus missing 問 46
   - Explanations are study-oriented and should be refined whenever an official answer key page is provided
 
+## 2026-04-29 Official Answer Key Update
+
+- Official 2023 4級 answer-key photo received and checked against app data.
+- Corrected 問33 from option 1 to option 2.
+- Added confirmed answer for 問36 as option 4.
+- Official answers for 問46-1 through 問46-10 and 問87-1 through 問87-5 are available, but those question texts are not yet entered in the app.
+
 ## Image Strategy
 
 - App does not store book scan images.
