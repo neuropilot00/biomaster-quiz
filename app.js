@@ -757,6 +757,7 @@ const state = {
   grade: 4,
   category: "all",
   showKr: true,
+  musicEnabled: false,
   session: [],
   index: 0,
   answers: [],
@@ -764,6 +765,71 @@ const state = {
   lastResult: null,
   progress: loadProgress(),
 };
+
+let audioContext = null;
+let musicTimer = null;
+let musicStep = 0;
+const musicNotes = [392, 493.88, 587.33, 493.88, 440, 523.25, 659.25, 523.25];
+
+function toggleMusic() {
+  if (state.musicEnabled) {
+    stopMusic();
+  } else {
+    startMusic();
+  }
+  render();
+}
+
+function startMusic() {
+  const AudioCtor = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtor) return;
+  audioContext ||= new AudioCtor();
+  if (audioContext.state === "suspended") audioContext.resume();
+  state.musicEnabled = true;
+  playMusicNote();
+  musicTimer = window.setInterval(playMusicNote, 680);
+}
+
+function stopMusic() {
+  state.musicEnabled = false;
+  if (musicTimer) window.clearInterval(musicTimer);
+  musicTimer = null;
+}
+
+function playMusicNote() {
+  if (!audioContext || !state.musicEnabled) return;
+  const now = audioContext.currentTime;
+  const osc = audioContext.createOscillator();
+  const gain = audioContext.createGain();
+  osc.type = "triangle";
+  osc.frequency.value = musicNotes[musicStep % musicNotes.length];
+  musicStep += 1;
+  gain.gain.setValueAtTime(0.0001, now);
+  gain.gain.exponentialRampToValueAtTime(0.028, now + 0.025);
+  gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.52);
+  osc.connect(gain).connect(audioContext.destination);
+  osc.start(now);
+  osc.stop(now + 0.54);
+}
+
+function launchConfetti() {
+  const layer = document.createElement("div");
+  layer.className = "confetti-layer";
+  const colors = ["#60a5fa", "#34d399", "#facc15", "#fb7185", "#a78bfa", "#f97316"];
+  for (let i = 0; i < 42; i += 1) {
+    const piece = document.createElement("span");
+    piece.className = "confetti-piece";
+    piece.style.setProperty("--x", `${Math.random() * 220 - 110}px`);
+    piece.style.setProperty("--y", `${Math.random() * 120 + 120}px`);
+    piece.style.setProperty("--r", `${Math.random() * 540 - 270}deg`);
+    piece.style.setProperty("--c", colors[i % colors.length]);
+    piece.style.left = `${45 + Math.random() * 10}%`;
+    piece.style.top = `${22 + Math.random() * 12}%`;
+    layer.appendChild(piece);
+  }
+  document.body.appendChild(layer);
+  window.setTimeout(() => layer.remove(), 1050);
+}
 
 function loadProgress() {
   try {
@@ -802,8 +868,11 @@ function startQuiz(category) {
 
 function submitAnswer(choice) {
   if (state.answers[state.index] !== null) return;
+  const q = state.session[state.index];
+  const isCorrect = q.answer !== null && choice === q.answer;
   state.answers[state.index] = choice;
   render();
+  if (isCorrect) launchConfetti();
 }
 
 function nextQuestion() {
@@ -887,7 +956,10 @@ function shell(content) {
             <p>${withRuby("生物分類技能検定")} ${withRuby("対策")} · 아들용 실사 사진 퀴즈</p>
           </div>
         </div>
-        <button class="lang-toggle" data-action="toggle-lang">${state.showKr ? "한국어 ON" : "한국어 OFF"}</button>
+        <div class="topbar-actions">
+          <button class="music-button" data-action="toggle-music">${state.musicEnabled ? "♪ ON" : "♪ OFF"}</button>
+          <button class="lang-toggle" data-action="toggle-lang">${state.showKr ? "한국어 ON" : "한국어 OFF"}</button>
+        </div>
       </header>
       ${content}
     </main>
@@ -984,6 +1056,7 @@ function renderQuiz() {
       <div class="quiz-head">
         <div class="quiz-row">
           <button class="ghost-button" data-view="home">← ホーム</button>
+          <button class="music-button music-mini" data-action="toggle-music">${state.musicEnabled ? "♪ ON" : "♪ OFF"}</button>
           <div class="score-pills">
             <span class="ok-pill">✓ ${correctCount}</span>
             <span class="bad-pill">× ${wrongCount}</span>
@@ -1138,6 +1211,7 @@ document.addEventListener("click", (event) => {
     state.showKr = !state.showKr;
     render();
   }
+  if (target.dataset.action === "toggle-music") toggleMusic();
   if (target.dataset.grade) {
     state.grade = Number(target.dataset.grade);
     render();
