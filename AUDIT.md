@@ -26,6 +26,12 @@ User-provided photos were used to transcribe visible question text into app data
 - Added confirmed answer for 問36 as option 4.
 - Official answers for 問46-1 through 問46-10 and 問87-1 through 問87-5 are available, but those question texts are not yet entered in the app.
 
+## 2026-04-29 Prompt Diagram Update
+
+- Added app-drawn SVG diagrams for questions where the book image is part of the prompt or answer choices.
+- Current diagram-backed questions: 問6, 問7, 問10, 問13, 問14, 問22, 問31, 問32, 問33, 問36.
+- For prompt-image questions, option cards use text-only answers so the drawing belongs to the question, not to the answer feedback.
+
 ## Image Strategy
 
 - App does not store book scan images.

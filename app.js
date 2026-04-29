@@ -539,6 +539,81 @@ function buildStudyHint(category, text) {
   return categoryHints[category] || categoryHints.all;
 }
 
+const svgWrap = (body, viewBox = "0 0 320 140") => `
+  <svg class="stem-svg" viewBox="${viewBox}" role="img" aria-hidden="true" focusable="false">
+    <rect width="100%" height="100%" rx="12" fill="#f8fafc"/>
+    ${body}
+  </svg>
+`;
+
+const birdSilhouette = (shape) => {
+  const shapes = {
+    cormorant: `<path d="M80 112 C92 76 94 42 75 20 C92 22 105 42 108 66 C122 61 138 63 151 74 C131 82 118 91 112 106 C103 128 88 132 80 112 Z" fill="#020617"/><path d="M75 24 L45 18 L75 36 Z" fill="#020617"/><path d="M92 115 L83 136 M102 113 L113 136" stroke="#020617" stroke-width="7" stroke-linecap="round"/>`,
+    passerine: `<path d="M58 92 C78 52 129 54 164 88 C137 96 105 111 76 116 C60 120 50 107 58 92 Z" fill="#020617"/><path d="M146 86 L222 112 L151 105 Z" fill="#020617"/><path d="M68 88 L34 77 L66 77 Z" fill="#020617"/><path d="M98 113 L82 136 M111 111 L121 135" stroke="#020617" stroke-width="5" stroke-linecap="round"/>`,
+    kingfisher: `<path d="M88 84 C108 61 142 59 169 81 C145 103 107 107 86 96 Z" fill="#020617"/><path d="M88 85 L22 76 L88 72 Z" fill="#020617"/><path d="M155 84 L214 89 L159 97 Z" fill="#020617"/><path d="M122 103 L113 130 M134 101 L142 128" stroke="#020617" stroke-width="5" stroke-linecap="round"/>`,
+    heron: `<path d="M132 122 C151 91 147 66 129 40 C140 24 158 13 173 10 C159 35 169 65 191 88 C174 101 160 116 154 137 Z" fill="#020617"/><path d="M171 12 L226 23 L174 25 Z" fill="#020617"/><path d="M148 132 L129 139 M161 132 L184 139" stroke="#020617" stroke-width="6" stroke-linecap="round"/>`,
+    kite: `<path d="M58 69 C103 21 161 22 258 57 C174 62 137 88 92 118 C96 92 79 78 58 69 Z" fill="#020617"/><path d="M119 85 L94 132 L141 101 Z" fill="#020617"/><path d="M145 84 L181 128 L167 93 Z" fill="#020617"/>`,
+  };
+  return svgWrap(shapes[shape], "0 0 280 150");
+};
+
+const frogCall = (sac) => {
+  const bubbles = {
+    bigThroat: `<ellipse cx="104" cy="93" rx="38" ry="35" fill="#e5e7eb" stroke="#020617" stroke-width="5"/>`,
+    side: `<ellipse cx="78" cy="80" rx="30" ry="24" fill="#e5e7eb" stroke="#020617" stroke-width="5"/>`,
+    none: "",
+    both: `<ellipse cx="64" cy="80" rx="24" ry="22" fill="#e5e7eb" stroke="#020617" stroke-width="5"/><ellipse cx="177" cy="80" rx="24" ry="22" fill="#e5e7eb" stroke="#020617" stroke-width="5"/>`,
+  };
+  return svgWrap(`
+    ${bubbles[sac]}
+    <path d="M83 69 C103 34 171 37 190 75 C167 99 113 101 83 69 Z" fill="#e5e7eb" stroke="#020617" stroke-width="5"/>
+    <circle cx="105" cy="49" r="13" fill="#f8fafc" stroke="#020617" stroke-width="4"/><circle cx="105" cy="49" r="5" fill="#020617"/>
+    <path d="M123 78 C143 91 164 88 181 73" fill="none" stroke="#020617" stroke-width="4" stroke-linecap="round"/>
+    <path d="M188 82 C213 96 217 122 206 138" fill="none" stroke="#020617" stroke-width="5" stroke-linecap="round"/>
+  `, "0 0 240 150");
+};
+
+const leafDiagram = (kind) => {
+  const leaves = {
+    saw: `<path d="M150 18 L173 45 L196 52 L178 72 L198 91 L174 101 L170 128 L150 111 L130 128 L126 101 L102 91 L122 72 L104 52 L127 45 Z" fill="#eef2ff" stroke="#020617" stroke-width="4"/><path d="M150 20 L150 132 M150 47 L119 62 M150 62 L184 55 M150 79 L115 91 M150 91 L181 102" stroke="#020617" stroke-width="3"/>`,
+    oval: `<path d="M153 18 C207 45 207 106 151 130 C98 106 94 48 153 18 Z" fill="#eef2ff" stroke="#020617" stroke-width="4"/><path d="M151 22 L151 133 M151 55 C130 65 120 80 111 100 M151 56 C171 69 180 84 188 103" stroke="#020617" stroke-width="3" fill="none"/>`,
+    plantain: `<path d="M154 14 C206 48 207 103 153 132 C99 102 98 48 154 14 Z" fill="#eef2ff" stroke="#020617" stroke-width="4"/><path d="M153 19 L153 134 M139 31 C124 64 121 98 148 131 M167 31 C184 67 183 101 158 131 M128 48 C113 76 117 103 146 130 M178 48 C194 78 190 106 160 130" stroke="#020617" stroke-width="3" fill="none"/>`,
+    narrowPlantain: `<path d="M156 13 C196 51 194 101 153 133 C113 99 112 52 156 13 Z" fill="#eef2ff" stroke="#020617" stroke-width="4"/><path d="M154 18 L154 134 M142 30 C128 68 130 101 150 131 M166 30 C180 68 178 101 158 131 M132 47 C123 77 128 104 149 130 M176 47 C187 77 181 105 159 130" stroke="#020617" stroke-width="3" fill="none"/>`,
+    oak: `<path d="M148 14 C170 25 181 43 171 57 C196 67 191 90 169 96 C177 118 155 130 137 112 C116 124 99 106 113 89 C91 78 99 55 123 55 C112 36 126 21 148 14 Z" fill="#f1f5f9" stroke="#020617" stroke-width="4"/><path d="M146 20 L142 132 M145 58 L113 69 M145 72 L177 67 M143 91 L116 101 M143 100 L164 109" stroke="#020617" stroke-width="3"/>`,
+  };
+  return svgWrap(leaves[kind], "0 0 300 150");
+};
+
+const fishDiagram = (kind) => {
+  const marks = kind === "katsuo"
+    ? `<path d="M82 85 C132 105 191 111 247 93 M82 96 C139 119 189 121 237 105 M93 73 C150 82 206 84 262 75" stroke="#020617" stroke-width="3" fill="none"/>`
+    : `<path d="M94 84 C130 76 161 78 193 91 M106 99 C146 111 182 111 218 98" stroke="#020617" stroke-width="3" fill="none"/><path d="M169 40 L188 17 L198 47" fill="#e5e7eb" stroke="#020617" stroke-width="4"/>`;
+  return svgWrap(`
+    <path d="M35 78 C73 31 190 29 265 72 L305 47 L294 81 L306 112 L264 92 C190 136 74 125 35 78 Z" fill="#e5e7eb" stroke="#020617" stroke-width="5"/>
+    <circle cx="66" cy="72" r="6" fill="#020617"/>
+    <path d="M88 86 C73 99 58 99 48 86" fill="none" stroke="#020617" stroke-width="4"/>
+    <path d="M130 108 L113 135 L158 114" fill="#e5e7eb" stroke="#020617" stroke-width="4"/>
+    <path d="M220 94 L235 121 L247 91" fill="#e5e7eb" stroke="#020617" stroke-width="4"/>
+    ${marks}
+  `, "0 0 330 150");
+};
+
+const stemVisuals = {
+  7: birdSilhouette("kite"),
+  13: fishDiagram("katsuo"),
+  14: fishDiagram("salmon"),
+  22: svgWrap(`<path d="M82 108 C80 52 126 18 174 28 C225 42 234 95 196 121 C159 145 104 136 82 108 Z" fill="#e5e7eb" stroke="#020617" stroke-width="5"/><path d="M93 109 C127 64 164 50 199 63 M101 119 C137 82 174 78 205 96 M123 41 C138 76 132 105 106 127 M151 31 C158 70 153 105 128 134 M176 33 C179 68 174 98 151 135 M203 52 C198 82 188 111 172 133" stroke="#020617" stroke-width="3" fill="none"/>`, "0 0 300 150"),
+  31: svgWrap(`<path d="M67 92 C48 62 82 31 121 43 C136 17 190 28 190 61 C226 55 247 100 217 119 C184 151 95 143 67 92 Z" fill="#f1f5f9" stroke="#020617" stroke-width="5"/><path d="M90 101 C122 73 163 73 195 103 M92 87 C128 49 168 55 197 87 M109 116 C137 97 167 98 191 117 M122 45 C131 77 125 103 105 125 M166 42 C157 80 164 107 187 128" stroke="#020617" stroke-width="3" fill="none"/>`, "0 0 300 150"),
+  32: svgWrap(`<path d="M55 119 C103 92 136 74 177 38 M63 123 C112 104 157 92 225 87 M60 126 C103 119 146 121 209 135" stroke="#020617" stroke-width="8" stroke-linecap="round"/><path d="M176 38 C160 14 193 7 198 32 C218 17 241 40 220 57 C225 80 190 81 186 59 C162 68 149 49 176 38 Z" fill="#e5e7eb" stroke="#020617" stroke-width="4"/><path d="M224 86 C214 58 249 52 255 79 C277 69 292 96 269 111 C270 134 236 130 238 106 C215 110 204 93 224 86 Z" fill="#e5e7eb" stroke="#020617" stroke-width="4"/>`, "0 0 320 150"),
+  33: leafDiagram("oak"),
+};
+
+const optionVisuals = {
+  6: [birdSilhouette("cormorant"), birdSilhouette("passerine"), birdSilhouette("kingfisher"), birdSilhouette("heron")],
+  10: [frogCall("bigThroat"), frogCall("side"), frogCall("none"), frogCall("both")],
+  36: [leafDiagram("saw"), leafDiagram("oval"), leafDiagram("plantain"), leafDiagram("narrowPlantain")],
+};
+
 const photoQuestions = [
   makePhotoQuestion(1, "mammal", "「ひげくじら」をひとつ選びなさい。", ["ザトウクジラ", "シャチ", "ハンドウイルカ", "マッコウクジラ"]),
   makePhotoQuestion(2, "mammal", "シカにもっとも近縁な動物をひとつ選びなさい。", ["イノシシ", "サイ", "タヌキ", "クマ"]),
@@ -626,6 +701,19 @@ const photoQuestions = [
   makePhotoQuestion(85, "all", "次の記述の（ア）にあてはまるものをひとつ選びなさい。ファーブル（1823-1915）は身近な（ア）の観察記録を全10巻で著した。", ["哺乳類", "両生類", "魚類", "昆虫類"]),
   makePhotoQuestion(86, "plant", "植物が光合成によって糖をつくりだす際の原料として、正しい組み合わせをひとつ選びなさい。", ["酸素・二酸化炭素", "酸素・二酸化炭素・水", "酸素・水", "二酸化炭素・水"]),
 ];
+
+photoQuestions.forEach((question) => {
+  const num = Number(question.num.replace(/\D/g, ""));
+  if (stemVisuals[num]) {
+    question.visual = stemVisuals[num];
+    question.textOnlyOptions = true;
+  }
+  if (optionVisuals[num]) {
+    question.options.forEach((option, index) => {
+      option.visual = optionVisuals[num][index];
+    });
+  }
+});
 
 const fallbackImages = {
   all: img("Biodiversity_of_Colombia.jpg"),
@@ -1201,12 +1289,17 @@ function renderQuiz() {
       if (answered && q.answer !== null && i === q.answer) cardState = selected === q.answer ? "correct" : "reveal";
       if (answered && q.answer !== null && i === selected && selected !== q.answer) cardState = "wrong";
       const badge = cardState === "correct" || cardState === "reveal" ? "✓" : cardState === "wrong" ? "×" : "";
+      const visualBlock = option.visual
+        ? `<div class="option-image option-diagram">${option.visual}</div>`
+        : q.textOnlyOptions
+          ? ""
+          : `<div class="option-image">
+              <span class="image-loading">写真を読み込み中</span>
+              <img src="${option.img || ""}" alt="${option.ja}の実写写真" loading="eager" data-photo data-name="${option.ja}" data-category="${q.category}" />
+            </div>`;
       return `
-        <button class="option-card ${cardState}" data-choice="${i}" ${answered ? "disabled" : ""}>
-          <div class="option-image">
-            <span class="image-loading">写真を読み込み中</span>
-            <img src="${option.img || ""}" alt="${option.ja}の実写写真" loading="eager" data-photo data-name="${option.ja}" data-category="${q.category}" />
-          </div>
+        <button class="option-card ${cardState} ${option.visual ? "has-diagram" : ""} ${q.textOnlyOptions ? "text-only" : ""}" data-choice="${i}" ${answered ? "disabled" : ""}>
+          ${visualBlock}
           ${badge ? `<span class="state-badge">${badge}</span>` : ""}
           <div class="option-body">
             <div class="option-name"><span class="letter">${letters[i]}</span><span>${withRuby(option.ja)}</span></div>
@@ -1230,9 +1323,10 @@ function renderQuiz() {
         </div>
         <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
       </div>
-      <div class="question-box">
+      <div class="question-box ${q.visual ? "has-stem-visual" : ""}">
         <p class="question-num">${withRuby(categories[q.category]?.ja || categories[state.category].ja)} · ${withRuby(q.num)} · ${state.index + 1}/${state.session.length}</p>
         <p class="question-text">${withRuby(q.ja)}</p>
+        ${q.visual ? `<div class="stem-visual">${q.visual}</div>` : ""}
         ${state.showKr ? `<p class="kr-text">${q.kr}</p>` : ""}
       </div>
       <div class="option-grid">${optionCards}</div>
