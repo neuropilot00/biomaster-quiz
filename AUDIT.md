@@ -71,6 +71,18 @@ User-provided photos were used to transcribe visible question text into app data
 - Widened the intro text column and reduced the hero image width/height so the headline wraps less.
 - Reduced category-card height and mobile hero copy to keep the 2-column category grid visible sooner.
 
+## 2026-04-29 Tablet Home Compact Mode
+
+- Added a landscape low-height home layout for tablet browsers.
+- The home shell now fits header, hero, and all category cards into `100dvh` when viewport height is limited.
+- In this compact mode, supporting copy, progress bars, and secondary card text are hidden to preserve the one-screen layout.
+
+## 2026-04-29 Tablet Quiz Compact Mode
+
+- Added a matching landscape low-height quiz layout for tablet browsers.
+- Reduced quiz controls, question text, option buttons, hint, and explanation heights so answered screens fit in one viewport.
+- Pinned explicit prompt photos for visually sensitive questions such as 問13, 問22, and 問36 to avoid cropped automatic thumbnails.
+
 ## Image Strategy
 
 - App does not store book scan images.

@@ -636,15 +636,15 @@ const optionVisuals = {
 };
 
 const promptPhotos = {
-  6: "カワウ",
-  7: "トビ",
-  13: "カツオ",
-  14: "サケ",
-  22: "タニシ",
-  31: "ハクサイ",
-  32: "ミツバ",
-  33: "カシワ",
-  36: "オオバコ",
+  6: { name: "カワウ" },
+  7: { name: "トビ" },
+  13: { name: "カツオ", img: img("Katsuwonus_pelamis.jpg") },
+  14: { name: "サケ" },
+  22: { name: "タニシ", img: img("Cipangopaludina_japonica_-_Osaka_Museum_of_Natural_History_-_DSC07741.JPG") },
+  31: { name: "ハクサイ" },
+  32: { name: "ミツバ" },
+  33: { name: "カシワ" },
+  36: { name: "オオバコ", img: img("Leaf_of_Plantago_asiatica.jpg") },
 };
 
 const photoQuestions = [
@@ -738,7 +738,8 @@ const photoQuestions = [
 photoQuestions.forEach((question) => {
   const num = Number(question.num.replace(/\D/g, ""));
   if (promptPhotos[num]) {
-    question.promptPhotoName = promptPhotos[num];
+    question.promptPhotoName = promptPhotos[num].name;
+    question.promptPhotoImg = promptPhotos[num].img || "";
     question.textOnlyOptions = true;
   }
   if (optionVisuals[num]) {
@@ -1443,7 +1444,7 @@ function renderQuiz() {
         ${q.promptPhotoName ? `
           <div class="stem-visual prompt-photo">
             <span class="image-loading">写真を読み込み中</span>
-            <img src="" alt="${q.promptPhotoName}の実写写真" loading="eager" data-photo data-name="${q.promptPhotoName}" data-category="${q.category}" />
+            <img src="${q.promptPhotoImg || ""}" alt="${q.promptPhotoName}の実写写真" loading="eager" data-photo data-name="${q.promptPhotoName}" data-category="${q.category}" />
           </div>
         ` : ""}
         ${state.showKr ? `<p class="kr-text">${q.kr}</p>` : ""}

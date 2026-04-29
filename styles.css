@@ -1057,6 +1057,236 @@ body:has(.view-quiz) {
   }
 }
 
+@media (orientation: landscape) and (max-height: 760px) {
+  .app-shell:not(.view-quiz) {
+    height: 100dvh;
+    overflow: hidden;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    padding: 8px 14px;
+  }
+
+  .app-shell:not(.view-quiz) .topbar {
+    padding: 4px 0 8px;
+  }
+
+  .app-shell:not(.view-quiz) .brand-mark {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+  }
+
+  .app-shell:not(.view-quiz) .brand h1 {
+    font-size: 1.55rem;
+  }
+
+  .app-shell:not(.view-quiz) .brand p {
+    font-size: 0.72rem;
+    margin-top: 2px;
+  }
+
+  .app-shell:not(.view-quiz) .lang-toggle,
+  .app-shell:not(.view-quiz) .music-button,
+  .app-shell:not(.view-quiz) .ghost-button,
+  .app-shell:not(.view-quiz) .primary-button {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 0.9rem;
+  }
+
+  .app-shell:not(.view-quiz) .hero {
+    grid-template-columns: minmax(0, 1.55fr) minmax(180px, 0.45fr);
+    gap: 10px;
+    min-height: 0;
+  }
+
+  .app-shell:not(.view-quiz) .hero-copy {
+    padding: 13px 16px;
+  }
+
+  .app-shell:not(.view-quiz) .eyebrow {
+    margin-bottom: 5px;
+    font-size: 0.74rem;
+  }
+
+  .app-shell:not(.view-quiz) .hero-copy h2 {
+    font-size: clamp(1.45rem, 3vw, 2.05rem);
+    line-height: 1.03;
+  }
+
+  .app-shell:not(.view-quiz) .hero-copy .support {
+    display: none;
+  }
+
+  .app-shell:not(.view-quiz) .controls {
+    margin-top: 10px;
+    gap: 7px;
+  }
+
+  .app-shell:not(.view-quiz) .segmented button {
+    min-height: 32px;
+    padding: 0 12px;
+  }
+
+  .app-shell:not(.view-quiz) .hero-photo,
+  .app-shell:not(.view-quiz) .hero-photo img {
+    min-height: 154px;
+  }
+
+  .app-shell:not(.view-quiz) .hero-photo span {
+    left: 10px;
+    bottom: 10px;
+    padding: 6px 8px;
+    font-size: 0.72rem;
+  }
+
+  .app-shell:not(.view-quiz) .study-panel {
+    margin-top: 8px;
+    padding: 10px;
+    min-height: 0;
+    overflow: hidden;
+  }
+
+  .app-shell:not(.view-quiz) .section-title {
+    margin-bottom: 7px;
+  }
+
+  .app-shell:not(.view-quiz) .section-title h3 {
+    font-size: 0.98rem;
+  }
+
+  .app-shell:not(.view-quiz) .section-title p {
+    font-size: 0.72rem;
+  }
+
+  .app-shell:not(.view-quiz) .category-grid {
+    gap: 7px;
+  }
+
+  .app-shell:not(.view-quiz) .category-card {
+    min-height: 76px;
+    padding: 8px;
+  }
+
+  .app-shell:not(.view-quiz) .category-card strong {
+    margin-top: 5px;
+    font-size: 0.84rem;
+  }
+
+  .app-shell:not(.view-quiz) .category-card small,
+  .app-shell:not(.view-quiz) .photo-pill,
+  .app-shell:not(.view-quiz) .new-pill,
+  .app-shell:not(.view-quiz) .category-head span {
+    font-size: 0.64rem;
+  }
+
+  .app-shell:not(.view-quiz) .category-card > small,
+  .app-shell:not(.view-quiz) .category-card .progress-track {
+    display: none;
+  }
+}
+
+@media (orientation: landscape) and (max-height: 760px) {
+  .view-quiz {
+    padding: 4px;
+  }
+
+  .view-quiz .quiz-panel {
+    height: calc(100dvh - 8px);
+    gap: 5px;
+    padding: 6px;
+  }
+
+  .view-quiz .quiz-row {
+    gap: 6px;
+  }
+
+  .view-quiz .ghost-button,
+  .view-quiz .danger-button,
+  .view-quiz .primary-button,
+  .view-quiz .music-mini {
+    min-height: 34px;
+    padding: 0 10px;
+    font-size: 0.9rem;
+  }
+
+  .view-quiz .score-pills {
+    font-size: 0.9rem;
+  }
+
+  .view-quiz .score-pills span {
+    min-width: 48px;
+    min-height: 34px;
+    padding: 4px 8px;
+  }
+
+  .view-quiz .progress-track {
+    height: 5px;
+  }
+
+  .view-quiz .question-box {
+    padding: 8px;
+  }
+
+  .view-quiz .question-num {
+    margin-bottom: 2px;
+    font-size: 0.62rem;
+  }
+
+  .view-quiz .question-text {
+    font-size: clamp(0.94rem, 1.9vw, 1.15rem);
+    line-height: 1.12;
+  }
+
+  .view-quiz .question-box.has-stem-visual {
+    gap: 5px;
+  }
+
+  .view-quiz .question-box.has-stem-visual .stem-visual {
+    width: min(100%, 600px);
+  }
+
+  .view-quiz .option-grid {
+    gap: 5px;
+  }
+
+  .view-quiz .stem-visual-mode .option-card.text-only {
+    min-height: 48px;
+  }
+
+  .view-quiz .option-body {
+    padding: 7px;
+  }
+
+  .view-quiz .option-name {
+    gap: 5px;
+    font-size: clamp(0.86rem, 1.7vw, 1rem);
+  }
+
+  .view-quiz .letter {
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    font-size: 0.72rem;
+  }
+
+  .view-quiz .hint-box,
+  .view-quiz .explain-box {
+    padding: 8px;
+    font-size: 0.82rem;
+    line-height: 1.25;
+    max-height: 58px;
+  }
+
+  .view-quiz .hint-box p {
+    margin-top: 4px;
+  }
+
+  .view-quiz .quiz-actions {
+    gap: 5px;
+  }
+}
+
 @media (max-width: 640px) {
   html,
   body {
