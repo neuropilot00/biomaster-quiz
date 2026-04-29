@@ -846,11 +846,11 @@ function launchConfetti() {
   const layer = document.createElement("div");
   layer.className = "confetti-layer";
   const colors = ["#60a5fa", "#34d399", "#facc15", "#fb7185", "#a78bfa", "#f97316"];
-  for (let i = 0; i < 42; i += 1) {
+  for (let i = 0; i < 72; i += 1) {
     const piece = document.createElement("span");
     piece.className = "confetti-piece";
-    piece.style.setProperty("--x", `${Math.random() * 220 - 110}px`);
-    piece.style.setProperty("--y", `${Math.random() * 120 + 120}px`);
+    piece.style.setProperty("--x", `${Math.random() * 320 - 160}px`);
+    piece.style.setProperty("--y", `${Math.random() * 220 + 180}px`);
     piece.style.setProperty("--r", `${Math.random() * 540 - 270}deg`);
     piece.style.setProperty("--c", colors[i % colors.length]);
     piece.style.left = `${45 + Math.random() * 10}%`;
@@ -859,28 +859,29 @@ function launchConfetti() {
   }
   document.body.appendChild(layer);
   playCheer();
-  window.setTimeout(() => layer.remove(), 1050);
+  window.setTimeout(() => layer.remove(), 3100);
 }
 
 function playCheer() {
   const ctx = ensureAudio();
   if (!ctx) return;
   const now = ctx.currentTime;
-  playClap(ctx, now + 0.02);
-  playClap(ctx, now + 0.16);
-  playClap(ctx, now + 0.31);
+  [0.02, 0.16, 0.31, 0.72, 0.9, 1.08, 1.55, 1.72, 1.92, 2.28, 2.48].forEach((offset) => {
+    playClap(ctx, now + offset);
+  });
   [660, 880, 990].forEach((freq, index) => {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
     osc.type = "sine";
     osc.frequency.setValueAtTime(freq, now + index * 0.035);
-    osc.frequency.exponentialRampToValueAtTime(freq * 1.25, now + 0.42);
+    osc.frequency.exponentialRampToValueAtTime(freq * 1.35, now + 2.25);
     gain.gain.setValueAtTime(0.0001, now + index * 0.035);
     gain.gain.exponentialRampToValueAtTime(0.018, now + 0.08 + index * 0.035);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+    gain.gain.exponentialRampToValueAtTime(0.012, now + 1.3);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 2.55);
     osc.connect(gain).connect(ctx.destination);
     osc.start(now + index * 0.035);
-    osc.stop(now + 0.52);
+    osc.stop(now + 2.6);
   });
 }
 
