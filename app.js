@@ -389,8 +389,32 @@ function makePhotoQuestion(num, category, ja, options, answer = null, note = nul
     addedAt,
     options: options.map((name) => ({ ja: name, kr: "", img: "" })),
     hint: note || buildStudyHint(category, ja),
-    explanation: answer === null ? "この問題は正解確認待ちです。答え合わせ後にデータを更新します。" : "写真から転記した問題です。解説は後で追加できます。",
+    explanation: buildExplanation(num, ja, options, answer),
   };
+}
+
+function buildExplanation(num, text, options, answer) {
+  const known = {
+    11: "正解はコイです。キンギョはフナの仲間をもとに作られた魚で、コイと同じコイ科にふくまれます。",
+    53: "正解はグッピーです。グッピーは母親の体内で子が育ってから生まれる胎生の魚です。イワナ、タナゴ、ハゼは卵を産む魚です。",
+    55: "正解はサケです。サケは海で大きくなり、産卵のために川へ戻ってくる魚です。",
+    56: "正解はナツミカンです。ナミアゲハの幼虫はミカン科の葉を食べます。ナツミカンはミカン科です。",
+    58: "正解はカマキリです。アリ、シロアリ、ミツバチは集団で生活する社会性昆虫ですが、カマキリは社会性昆虫ではありません。",
+  };
+  if (known[num]) return known[num];
+  if (answer === null) {
+    return "この問題はまだ正解データを入れていないため採点しません。答え合わせ後に、正解と理由を追加します。";
+  }
+  return `正解は${options[answer]}です。この問題は答え合わせ済みです。詳しい理由はあとで追加できます。`;
+}
+
+function buildFeedback(q, selectedIndex) {
+  if (q.answer === null) return q.explanation;
+  const selectedName = q.options[selectedIndex]?.ja || "";
+  const correctName = q.options[q.answer]?.ja || "";
+  const base = q.explanation;
+  if (selectedIndex === q.answer) return base;
+  return `${base} あなたが選んだ${selectedName}は、この問題で聞かれている特徴が${correctName}とは違います。写真の姿だけでなく、同じ科・ふえ方・すみかなどの条件をもう一度比べてみましょう。`;
 }
 
 function buildStudyHint(category, text) {
@@ -436,7 +460,7 @@ const photoQuestions = [
   makePhotoQuestion(8, "bird", "みずかきが発達していない鳥をひとつ選びなさい。", ["アヒル", "オシドリ", "カワウ", "カワセミ"]),
   makePhotoQuestion(9, "amphibian", "サンショウウオにもっとも近縁な動物をひとつ選びなさい。", ["イモリ", "カナヘビ", "アカガエル", "トカゲ"]),
   makePhotoQuestion(10, "amphibian", "アマガエルの鳴く姿の図をひとつ選びなさい。", ["図1", "図2", "図3", "図4"]),
-  makePhotoQuestion(11, "fish", "キンギョと同じ仲間（同じ科）の魚をひとつ選びなさい。", ["アユ", "コイ", "ドジョウ", "ナマズ"]),
+  makePhotoQuestion(11, "fish", "キンギョと同じ仲間（同じ科）の魚をひとつ選びなさい。", ["アユ", "コイ", "ドジョウ", "ナマズ"], 1),
   makePhotoQuestion(12, "fish", "イワナと同じなかま（同じ科）の魚をひとつ選びなさい。", ["サクラマス", "マイワシ", "オイカワ", "ウグイ"]),
   makePhotoQuestion(13, "fish", "この魚はなんですか。", ["カツオ", "クロマグロ", "ブリ", "ボラ"]),
   makePhotoQuestion(14, "fish", "この魚はなんですか。", ["サケ", "ウツボ", "サンマ", "フナ"]),
@@ -1082,7 +1106,7 @@ function renderQuiz() {
   const optionCards = q.options
     .map((option, i) => {
       let cardState = "idle";
-      if (answered && q.answer === null && i === selected) cardState = "reveal";
+      if (answered && q.answer === null && i === selected) cardState = "selected";
       if (answered && q.answer !== null && i === q.answer) cardState = selected === q.answer ? "correct" : "reveal";
       if (answered && q.answer !== null && i === selected && selected !== q.answer) cardState = "wrong";
       const badge = cardState === "correct" || cardState === "reveal" ? "✓" : cardState === "wrong" ? "×" : "";
@@ -1125,7 +1149,7 @@ function renderQuiz() {
         <summary>${withRuby("ヒントを見る")}</summary>
         <p>${withRuby(q.hint)}</p>
       </details>
-      ${answered ? `<div class="explain-box"><strong>${q.answer === null ? withRuby("正解確認待ちです。") : selected === q.answer ? withRuby("正解です。") : withRuby("答えは ") + withRuby(q.options[q.answer].ja) + withRuby(" です。")}</strong><br />${withRuby(q.explanation)}</div>` : ""}
+      ${answered ? `<div class="explain-box ${q.answer === null ? "pending" : ""}"><strong>${q.answer === null ? withRuby("採点準備中です。") : selected === q.answer ? withRuby("正解です。") : withRuby("答えは ") + withRuby(q.options[q.answer].ja) + withRuby(" です。")}</strong><br />${withRuby(buildFeedback(q, selected))}</div>` : ""}
       <div class="quiz-actions">
         <button class="danger-button" data-view="home">やめる</button>
         <button class="primary-button" data-next ${answered ? "" : "disabled"}>${state.index === state.session.length - 1 ? withRuby("結果を見る") : withRuby("次へ")}</button>
