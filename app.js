@@ -781,13 +781,19 @@ function toggleMusic() {
 }
 
 function startMusic() {
-  const AudioCtor = window.AudioContext || window.webkitAudioContext;
-  if (!AudioCtor) return;
-  audioContext ||= new AudioCtor();
-  if (audioContext.state === "suspended") audioContext.resume();
+  ensureAudio();
+  if (!audioContext) return;
   state.musicEnabled = true;
   playMusicNote();
   musicTimer = window.setInterval(playMusicNote, 680);
+}
+
+function ensureAudio() {
+  const AudioCtor = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtor) return null;
+  audioContext ||= new AudioCtor();
+  if (audioContext.state === "suspended") audioContext.resume();
+  return audioContext;
 }
 
 function stopMusic() {
@@ -828,7 +834,52 @@ function launchConfetti() {
     layer.appendChild(piece);
   }
   document.body.appendChild(layer);
+  playCheer();
   window.setTimeout(() => layer.remove(), 1050);
+}
+
+function playCheer() {
+  const ctx = ensureAudio();
+  if (!ctx) return;
+  const now = ctx.currentTime;
+  playClap(ctx, now + 0.02);
+  playClap(ctx, now + 0.16);
+  playClap(ctx, now + 0.31);
+  [660, 880, 990].forEach((freq, index) => {
+    const osc = ctx.createOscillator();
+    const gain = ctx.createGain();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(freq, now + index * 0.035);
+    osc.frequency.exponentialRampToValueAtTime(freq * 1.25, now + 0.42);
+    gain.gain.setValueAtTime(0.0001, now + index * 0.035);
+    gain.gain.exponentialRampToValueAtTime(0.018, now + 0.08 + index * 0.035);
+    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.5);
+    osc.connect(gain).connect(ctx.destination);
+    osc.start(now + index * 0.035);
+    osc.stop(now + 0.52);
+  });
+}
+
+function playClap(ctx, startTime) {
+  const bufferSize = Math.floor(ctx.sampleRate * 0.09);
+  const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+  const data = buffer.getChannelData(0);
+  for (let i = 0; i < bufferSize; i += 1) {
+    data[i] = (Math.random() * 2 - 1) * (1 - i / bufferSize);
+  }
+  const noise = ctx.createBufferSource();
+  const filter = ctx.createBiquadFilter();
+  const gain = ctx.createGain();
+  noise.buffer = buffer;
+  filter.type = "bandpass";
+  filter.frequency.value = 1600 + Math.random() * 900;
+  filter.Q.value = 0.8;
+  gain.gain.setValueAtTime(0.0001, startTime);
+  gain.gain.exponentialRampToValueAtTime(0.055, startTime + 0.012);
+  gain.gain.exponentialRampToValueAtTime(0.0001, startTime + 0.085);
+  noise.connect(filter).connect(gain).connect(ctx.destination);
+  noise.start(startTime);
+  noise.stop(startTime + 0.095);
 }
 
 function loadProgress() {
