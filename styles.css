@@ -734,7 +734,15 @@ button:disabled {
   display: none !important;
 }
 
+html:has(.view-quiz),
+body:has(.view-quiz) {
+  height: 100dvh;
+  overflow: hidden;
+}
+
 .view-quiz {
+  width: 100%;
+  max-width: none;
   height: 100dvh;
   overflow: hidden;
   padding: 8px;
@@ -747,10 +755,11 @@ button:disabled {
 .view-quiz .quiz-panel {
   height: calc(100dvh - 16px);
   display: grid;
-  grid-template-rows: auto auto auto auto auto;
+  grid-template-rows: auto auto minmax(0, 1fr) auto auto;
   gap: 8px;
   padding: 10px;
   overflow: hidden;
+  box-shadow: none;
 }
 
 .view-quiz .quiz-head {
@@ -798,20 +807,25 @@ button:disabled {
 }
 
 .view-quiz .option-grid {
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 8px;
   margin-top: 0;
   min-height: 0;
-  align-items: start;
+  height: 100%;
+  align-items: stretch;
 }
 
 .view-quiz .option-card {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
   min-height: 0;
-  height: auto;
+  height: 100%;
 }
 
 .view-quiz .option-image {
-  aspect-ratio: 2.2 / 1;
+  min-height: 0;
+  height: 100%;
+  aspect-ratio: auto;
 }
 
 .view-quiz .option-body {
@@ -883,6 +897,10 @@ button:disabled {
   .quiz-actions .danger-button {
     min-height: 52px;
     font-size: 1.02rem;
+  }
+
+  .view-quiz .option-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
@@ -978,11 +996,8 @@ button:disabled {
 
   .view-quiz .quiz-panel {
     height: calc(100dvh - 12px);
-    display: grid;
-    grid-template-rows: auto auto auto auto auto;
-    gap: 8px;
+    gap: 7px;
     padding: 8px;
-    overflow: hidden;
     border-radius: 0;
   }
 
@@ -1048,18 +1063,6 @@ button:disabled {
   .view-quiz .option-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 6px;
-    margin-top: 0;
-    min-height: 0;
-    align-items: start;
-  }
-
-  .view-quiz .option-card {
-    min-height: 0;
-    height: auto;
-  }
-
-  .view-quiz .option-image {
-    aspect-ratio: 1.45 / 1;
   }
 
   .view-quiz .option-body {
