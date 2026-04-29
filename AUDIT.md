@@ -59,6 +59,12 @@ User-provided photos were used to transcribe visible question text into app data
 
 - Corrected 問3 from 爬虫類 to 哺乳類. センザンコウ is a mammal with hard scales, not a reptile.
 
+## 2026-04-29 Full Category Audit
+
+- Rechecked all entered questions against broad app categories.
+- Corrected 問23 from 昆虫類 to 全カテゴリ because クモ is not an insect and the app has no arachnid category.
+- Corrected 問76 from 全カテゴリ to 爬虫類, 問82 from 全カテゴリ to 植物, and 問85 from 全カテゴリ to 昆虫類.
+
 ## Image Strategy
 
 - App does not store book scan images.
