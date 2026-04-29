@@ -49,6 +49,8 @@ select {
 
 button {
   cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: rgba(59, 130, 246, 0.24);
 }
 
 button:disabled {
@@ -730,6 +732,136 @@ button:disabled {
 
 .hidden {
   display: none !important;
+}
+
+.view-quiz {
+  height: 100dvh;
+  overflow: hidden;
+  padding: 8px;
+}
+
+.view-quiz .topbar {
+  display: none;
+}
+
+.view-quiz .quiz-panel {
+  height: calc(100dvh - 16px);
+  display: grid;
+  grid-template-rows: auto auto auto auto auto;
+  gap: 8px;
+  padding: 10px;
+  overflow: hidden;
+}
+
+.view-quiz .quiz-head {
+  gap: 6px;
+  margin-bottom: 0;
+}
+
+.view-quiz .quiz-row {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  align-items: center;
+  gap: 10px;
+}
+
+.view-quiz .music-mini {
+  min-width: 72px;
+  padding: 0 10px;
+}
+
+.view-quiz .score-pills {
+  justify-content: end;
+}
+
+.view-quiz .progress-track {
+  height: 7px;
+  margin-top: 0;
+}
+
+.view-quiz .question-box {
+  padding: 12px;
+}
+
+.view-quiz .question-num {
+  margin-bottom: 4px;
+  font-size: 0.78rem;
+}
+
+.view-quiz .question-text {
+  font-size: clamp(1.08rem, 2.3vw, 1.42rem);
+  line-height: 1.25;
+}
+
+.view-quiz .kr-text {
+  display: none;
+}
+
+.view-quiz .option-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 0;
+  min-height: 0;
+  align-items: start;
+}
+
+.view-quiz .option-card {
+  min-height: 0;
+  height: auto;
+}
+
+.view-quiz .option-image {
+  aspect-ratio: 2.2 / 1;
+}
+
+.view-quiz .option-body {
+  padding: 10px;
+  gap: 2px;
+}
+
+.view-quiz .option-name {
+  gap: 7px;
+  font-size: clamp(1rem, 2.2vw, 1.28rem);
+  line-height: 1.12;
+}
+
+.view-quiz .option-body small {
+  display: none;
+}
+
+.view-quiz .letter {
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  font-size: 0.86rem;
+}
+
+.view-quiz .state-badge {
+  width: 30px;
+  height: 30px;
+  top: 7px;
+  right: 7px;
+}
+
+.view-quiz .hint-box,
+.view-quiz .explain-box {
+  margin-top: 0;
+  padding: 12px;
+  font-size: clamp(0.95rem, 1.8vw, 1.08rem);
+  line-height: 1.35;
+  max-height: 92px;
+  overflow: hidden;
+}
+
+.view-quiz .hint-box p {
+  margin: 7px 0 0;
+}
+
+.view-quiz .quiz-actions {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px;
+  margin-top: 0;
 }
 
 @media (max-width: 900px) {
