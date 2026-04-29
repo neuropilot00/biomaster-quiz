@@ -55,6 +55,10 @@ User-provided photos were used to transcribe visible question text into app data
 - 問10 is a diagram-comparison question, so it cannot be replaced by a real photo.
 - Restored four answer-choice diagrams for the frog calling posture and redrew them to clearly show throat sac, side sacs, no sac, and paired sacs.
 
+## 2026-04-29 Category Correction
+
+- Corrected 問3 from 爬虫類 to 哺乳類. センザンコウ is a mammal with hard scales, not a reptile.
+
 ## Image Strategy
 
 - App does not store book scan images.
