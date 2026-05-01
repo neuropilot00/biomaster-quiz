@@ -1,9 +1,9 @@
 {
-  "name": "BioMaster 生き物マスター",
-  "short_name": "BioMaster",
+  "name": "너만 몰라",
+  "short_name": "너만 몰라",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#f8fafc",
-  "theme_color": "#0f172a",
+  "background_color": "#101114",
+  "theme_color": "#111827",
   "icons": []
 }
