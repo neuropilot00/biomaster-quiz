@@ -150,6 +150,13 @@ User-provided photos were used to transcribe visible question text into app data
 - Rechecked 285 active questions for invalid answer indexes, duplicate IDs, and missing local image files; no broken answer indexes, duplicate IDs, or missing local image references were found.
 - The earlier 2024/2025 問87 missing-photo notes are now resolved for the provided plates.
 
+## 2026-05-04 2023 Missing Set Intake
+
+- Added the missing 2023 問46-1 through 問46-10 photo-identification set from the newly supplied pages.
+- Added the missing 2023 問87-1 through 問87-5 observation set and replaced the earlier placeholder 2023 問87 answer/explanation data with the source-page wording.
+- Clipped and attached the 2023 source images for 問46-1 through 問46-10 and the 2023 問87 leaf observation plate.
+- Rechecked 300 active questions for invalid answer indexes, duplicate IDs, and missing local image files; no broken answer indexes, duplicate IDs, or missing local image references were found.
+
 ## Image Strategy
 
 - App does not store full book scan images.
