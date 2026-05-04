@@ -1242,6 +1242,60 @@ function escapeRegExp(text) {
   return text.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
+const KANJI_SESSION_SIZE = 15;
+
+const kanjiTerms = [
+  { id: "seibutsu", term: "生物", reading: "せいぶつ", kr: "생물", meaning: "生きているもの。動物や植物など。", krMeaning: "살아 있는 것. 동물과 식물 등.", example: "生物をなかまで分ける。" },
+  { id: "bunrui", term: "分類", reading: "ぶんるい", kr: "분류", meaning: "にているところで、なかまに分けること。", krMeaning: "비슷한 점으로 무리를 나누는 것.", example: "写真を見て分類する。" },
+  { id: "bunrui-kaikyu", term: "分類階級", reading: "ぶんるいかいきゅう", kr: "분류 계급", meaning: "生物を分けるときの大きい順番。", krMeaning: "생물을 나눌 때 쓰는 단계.", example: "界、門、綱、目、科、属、種。" },
+  { id: "honyurui", term: "哺乳類", reading: "ほにゅうるい", kr: "포유류", meaning: "お母さんの乳で子を育てる動物のなかま。", krMeaning: "어미의 젖으로 새끼를 키우는 동물 무리.", example: "ニホンザルは哺乳類です。" },
+  { id: "chorui", term: "鳥類", reading: "ちょうるい", kr: "조류", meaning: "羽があり、卵を産む鳥のなかま。", krMeaning: "깃털이 있고 알을 낳는 새 무리.", example: "スズメは鳥類です。" },
+  { id: "gyorui", term: "魚類", reading: "ぎょるい", kr: "어류", meaning: "水の中で生活し、えらで呼吸する魚のなかま。", krMeaning: "물속에서 살고 아가미로 숨 쉬는 물고기 무리.", example: "コイは魚類です。" },
+  { id: "konchurui", term: "昆虫類", reading: "こんちゅうるい", kr: "곤충류", meaning: "体が頭・胸・腹に分かれ、脚が6本あるなかま。", krMeaning: "몸이 머리, 가슴, 배로 나뉘고 다리가 6개인 무리.", example: "テントウムシは昆虫類です。" },
+  { id: "ryoseirui", term: "両生類", reading: "りょうせいるい", kr: "양서류", meaning: "子どものころは水中、大人になると陸でも生活するなかま。", krMeaning: "어릴 때는 물속, 자라면 땅에서도 사는 무리.", example: "カエルは両生類です。" },
+  { id: "hachurui", term: "爬虫類", reading: "はちゅうるい", kr: "파충류", meaning: "うろこがあり、肺で呼吸する動物のなかま。", krMeaning: "비늘이 있고 폐로 숨 쉬는 동물 무리.", example: "ヤモリは爬虫類です。" },
+  { id: "shokubutsu", term: "植物", reading: "しょくぶつ", kr: "식물", meaning: "根・茎・葉などをもち、光合成をする生き物。", krMeaning: "뿌리, 줄기, 잎 등이 있고 광합성을 하는 생물.", example: "植物の葉を観察する。" },
+  { id: "shushi-shokubutsu", term: "種子植物", reading: "しゅししょくぶつ", kr: "종자식물", meaning: "種子でふえる植物。", krMeaning: "씨앗으로 번식하는 식물.", example: "アマモは種子植物です。" },
+  { id: "hishi-shokubutsu", term: "被子植物", reading: "ひししょくぶつ", kr: "속씨식물", meaning: "種子が果実の中にできる植物。", krMeaning: "씨앗이 열매 안에 생기는 식물.", example: "花を咲かせる被子植物。" },
+  { id: "rashi-shokubutsu", term: "裸子植物", reading: "らししょくぶつ", kr: "겉씨식물", meaning: "種子がむき出しに近い植物。", krMeaning: "씨앗이 겉으로 드러난 식물.", example: "スギは裸子植物です。" },
+  { id: "sorui", term: "藻類", reading: "そうるい", kr: "조류", meaning: "水の中などにすむ、海藻をふくむなかま。", krMeaning: "물속 등에 사는 해조류를 포함한 무리.", example: "ヒジキは藻類です。" },
+  { id: "kinrui", term: "菌類", reading: "きんるい", kr: "균류", meaning: "キノコやカビのなかま。", krMeaning: "버섯과 곰팡이 무리.", example: "シメジは菌類です。" },
+  { id: "gakumei", term: "学名", reading: "がくめい", kr: "학명", meaning: "世界で使う、生物の正式な名前。", krMeaning: "세계에서 쓰는 생물의 공식 이름.", example: "学名には属名がある。" },
+  { id: "meimeisha", term: "命名者", reading: "めいめいしゃ", kr: "명명자", meaning: "生物に名前をつけた人。", krMeaning: "생물에 이름을 붙인 사람.", example: "学名のあとに命名者を書く。" },
+  { id: "hyohon", term: "標本", reading: "ひょうほん", kr: "표본", meaning: "調べるために残しておく体や葉。", krMeaning: "조사하려고 남겨 둔 몸이나 잎.", example: "おし葉標本を作る。" },
+  { id: "saishu", term: "採集", reading: "さいしゅう", kr: "채집", meaning: "調べるものを集めること。", krMeaning: "조사할 것을 모으는 것.", example: "採集年月日を書く。" },
+  { id: "zetsumetsu", term: "絶滅", reading: "ぜつめつ", kr: "멸종", meaning: "その生き物がいなくなること。", krMeaning: "그 생물이 사라지는 것.", example: "野生絶滅した鳥。" },
+  { id: "gairaishu", term: "外来種", reading: "がいらいしゅ", kr: "외래종", meaning: "ほかの場所から入ってきた生き物。", krMeaning: "다른 곳에서 들어온 생물.", example: "ウシガエルは外来種です。" },
+  { id: "zairaishu", term: "在来種", reading: "ざいらいしゅ", kr: "재래종", meaning: "もともとその地域にいる生き物。", krMeaning: "원래 그 지역에 살던 생물.", example: "日本在来の動物。" },
+  { id: "suisei-shokubutsu", term: "水生植物", reading: "すいせいしょくぶつ", kr: "수생식물", meaning: "水辺や水の中で育つ植物。", krMeaning: "물가나 물속에서 자라는 식물.", example: "ヒツジグサは水生植物です。" },
+  { id: "chusui-shokubutsu", term: "抽水植物", reading: "ちゅうすいしょくぶつ", kr: "정수식물", meaning: "根は水底、葉や茎は水の上に出る植物。", krMeaning: "뿌리는 물밑, 잎과 줄기는 물 위로 나오는 식물.", example: "ガマは抽水植物です。" },
+  { id: "fuyo-shokubutsu", term: "浮葉植物", reading: "ふようしょくぶつ", kr: "부엽식물", meaning: "葉を水面に浮かべる植物。", krMeaning: "잎을 물 위에 띄우는 식물.", example: "ヒシは浮葉植物です。" },
+  { id: "shokuchu-shokubutsu", term: "食虫植物", reading: "しょくちゅうしょくぶつ", kr: "식충식물", meaning: "虫をとって養分にする植物。", krMeaning: "곤충을 잡아 영양분으로 삼는 식물.", example: "ウツボカズラは食虫植物です。" },
+  { id: "kisei", term: "寄生", reading: "きせい", kr: "기생", meaning: "ほかの生き物から栄養をもらって生活すること。", krMeaning: "다른 생물에게서 영양분을 얻어 사는 것.", example: "寄生する昆虫。" },
+  { id: "tomin", term: "冬眠", reading: "とうみん", kr: "동면", meaning: "冬に動きを少なくして過ごすこと。", krMeaning: "겨울에 활동을 줄이고 지내는 것.", example: "冬眠する動物。" },
+  { id: "sanran", term: "産卵", reading: "さんらん", kr: "산란", meaning: "卵を産むこと。", krMeaning: "알을 낳는 것.", example: "海藻に産卵する魚。" },
+  { id: "hanshoku", term: "繁殖", reading: "はんしょく", kr: "번식", meaning: "子や種子をつくってふえること。", krMeaning: "새끼나 씨앗을 만들어 늘어나는 것.", example: "植物が繁殖する。" },
+  { id: "eiyo-hanshoku", term: "栄養繁殖", reading: "えいようはんしょく", kr: "영양번식", meaning: "種子を使わず、茎や根などでふえること。", krMeaning: "씨앗 없이 줄기나 뿌리 등으로 번식하는 것.", example: "サトイモは栄養繁殖をする。" },
+  { id: "yoen", term: "葉縁", reading: "ようえん", kr: "잎 가장자리", meaning: "葉のふちのこと。", krMeaning: "잎의 가장자리.", example: "葉縁には鋸歯がある。" },
+  { id: "kyoshi", term: "鋸歯", reading: "きょし", kr: "톱니", meaning: "葉のふちにある、ぎざぎざ。", krMeaning: "잎 가장자리의 톱니 모양.", example: "葉の縁には鋸歯がある。" },
+  { id: "tanyo", term: "単葉", reading: "たんよう", kr: "홑잎", meaning: "一枚の葉でできている葉。", krMeaning: "한 장으로 된 잎.", example: "この葉は単葉です。" },
+  { id: "fukuyo", term: "複葉", reading: "ふくよう", kr: "겹잎", meaning: "小さな葉がいくつか集まった葉。", krMeaning: "작은 잎 여러 장이 모인 잎.", example: "フジの葉は複葉です。" },
+  { id: "ujo-fukuyo", term: "羽状複葉", reading: "うじょうふくよう", kr: "깃꼴겹잎", meaning: "羽のように小葉が並ぶ複葉。", krMeaning: "깃털처럼 작은 잎이 늘어선 겹잎.", example: "羽状複葉か観察する。" },
+  { id: "yomyaku", term: "葉脈", reading: "ようみゃく", kr: "잎맥", meaning: "葉に見えるすじ。", krMeaning: "잎에 보이는 줄기 같은 선.", example: "葉脈をよく見る。" },
+  { id: "kaben", term: "花弁", reading: "かべん", kr: "꽃잎", meaning: "花びらのこと。", krMeaning: "꽃잎.", example: "花弁が4枚ある。" },
+  { id: "kajitsu", term: "果実", reading: "かじつ", kr: "열매", meaning: "花のあとにでき、種子を包むもの。", krMeaning: "꽃이 진 뒤 생기며 씨앗을 감싸는 것.", example: "果実の中に種子がある。" },
+  { id: "chikakei", term: "地下茎", reading: "ちかけい", kr: "땅속줄기", meaning: "土の中にある茎。", krMeaning: "땅속에 있는 줄기.", example: "ジャガイモは地下茎です。" },
+  { id: "kogosei", term: "光合成", reading: "こうごうせい", kr: "광합성", meaning: "光を使って、植物が栄養を作ること。", krMeaning: "빛을 이용해 식물이 영양분을 만드는 것.", example: "植物は光合成をする。" },
+  { id: "konryukin", term: "根粒菌", reading: "こんりゅうきん", kr: "뿌리혹박테리아", meaning: "マメ科植物の根にすむ菌。", krMeaning: "콩과 식물 뿌리에 사는 균.", example: "根粒菌は窒素固定をする。" },
+  { id: "chisso-kotei", term: "窒素固定", reading: "ちっそこてい", kr: "질소고정", meaning: "空気中の窒素を植物が使える形にすること。", krMeaning: "공기 중 질소를 식물이 쓸 수 있게 바꾸는 것.", example: "根粒菌は窒素固定をする。" },
+];
+
+const kanjiQuestionTypes = ["meaning", "reading"];
+
+function defaultProgress() {
+  return { sessions: [], answers: {}, kanji: {}, kanjiSessions: [] };
+}
+
 const state = {
   view: "home",
   grade: 4,
@@ -1253,8 +1307,13 @@ const state = {
   index: 0,
   answers: [],
   recordedAnswers: [],
+  kanjiSession: [],
+  kanjiIndex: 0,
+  kanjiAnswers: [],
+  kanjiRecordedAnswers: [],
   startedAt: 0,
   lastResult: null,
+  lastKanjiResult: null,
   progress: loadProgress(),
 };
 
@@ -1377,9 +1436,17 @@ function playClap(ctx, startTime) {
 
 function loadProgress() {
   try {
-    return JSON.parse(localStorage.getItem("biomaster-progress")) || { sessions: [], answers: {} };
+    const saved = JSON.parse(localStorage.getItem("biomaster-progress")) || {};
+    return {
+      ...defaultProgress(),
+      ...saved,
+      answers: saved.answers || {},
+      kanji: saved.kanji || {},
+      sessions: saved.sessions || [],
+      kanjiSessions: saved.kanjiSessions || [],
+    };
   } catch {
-    return { sessions: [], answers: {} };
+    return defaultProgress();
   }
 }
 
@@ -1424,6 +1491,111 @@ function buildSession(category, grade, year) {
     }))
     .sort((a, b) => b.score - a.score)
     .map((item) => item.question);
+}
+
+function kanjiTermMarkup(term, showReading = true) {
+  const safeTerm = escapeHtml(term.term);
+  if (!showReading) return safeTerm;
+  return `<ruby>${safeTerm}<rt>${escapeHtml(term.reading)}</rt></ruby>`;
+}
+
+function kanjiWeight(term) {
+  const record = state.progress.kanji[term.id];
+  if (!record) return 0;
+  const wrongBoost = Math.min(record.wrong * 0.22, 0.88);
+  const masteredPenalty = record.streak >= 3 ? 0.35 : 0;
+  return wrongBoost - masteredPenalty;
+}
+
+function buildKanjiQuestion(term) {
+  const type = kanjiQuestionTypes[Math.floor(Math.random() * kanjiQuestionTypes.length)];
+  const field = type === "reading" ? "reading" : "meaning";
+  const distractors = shuffle(kanjiTerms.filter((item) => item.id !== term.id))
+    .map((item) => item[field])
+    .filter((value, index, list) => list.indexOf(value) === index)
+    .slice(0, 3);
+  const choices = shuffle([term[field], ...distractors]).map((value) => ({
+    value,
+    isCorrect: value === term[field],
+    krValue: type === "meaning" ? kanjiTerms.find((item) => item.meaning === value)?.krMeaning || "" : "",
+  }));
+  return {
+    id: `${term.id}-${type}`,
+    term,
+    type,
+    prompt: type === "reading" ? "この漢字は、なんと読みますか。" : "この言葉の意味を選びましょう。",
+    choices,
+    answer: choices.findIndex((choice) => choice.isCorrect),
+  };
+}
+
+function buildKanjiSession() {
+  return shuffle(kanjiTerms)
+    .map((term) => ({ term, score: Math.random() + kanjiWeight(term) }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, KANJI_SESSION_SIZE)
+    .map((item) => buildKanjiQuestion(item.term));
+}
+
+function startKanjiQuiz() {
+  state.kanjiSession = buildKanjiSession();
+  state.kanjiIndex = 0;
+  state.kanjiAnswers = new Array(state.kanjiSession.length).fill(null);
+  state.kanjiRecordedAnswers = new Array(state.kanjiSession.length).fill(false);
+  state.startedAt = Date.now();
+  state.view = "kanji";
+  render();
+}
+
+function submitKanjiAnswer(choice) {
+  if (state.kanjiAnswers[state.kanjiIndex] !== null) return;
+  const q = state.kanjiSession[state.kanjiIndex];
+  const isCorrect = choice === q.answer;
+  state.kanjiAnswers[state.kanjiIndex] = choice;
+  recordKanjiAnswer(q, choice, state.kanjiIndex);
+  render();
+  if (isCorrect) launchConfetti();
+}
+
+function recordKanjiAnswer(q, choice, index) {
+  if (state.kanjiRecordedAnswers[index]) return;
+  const record = state.progress.kanji[q.term.id] || { correct: 0, wrong: 0, streak: 0 };
+  if (choice === q.answer) {
+    record.correct += 1;
+    record.streak += 1;
+  } else {
+    record.wrong += 1;
+    record.streak = 0;
+  }
+  state.progress.kanji[q.term.id] = record;
+  state.kanjiRecordedAnswers[index] = true;
+  saveProgress();
+}
+
+function nextKanjiQuestion() {
+  if (state.kanjiIndex < state.kanjiSession.length - 1) {
+    state.kanjiIndex += 1;
+    render();
+    return;
+  }
+  finishKanjiQuiz();
+}
+
+function finishKanjiQuiz() {
+  const correct = state.kanjiSession.reduce((sum, q, i) => sum + (state.kanjiAnswers[i] === q.answer ? 1 : 0), 0);
+  const result = {
+    id: String(Date.now()),
+    date: new Date().toISOString(),
+    total: state.kanjiSession.length,
+    correct,
+    wrongIds: state.kanjiSession.filter((q, i) => state.kanjiAnswers[i] !== q.answer).map((q) => q.term.id),
+    timeSeconds: Math.round((Date.now() - state.startedAt) / 1000),
+  };
+  state.progress.kanjiSessions = [result, ...state.progress.kanjiSessions].slice(0, 30);
+  state.lastKanjiResult = result;
+  saveProgress();
+  state.view = "kanjiResult";
+  render();
 }
 
 function startQuiz(category) {
@@ -1526,6 +1698,8 @@ function masteredCount(pool) {
 
 function render() {
   if (state.view === "quiz") renderQuiz();
+  else if (state.view === "kanji") renderKanjiQuiz();
+  else if (state.view === "kanjiResult") renderKanjiResult();
   else if (state.view === "result") renderResult();
   else if (state.view === "stats") renderStats();
   else renderHome();
@@ -1601,6 +1775,7 @@ function renderHome() {
           </div>
           <div class="year-tabs" aria-label="exam year">${yearTabs}</div>
           <button class="primary-button" data-start="all">${selectedYearLabel()} · ${withRuby("全カテゴリを始める")}</button>
+          <button class="kanji-mode-button" data-kanji-start><span><ruby>漢字<rt>かんじ</rt></ruby><ruby>認識<rt>にんしき</rt></ruby></span><small>23·24·25와 별도</small></button>
           <button class="ghost-button" data-view="stats">${withRuby("成績を見る")}</button>
         </div>
       </div>
@@ -1699,6 +1874,102 @@ function renderQuiz() {
   wireImages();
 }
 
+function renderKanjiQuiz() {
+  const q = state.kanjiSession[state.kanjiIndex];
+  const selected = state.kanjiAnswers[state.kanjiIndex];
+  const answered = selected !== null;
+  const correctCount = state.kanjiSession.reduce((sum, item, i) => sum + (state.kanjiAnswers[i] === item.answer ? 1 : 0), 0);
+  const wrongCount = state.kanjiAnswers.filter((answer, i) => answer !== null && answer !== state.kanjiSession[i].answer).length;
+  const progress = percent(state.kanjiIndex + (answered ? 1 : 0), state.kanjiSession.length);
+  const optionCards = q.choices
+    .map((choice, i) => {
+      let cardState = "idle";
+      if (answered && i === q.answer) cardState = selected === q.answer ? "correct" : "reveal";
+      if (answered && i === selected && selected !== q.answer) cardState = "wrong";
+      const badge = cardState === "correct" || cardState === "reveal" ? "✓" : cardState === "wrong" ? "×" : "";
+      return `
+        <button class="kanji-option ${cardState}" data-kanji-choice="${i}" ${answered ? "disabled" : ""}>
+          <span class="letter">${letters[i]}</span>
+          <strong>${q.type === "reading" ? escapeHtml(choice.value) : withRuby(choice.value)}</strong>
+          ${state.showKr && choice.krValue ? `<small>${escapeHtml(choice.krValue)}</small>` : ""}
+          ${badge ? `<span class="state-badge">${badge}</span>` : ""}
+        </button>
+      `;
+    })
+    .join("");
+  const feedback = answered
+    ? selected === q.answer
+      ? withRuby("正解です。")
+      : `${withRuby("答えは")} ${q.type === "reading" ? escapeHtml(q.term.reading) : withRuby(q.term.meaning)} ${withRuby("です。")}`
+    : "";
+
+  shell(`
+    <section class="kanji-panel">
+      <div class="quiz-head">
+        <div class="quiz-row">
+          <button class="ghost-button" data-view="home">← ホーム</button>
+          <button class="music-button music-mini" data-action="toggle-music">${state.musicEnabled ? "♪ ON" : "♪ OFF"}</button>
+          <div class="score-pills">
+            <span class="ok-pill">✓ ${correctCount}</span>
+            <span class="bad-pill">× ${wrongCount}</span>
+          </div>
+        </div>
+        <div class="progress-track"><div class="progress-fill" style="width:${progress}%"></div></div>
+      </div>
+      <div class="kanji-card">
+        <p class="eyebrow">KANJI · <ruby>見<rt>み</rt></ruby>て<ruby>選<rt>えら</rt></ruby>ぶ</p>
+        <h2>${kanjiTermMarkup(q.term, q.type === "meaning")}</h2>
+        ${q.type === "reading" ? `<p class="kanji-reading">${escapeHtml(q.term.kr)}</p>` : ""}
+        <p>${withRuby(q.prompt)}</p>
+      </div>
+      <div class="kanji-options">${optionCards}</div>
+      ${answered ? `
+        <div class="explain-box">
+          <strong>${feedback}</strong><br />
+          ${kanjiTermMarkup(q.term)} = ${withRuby(q.term.meaning)}
+          ${state.showKr ? `<br /><span class="kr-text">${escapeHtml(q.term.kr)} · ${escapeHtml(q.term.krMeaning)}</span>` : ""}
+          <br /><small>${withRuby("例")}: ${withRuby(q.term.example)}</small>
+        </div>
+      ` : ""}
+      <div class="quiz-actions">
+        <button class="danger-button" data-view="home">やめる</button>
+        <button class="primary-button" data-kanji-next ${answered ? "" : "disabled"}>${state.kanjiIndex === state.kanjiSession.length - 1 ? withRuby("結果を見る") : withRuby("次へ")}</button>
+      </div>
+    </section>
+  `);
+}
+
+function renderKanjiResult() {
+  const result = state.lastKanjiResult;
+  const pct = percent(result.correct, result.total);
+  const wrongItems = result.wrongIds
+    .map((id) => kanjiTerms.find((term) => term.id === id))
+    .filter(Boolean)
+    .map((term) => `<div class="wrong-item"><strong>${kanjiTermMarkup(term)}</strong><br /><small>${withRuby(term.meaning)}${state.showKr ? ` · ${escapeHtml(term.krMeaning)}` : ""}</small></div>`)
+    .join("");
+  shell(`
+    <section class="result-panel kanji-result-panel">
+      <div class="section-title">
+        <h3>${withRuby(pct >= 80 ? "漢字もよくできました" : pct >= 50 ? "読み方をもう少し練習します" : "ゆっくり復習します")}</h3>
+        <p>${result.timeSeconds}${withRuby("秒")}</p>
+      </div>
+      <div class="result-score"><strong>${pct}%</strong></div>
+      <div class="stats-grid">
+        <div class="stat-card">${withRuby("正解")}<b>${result.correct}</b></div>
+        <div class="stat-card">${withRuby("不正解")}<b>${result.total - result.correct}</b></div>
+        <div class="stat-card">${withRuby("漢字")}<b>${result.total}</b></div>
+      </div>
+      <div class="wrong-list">
+        ${wrongItems || `<div class="wrong-item"><strong>${withRuby("間違えた漢字はありません。")}</strong><br /><small>${withRuby("この調子です。")}</small></div>`}
+      </div>
+      <div class="quiz-actions">
+        <button class="ghost-button" data-view="home">ホームへ</button>
+        <button class="primary-button" data-kanji-retry>${withRuby("もう一度")}</button>
+      </div>
+    </section>
+  `);
+}
+
 function renderResult() {
   const result = state.lastResult;
   const pct = percent(result.correct, result.total);
@@ -1734,6 +2005,8 @@ function renderStats() {
   const answeredIds = Object.keys(state.progress.answers);
   const mastered = answeredIds.filter((id) => state.progress.answers[id].streak >= 3).length;
   const totalAnswered = Object.values(state.progress.answers).reduce((sum, item) => sum + item.correct + item.wrong, 0);
+  const kanjiAnswered = Object.values(state.progress.kanji).reduce((sum, item) => sum + item.correct + item.wrong, 0);
+  const kanjiMastered = Object.values(state.progress.kanji).filter((item) => item.streak >= 3).length;
   const pendingAudit = questions.filter((q) => q.answer === null).length;
   const recent = state.progress.sessions
     .slice(0, 8)
@@ -1760,6 +2033,8 @@ function renderStats() {
       <div class="stats-grid">
         <div class="stat-card">${withRuby("解いた回数")}<b>${totalAnswered}</b></div>
         <div class="stat-card">${withRuby("習得済み")}<b>${mastered}</b></div>
+        <div class="stat-card"><ruby>漢字<rt>かんじ</rt></ruby>${withRuby("習得")}<b>${kanjiMastered}/${kanjiTerms.length}</b></div>
+        <div class="stat-card"><ruby>漢字<rt>かんじ</rt></ruby>${withRuby("練習回数")}<b>${kanjiAnswered}</b></div>
         <div class="stat-card">${withRuby("正解確認待ち")}<b>${pendingAudit}</b></div>
       </div>
       <div class="section-title" style="margin-top:22px">
@@ -1845,6 +2120,10 @@ document.addEventListener("click", (event) => {
     state.year = target.dataset.year === "all" ? "all" : Number(target.dataset.year);
     render();
   }
+  if (target.dataset.kanjiStart !== undefined) startKanjiQuiz();
+  if (target.dataset.kanjiChoice !== undefined) submitKanjiAnswer(Number(target.dataset.kanjiChoice));
+  if (target.dataset.kanjiNext !== undefined) nextKanjiQuestion();
+  if (target.dataset.kanjiRetry !== undefined) startKanjiQuiz();
   if (target.dataset.start) startQuiz(target.dataset.start);
   if (target.dataset.choice !== undefined) submitAnswer(Number(target.dataset.choice));
   if (target.dataset.next !== undefined) nextQuestion();
@@ -1854,7 +2133,7 @@ document.addEventListener("click", (event) => {
   }
   if (target.dataset.retry !== undefined) startQuiz(state.category);
   if (target.dataset.reset !== undefined) {
-    state.progress = { sessions: [], answers: {} };
+    state.progress = defaultProgress();
     saveProgress();
     render();
   }

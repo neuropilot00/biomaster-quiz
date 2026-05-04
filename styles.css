@@ -174,6 +174,25 @@ button:disabled {
   background: var(--blue);
 }
 
+.kanji-mode-button {
+  display: inline-grid;
+  gap: 2px;
+  align-content: center;
+  min-height: 42px;
+  padding: 0 14px;
+  color: #111827;
+  font-weight: 950;
+  border: 0;
+  border-radius: 8px;
+  background: #facc15;
+}
+
+.kanji-mode-button small {
+  color: #713f12;
+  font-size: 0.68rem;
+  line-height: 1;
+}
+
 .danger-button {
   color: #fff;
   background: var(--red);
@@ -458,8 +477,104 @@ button:disabled {
 
 .quiz-panel,
 .result-panel,
-.stats-panel {
+.stats-panel,
+.kanji-panel {
   padding: 18px;
+}
+
+.kanji-panel {
+  max-width: 860px;
+  margin: 0 auto;
+  background: rgba(31, 41, 55, 0.96);
+  border: 1px solid rgba(51, 65, 85, 0.95);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.kanji-card {
+  display: grid;
+  gap: 10px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #111827;
+}
+
+.kanji-card h2 {
+  margin: 0;
+  font-size: clamp(3rem, 10vw, 6.5rem);
+  line-height: 1.05;
+  letter-spacing: 0;
+}
+
+.kanji-card h2 rt {
+  color: #fef3c7;
+  font-size: 0.24em;
+}
+
+.kanji-card p {
+  margin: 0;
+  color: #dbeafe;
+  font-weight: 850;
+  line-height: 1.45;
+}
+
+.kanji-reading {
+  color: #facc15 !important;
+  font-size: 1.1rem;
+}
+
+.kanji-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.kanji-option {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 10px;
+  align-items: center;
+  min-height: 88px;
+  padding: 14px;
+  text-align: left;
+  color: var(--ink);
+  border: 2px solid var(--line);
+  border-radius: 8px;
+  background: #111827;
+  transition: transform 160ms ease, border-color 160ms ease, background-color 160ms ease;
+}
+
+.kanji-option:hover {
+  transform: translateY(-2px);
+}
+
+.kanji-option strong {
+  font-size: clamp(1rem, 2.5vw, 1.34rem);
+  line-height: 1.35;
+}
+
+.kanji-option small {
+  grid-column: 2;
+  color: var(--muted);
+  font-weight: 750;
+}
+
+.kanji-option.correct,
+.kanji-option.reveal {
+  border-color: var(--green);
+  background: var(--green-soft);
+}
+
+.kanji-option.wrong {
+  border-color: var(--red);
+  background: var(--red-soft);
+}
+
+.kanji-option:disabled {
+  opacity: 1;
 }
 
 .quiz-head {
