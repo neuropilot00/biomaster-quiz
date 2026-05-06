@@ -1293,7 +1293,7 @@ const kanjiTerms = [
 const kanjiQuestionTypes = ["meaning", "reading"];
 
 function defaultProgress() {
-  return { sessions: [], answers: {}, kanji: {}, kanjiSessions: [] };
+  return { sessions: [], answers: {}, kanji: {}, kanjiSessions: [], activeQuiz: null, activeKanji: null };
 }
 
 const state = {
@@ -1444,6 +1444,8 @@ function loadProgress() {
       kanji: saved.kanji || {},
       sessions: saved.sessions || [],
       kanjiSessions: saved.kanjiSessions || [],
+      activeQuiz: saved.activeQuiz || null,
+      activeKanji: saved.activeKanji || null,
     };
   } catch {
     return defaultProgress();
@@ -1537,6 +1539,100 @@ function buildKanjiSession() {
     .map((item) => buildKanjiQuestion(item.term));
 }
 
+function saveActiveQuiz() {
+  if (!state.session.length || state.view === "result") return;
+  state.progress.activeQuiz = {
+    category: state.category,
+    grade: state.grade,
+    year: state.year,
+    questionIds: state.session.map((q) => q.id),
+    index: state.index,
+    answers: state.answers,
+    recordedAnswers: state.recordedAnswers,
+    startedAt: state.startedAt,
+    savedAt: new Date().toISOString(),
+  };
+  saveProgress();
+}
+
+function clearActiveQuiz() {
+  state.progress.activeQuiz = null;
+  saveProgress();
+}
+
+function resumeQuiz() {
+  const active = state.progress.activeQuiz;
+  if (!active?.questionIds?.length) return;
+  const restored = active.questionIds.map((id) => questions.find((q) => q.id === id)).filter(Boolean);
+  if (!restored.length) {
+    clearActiveQuiz();
+    return;
+  }
+  state.category = active.category || "all";
+  state.grade = active.grade || 4;
+  state.year = active.year || "all";
+  state.session = restored;
+  state.index = Math.min(active.index || 0, restored.length - 1);
+  state.answers = restored.map((_, i) => active.answers?.[i] ?? null);
+  state.recordedAnswers = restored.map((_, i) => Boolean(active.recordedAnswers?.[i]));
+  state.startedAt = active.startedAt || Date.now();
+  state.view = "quiz";
+  render();
+}
+
+function saveActiveKanji() {
+  if (!state.kanjiSession.length || state.view === "kanjiResult") return;
+  state.progress.activeKanji = {
+    session: state.kanjiSession.map((q) => ({
+      termId: q.term.id,
+      type: q.type,
+      choices: q.choices,
+      answer: q.answer,
+    })),
+    index: state.kanjiIndex,
+    answers: state.kanjiAnswers,
+    recordedAnswers: state.kanjiRecordedAnswers,
+    startedAt: state.startedAt,
+    savedAt: new Date().toISOString(),
+  };
+  saveProgress();
+}
+
+function clearActiveKanji() {
+  state.progress.activeKanji = null;
+  saveProgress();
+}
+
+function resumeKanjiQuiz() {
+  const active = state.progress.activeKanji;
+  if (!active?.session?.length) return;
+  const restored = active.session
+    .map((item) => {
+      const term = kanjiTerms.find((candidate) => candidate.id === item.termId);
+      if (!term) return null;
+      return {
+        id: `${term.id}-${item.type}`,
+        term,
+        type: item.type,
+        prompt: item.type === "reading" ? "この漢字は、なんと読みますか。" : "この言葉の意味を選びましょう。",
+        choices: item.choices,
+        answer: item.answer,
+      };
+    })
+    .filter(Boolean);
+  if (!restored.length) {
+    clearActiveKanji();
+    return;
+  }
+  state.kanjiSession = restored;
+  state.kanjiIndex = Math.min(active.index || 0, restored.length - 1);
+  state.kanjiAnswers = restored.map((_, i) => active.answers?.[i] ?? null);
+  state.kanjiRecordedAnswers = restored.map((_, i) => Boolean(active.recordedAnswers?.[i]));
+  state.startedAt = active.startedAt || Date.now();
+  state.view = "kanji";
+  render();
+}
+
 function startKanjiQuiz() {
   state.kanjiSession = buildKanjiSession();
   state.kanjiIndex = 0;
@@ -1544,6 +1640,7 @@ function startKanjiQuiz() {
   state.kanjiRecordedAnswers = new Array(state.kanjiSession.length).fill(false);
   state.startedAt = Date.now();
   state.view = "kanji";
+  saveActiveKanji();
   render();
 }
 
@@ -1553,6 +1650,7 @@ function submitKanjiAnswer(choice) {
   const isCorrect = choice === q.answer;
   state.kanjiAnswers[state.kanjiIndex] = choice;
   recordKanjiAnswer(q, choice, state.kanjiIndex);
+  saveActiveKanji();
   render();
   if (isCorrect) launchConfetti();
 }
@@ -1575,10 +1673,18 @@ function recordKanjiAnswer(q, choice, index) {
 function nextKanjiQuestion() {
   if (state.kanjiIndex < state.kanjiSession.length - 1) {
     state.kanjiIndex += 1;
+    saveActiveKanji();
     render();
     return;
   }
   finishKanjiQuiz();
+}
+
+function previousKanjiQuestion() {
+  if (state.kanjiIndex <= 0) return;
+  state.kanjiIndex -= 1;
+  saveActiveKanji();
+  render();
 }
 
 function finishKanjiQuiz() {
@@ -1592,6 +1698,7 @@ function finishKanjiQuiz() {
     timeSeconds: Math.round((Date.now() - state.startedAt) / 1000),
   };
   state.progress.kanjiSessions = [result, ...state.progress.kanjiSessions].slice(0, 30);
+  state.progress.activeKanji = null;
   state.lastKanjiResult = result;
   saveProgress();
   state.view = "kanjiResult";
@@ -1609,6 +1716,7 @@ function startQuiz(category) {
   state.recordedAnswers = new Array(state.session.length).fill(false);
   state.startedAt = Date.now();
   state.view = "quiz";
+  saveActiveQuiz();
   render();
 }
 
@@ -1618,6 +1726,7 @@ function submitAnswer(choice) {
   const isCorrect = q.answer !== null && choice === q.answer;
   state.answers[state.index] = choice;
   recordQuestionAnswer(q, choice, state.index);
+  saveActiveQuiz();
   render();
   if (isCorrect) launchConfetti();
 }
@@ -1640,10 +1749,18 @@ function recordQuestionAnswer(q, choice, index) {
 function nextQuestion() {
   if (state.index < state.session.length - 1) {
     state.index += 1;
+    saveActiveQuiz();
     render();
     return;
   }
   finishQuiz();
+}
+
+function previousQuestion() {
+  if (state.index <= 0) return;
+  state.index -= 1;
+  saveActiveQuiz();
+  render();
 }
 
 function finishQuiz() {
@@ -1663,6 +1780,7 @@ function finishQuiz() {
   };
 
   state.progress.sessions = [result, ...state.progress.sessions].slice(0, 30);
+  state.progress.activeQuiz = null;
   state.lastResult = result;
   saveProgress();
   state.view = "result";
@@ -1690,6 +1808,22 @@ function questionCountForYear(year) {
 
 function selectedYearLabel() {
   return examYears.find((item) => item.id === state.year)?.label || String(state.year);
+}
+
+function resumeQuizLabel(active) {
+  if (!active) return "";
+  const answered = (active.answers || []).filter((answer) => answer !== null).length;
+  const total = active.questionIds?.length || 0;
+  const year = active.year === "all" ? "전체" : active.year;
+  const cat = categories[active.category]?.ja || categories.all.ja;
+  return `${year} · ${withRuby(cat)} · ${answered}/${total}`;
+}
+
+function resumeKanjiLabel(active) {
+  if (!active) return "";
+  const answered = (active.answers || []).filter((answer) => answer !== null).length;
+  const total = active.session?.length || 0;
+  return `<ruby>漢字<rt>かんじ</rt></ruby><ruby>認識<rt>にんしき</rt></ruby> · ${answered}/${total}`;
 }
 
 function masteredCount(pool) {
@@ -1729,6 +1863,14 @@ function shell(content) {
 function renderHome() {
   const grade4Active = state.grade === 4 ? "active" : "";
   const grade3Active = state.grade === 3 ? "active" : "";
+  const resumeItems = [
+    state.progress.activeQuiz
+      ? `<button class="resume-button" data-resume-quiz><strong>${withRuby("途中から続ける")}</strong><small>${resumeQuizLabel(state.progress.activeQuiz)}</small></button>`
+      : "",
+    state.progress.activeKanji
+      ? `<button class="resume-button kanji-resume" data-resume-kanji><strong><ruby>漢字<rt>かんじ</rt></ruby>を${withRuby("続ける")}</strong><small>${resumeKanjiLabel(state.progress.activeKanji)}</small></button>`
+      : "",
+  ].filter(Boolean).join("");
   const yearTabs = examYears
     .map((year) => {
       const count = questionCountForYear(year.id);
@@ -1778,6 +1920,7 @@ function renderHome() {
           <button class="kanji-mode-button" data-kanji-start><span><ruby>漢字<rt>かんじ</rt></ruby><ruby>認識<rt>にんしき</rt></ruby></span><small>23·24·25와 별도</small></button>
           <button class="ghost-button" data-view="stats">${withRuby("成績を見る")}</button>
         </div>
+        ${resumeItems ? `<div class="resume-row">${resumeItems}</div>` : ""}
       </div>
       <div class="hero-photo">
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Papilio_xuthus_front_view_2011-07-16.jpg" alt="実写のアゲハチョウ" />
@@ -1867,6 +2010,7 @@ function renderQuiz() {
       ${answered ? `<div class="explain-box ${q.answer === null ? "pending" : ""}"><strong>${q.answer === null ? withRuby("採点準備中です。") : selected === q.answer ? withRuby("正解です。") : withRuby("答えは ") + withRuby(q.options[q.answer].ja) + withRuby(" です。")}</strong><br />${withRuby(buildFeedback(q, selected))}</div>` : ""}
       <div class="quiz-actions">
         <button class="danger-button" data-view="home">やめる</button>
+        <button class="ghost-button" data-prev ${state.index === 0 ? "disabled" : ""}>${withRuby("前へ")}</button>
         <button class="primary-button" data-next ${answered ? "" : "disabled"}>${state.index === state.session.length - 1 ? withRuby("結果を見る") : withRuby("次へ")}</button>
       </div>
     </section>
@@ -1933,6 +2077,7 @@ function renderKanjiQuiz() {
       ` : ""}
       <div class="quiz-actions">
         <button class="danger-button" data-view="home">やめる</button>
+        <button class="ghost-button" data-kanji-prev ${state.kanjiIndex === 0 ? "disabled" : ""}>${withRuby("前へ")}</button>
         <button class="primary-button" data-kanji-next ${answered ? "" : "disabled"}>${state.kanjiIndex === state.kanjiSession.length - 1 ? withRuby("結果を見る") : withRuby("次へ")}</button>
       </div>
     </section>
@@ -2120,13 +2265,17 @@ document.addEventListener("click", (event) => {
     state.year = target.dataset.year === "all" ? "all" : Number(target.dataset.year);
     render();
   }
+  if (target.dataset.resumeQuiz !== undefined) resumeQuiz();
+  if (target.dataset.resumeKanji !== undefined) resumeKanjiQuiz();
   if (target.dataset.kanjiStart !== undefined) startKanjiQuiz();
   if (target.dataset.kanjiChoice !== undefined) submitKanjiAnswer(Number(target.dataset.kanjiChoice));
   if (target.dataset.kanjiNext !== undefined) nextKanjiQuestion();
+  if (target.dataset.kanjiPrev !== undefined) previousKanjiQuestion();
   if (target.dataset.kanjiRetry !== undefined) startKanjiQuiz();
   if (target.dataset.start) startQuiz(target.dataset.start);
   if (target.dataset.choice !== undefined) submitAnswer(Number(target.dataset.choice));
   if (target.dataset.next !== undefined) nextQuestion();
+  if (target.dataset.prev !== undefined) previousQuestion();
   if (target.dataset.view) {
     state.view = target.dataset.view;
     render();
