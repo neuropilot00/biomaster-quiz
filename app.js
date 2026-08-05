@@ -303,23 +303,61 @@ function buildFeedback(q, selectedIndex) {
 }
 
 function buildStudyHint(category, text) {
-  if (text.includes("近縁") || text.includes("同じ")) {
-    return "名前の似ているものだけで選ばず、同じ科・同じ目など分類上の近さを考えます。写真では体の形、足、くちばし、葉や花のつくりも比べます。";
+  const question = String(text || "");
+  const focusHint = (hint) => {
+    const focus = question.replace(/[。！？]/g, "").slice(0, 46);
+    return `問題文の「${focus}」が手がかりです。${hint}`;
+  };
+  if (question.includes("ひげくじら")) {
+    return focusHint("ひげ板をもつハクジラか、歯をもつハクジラかを比べます。体の大きさだけで決めず、口のつくりを確認します。");
   }
-  if (text.includes("シルエット") || text.includes("図") || text.includes("葉")) {
-    return "細かい色ではなく、全体の形を見ます。首やくちばし、尾、葉脈、葉のふちなど、輪郭に出る特徴を先に確認します。";
+  if (question.includes("紅藻") || question.includes("褐藻") || question.includes("藻類")) {
+    return focusHint("海藻の色だけでなく、紅藻・褐藻・緑藻の分類を確認します。選択肢の生物がどの藻類に属するかを比べます。");
   }
-  if (text.includes("正しい記述") || text.includes("誤り")) {
-    return "選択肢を一つずつ読んで、すみか、体のつくり、ふえ方、食べ方のどれを聞いているかに分けて考えます。";
+  if (question.includes("コケ植物") || question.includes("シダ植物") || question.includes("裸子植物") || question.includes("被子植物") || question.includes("種子植物")) {
+    return focusHint("種子をつくるか、胞子でふえるか、種子が果実に包まれるかを確認して分類します。");
   }
-  if (text.includes("なんですか")) {
-    return "まず大きな形を見ます。魚なら体形とひれ、鳥ならくちばしと足、植物なら葉・花・実の特徴を比べます。";
+  if (question.includes("シルエット") || question.includes("図") || question.includes("形状") || question.includes("検索表")) {
+    return focusHint("まず輪郭と配置を見ます。動物は頭・足・尾・ひれ、植物は葉・花・実の形を選択肢と一つずつ比べます。");
   }
-  if (text.includes("胎生")) {
-    return "胎生は卵を外に産むのではなく、親の体内で子が育ってから生まれることです。";
+  if (question.includes("近縁") || question.includes("同じ") || question.includes("分類階級") || question.includes("学名") || /(?:門|綱|目|科|属)を/.test(question)) {
+    return focusHint("名前の似ているものだけで選ばず、同じ科・同じ目など分類上の近さを考えます。写真では体の形、足、くちばし、葉や花のつくりも比べます。");
   }
-  if (text.includes("産卵") || text.includes("種子") || text.includes("散布")) {
-    return "ふえ方を聞く問題です。卵・種子・胞子のどれか、また風・動物・水のどれで運ばれるかを考えます。";
+  if (question.includes("正しい") || question.includes("誤り") || question.includes("記述") || question.includes("組み合わせ")) {
+    return focusHint("選択肢を一つずつ読み、問題で示された条件と合うか確認します。特に「正しい」と「誤り」を先に区別して考えます。");
+  }
+  if (question.includes("なんですか") || question.includes("和名")) {
+    return focusHint("まず大きな形を見ます。魚なら体形とひれ、鳥ならくちばしと足、植物なら葉・花・実の特徴を比べます。");
+  }
+  if (question.includes("はばた") || question.includes("飛ぶ") || question.includes("滑空")) {
+    return focusHint("飛び方と体のつくりを見ます。翼や飛膜の位置、体の大きさ、飛ぶための特徴が選択肢と合うか比べます。");
+  }
+  if (question.includes("みずかき") || question.includes("水かき") || question.includes("足") || question.includes("脚")) {
+    return focusHint("足の本数と形を確認します。水で泳ぐ動物は水かき、鳥は足指や爪の形も選択肢と比べます。");
+  }
+  if (question.includes("翅") || question.includes("鱗") || question.includes("甲羅") || question.includes("歯舌") || question.includes("呼吸") || question.includes("えら") || question.includes("肺") || question.includes("あご") || question.includes("口")) {
+    return focusHint("問題文で指定された体の部分だけに注目します。昆虫なら翅・口、魚ならえら・ひれ、爬虫類なら鱗・甲羅が一致するか比べます。");
+  }
+  if (question.includes("餌") || question.includes("食べ") || question.includes("肉食") || question.includes("吸血") || question.includes("食草") || question.includes("捕食")) {
+    return focusHint("食べ物と食べ方を分けて考えます。何を食べるか、口の形や食べる場所が選択肢の説明と合うか確認します。");
+  }
+  if (question.includes("胎生") || question.includes("卵生") || question.includes("産卵") || question.includes("繁殖") || question.includes("越冬") || question.includes("冬眠") || question.includes("夏鳥") || question.includes("冬鳥") || question.includes("巣") || question.includes("育てる")) {
+    return focusHint("ふえ方や生活時期を確認します。卵を産むか、子を体内で育てるか、いつ渡来・越冬するかを選択肢と比べます。");
+  }
+  if (question.includes("水中") || question.includes("淡水") || question.includes("海") || question.includes("湿原") || question.includes("海浜") || question.includes("生育") || question.includes("分布") || question.includes("原産") || question.includes("外来") || question.includes("在来")) {
+    return focusHint("すむ場所や分布を手がかりにします。海・淡水・陸のどこで生活するか、原産地や外来種かどうかを選択肢と確認します。");
+  }
+  if (question.includes("花") || question.includes("葉") || question.includes("果実") || question.includes("種子") || question.includes("根") || question.includes("茎") || question.includes("花弁") || question.includes("葉脈") || question.includes("葉柄") || question.includes("野菜") || question.includes("常緑") || question.includes("落葉") || question.includes("一年生") || question.includes("多年")) {
+    return focusHint("植物のどの部分を聞いているかを先に決めます。花・葉・実・根・茎の形や季節の変化を選択肢と比べます。");
+  }
+  if (question.includes("標本") || question.includes("採集") || question.includes("乾燥") || question.includes("固定") || question.includes("解剖")) {
+    return focusHint("標本の目的に合う方法を考えます。形を残すのか液体で保存するのか、採集日や場所を記録するのか確認します。");
+  }
+  if (question.includes("利用法") || question.includes("原料") || question.includes("用途")) {
+    return focusHint("生物の特徴ではなく、問題に出た利用目的を探します。食用・薬用・材料・燃料のどれかを選択肢と対照します。");
+  }
+  if (question.includes("関係") || question.includes("共生") || question.includes("寄生")) {
+    return focusHint("二つの生物のどちらが利益を得るか、害があるかを分けて考えます。双方に利益があるか、一方だけが利益を得るかを確認します。");
   }
   const categoryHints = {
     fish: "魚の問題では、すみか、産卵のしかた、ひれ・えら・体形に注目します。",
@@ -331,7 +369,7 @@ function buildStudyHint(category, text) {
     reptile: "爬虫類の問題では、うろこ、肺呼吸、卵、体表の乾きやすさに注目します。",
     all: "分類の問題では、見た目だけでなく、何門・何綱・何目・何科かを思い出します。",
   };
-  return categoryHints[category] || categoryHints.all;
+  return focusHint(categoryHints[category] || categoryHints.all);
 }
 
 const svgWrap = (body, viewBox = "0 0 320 140") => `
@@ -924,6 +962,42 @@ const optionImageOverrides = {
 
 const optionImageCache = new Map(Object.entries(optionImageOverrides));
 
+const imageQueryAliases = {
+  "アゲハ（ナミアゲハ）": "ナミアゲハ",
+  "ニガウリ（ゴーヤ）": "ツルレイシ",
+  "ヤハズエンドウ（カラスノエンドウ）": "ヤハズエンドウ",
+  "ゲンゲ（レンゲソウ）": "レンゲソウ",
+  "スマトラオオコンニャク（ショクダイコンニャク）": "スマトラオオコンニャク",
+  "うろこ": "鱗",
+  "えら": "鰓",
+  "ひれ": "鰭",
+};
+
+const imageCacheStorageKey = "biomaster-image-cache-v1";
+const imageRequestQueue = [];
+let imageRequestActive = false;
+
+try {
+  const savedImageCache = JSON.parse(localStorage.getItem(imageCacheStorageKey) || "{}");
+  Object.entries(savedImageCache).forEach(([name, source]) => {
+    if (typeof source === "string" && /^https?:\/\//.test(source)) {
+      optionImageCache.set(name, source);
+    }
+  });
+} catch {
+  // Image cache is optional; the resolver can still fetch fresh sources.
+}
+
+function persistImageCache(name, source) {
+  try {
+    const saved = JSON.parse(localStorage.getItem(imageCacheStorageKey) || "{}");
+    saved[name] = source;
+    localStorage.setItem(imageCacheStorageKey, JSON.stringify(saved));
+  } catch {
+    // Storage can be unavailable in private or embedded browsers.
+  }
+}
+
 const questions = photoQuestions.sort((a, b) => {
   const yearDiff = a.year - b.year;
   if (yearDiff) return yearDiff;
@@ -1204,13 +1278,22 @@ const kanjiReadings = {
   黄: "き"
 };
 
+// Readings used by the recovered question text and the standalone kanji mode.
+// The character fallback below deliberately leaves an unknown kanji unchanged
+// instead of displaying a misleading question mark.
+Object.assign(kanjiReadings, {
+  番: "ばん", 羽: "はね", 咲: "さ", 菌: "きん", 世: "せ", 式: "しき", 命: "めい", 者: "しゃ", 書: "か", 採: "さい", 月: "つき", 場: "ば", 所: "しょ", 入: "はい", 在: "ざい", 域: "いき", 過: "す", 繁: "はん", 殖: "しょく", 鋸: "きょ", 歯: "は", 枚: "まい", 並: "なら", 粒: "つぶ", 窒: "ちつ",
+  漢: "かん", 字: "じ", 言: "こと", 味: "あじ", 読: "よ", 縞: "しま", 厚: "あつ", 反: "はん", 返: "かえ", 密: "みつ", 指: "ゆび", 盤: "ばん", 登: "のぼ", 深: "ふか", 叉: "さ", 横: "よこ", 鋏: "はさみ", 角: "かく", 腕: "うで", 触: "ふ", 序: "じょ", 斗: "と", 紫: "むらさき", 冠: "かん", 円: "えん", 披: "ひ", 心: "こころ", 互: "たが", 束: "たば", 堅: "かた", 淡: "たん", 臭: "くさ", 総: "そう", 苞: "ほう", 片: "かた", 椎: "しい", 型: "かた", 黒: "くろ", 斑: "はん", 紋: "もん", 手: "て", 泡: "あわ", 塊: "かたまり", 敵: "てき", 防: "ぼう", 御: "ご", 激: "げき", 受: "う", 常: "じょう", 緑: "みどり", 宿: "しゅく", 冷: "つめ", 湿: "しつ", 秋: "あき", 毒: "どく", 漆: "うるし", 塗: "ぬ", 具: "ぐ", 燃: "も", 羅: "ら", 粉: "こな", 掌: "しょう", 三: "さん", 床: "ゆか", 柱: "はしら", 掘: "ほ", 穴: "あな", 渓: "けい", 流: "なが", 歩: "ある", 浜: "はま", 息: "いき", 潜: "もぐ", 網: "あみ", 血: "ち", 話: "はなし", 耐: "た", 久: "ひさ", 落: "お", 付: "つ", 着: "つ", 終: "お", 般: "はん", 北: "きた", 蝋: "ろう", 殺: "さつ", 剤: "ざい", 仏: "ぶつ", 壇: "だん", 供: "そな", 香: "かお", 辛: "から", 移: "うつ", 提: "てい", 唱: "とな", 相: "あい", 端: "はし"
+});
+
 function withRuby(text) {
   if (!text) return "";
   const cacheKey = String(text);
   if (rubyCache.has(cacheKey)) return rubyCache.get(cacheKey);
   const placeholders = [];
   let output = escapeHtml(text);
-  rubyEntries
+  const entries = [...rubyEntries, ...kanjiTerms.map((term) => [term.term, term.reading])];
+  entries
     .slice()
     .sort((a, b) => b[0].length - a[0].length)
     .forEach(([word, reading]) => {
@@ -1221,7 +1304,10 @@ function withRuby(text) {
         return token;
       });
     });
-  output = output.replace(/[\u3400-\u9fff]/gu, (char) => `<ruby>${char}<rt>${kanjiReadings[char] || "?"}</rt></ruby>`);
+  output = output.replace(/[\u3400-\u9fff]/gu, (char) => {
+    const reading = kanjiReadings[char];
+    return reading ? `<ruby>${char}<rt>${reading}</rt></ruby>` : char;
+  });
   placeholders.forEach((html, index) => {
     output = output.replace(`__RUBY_${index}__`, html);
   });
@@ -2199,12 +2285,25 @@ function renderStats() {
 function wireImages() {
   document.querySelectorAll("[data-photo]").forEach((photo) => {
     const status = photo.previousElementSibling;
-    photo.addEventListener("load", () => status?.classList.add("hidden"));
+    photo.addEventListener("load", () => {
+      if (photo.dataset.imageFallback === "true") {
+        if (status) {
+          status.textContent = "代表写真（正確な一致写真なし）";
+          status.className = "image-loading fallback-image";
+        }
+        return;
+      }
+      status?.classList.add("hidden");
+    });
     photo.addEventListener("error", () => {
       const fallback = fallbackImages[photo.dataset.category] || fallbackImages.all;
-      if (photo.src !== fallback) {
+      if (photo.dataset.imageFallback !== "true" && photo.src !== fallback) {
+        photo.dataset.imageFallback = "true";
         photo.src = fallback;
-        if (status) status.textContent = "関連写真を読み込み中";
+        if (status) {
+          status.textContent = "代表写真を表示中（該当写真なし）";
+          status.className = "image-loading fallback-image";
+        }
         return;
       }
       if (status) {
@@ -2218,6 +2317,78 @@ function wireImages() {
   });
 }
 
+function waitForImageRequest(milliseconds) {
+  return new Promise((resolve) => setTimeout(resolve, milliseconds));
+}
+
+function enqueueImageRequest(name) {
+  return new Promise((resolve) => {
+    imageRequestQueue.push({ name, resolve });
+    processImageRequestQueue();
+  });
+}
+
+async function processImageRequestQueue() {
+  if (imageRequestActive) return;
+  imageRequestActive = true;
+  while (imageRequestQueue.length) {
+    const request = imageRequestQueue.shift();
+    const source = await fetchImageSource(request.name);
+    request.resolve(source);
+    // Keep the public Wikimedia endpoint below its burst/rate limit on tablets.
+    if (imageRequestQueue.length) await waitForImageRequest(140);
+  }
+  imageRequestActive = false;
+}
+
+async function fetchImageSource(name) {
+  const candidates = [...new Set([name, imageQueryAliases[name]].filter(Boolean))];
+  for (const candidate of candidates) {
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const response = await fetch(`https://ja.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(candidate)}`, {
+          headers: { Accept: "application/json" },
+        });
+        if (response.status === 404) break;
+        if (response.status === 429 || response.status === 503) {
+          if (attempt === 0) await waitForImageRequest(700);
+          else break;
+          continue;
+        }
+        if (!response.ok) break;
+        const data = await response.json();
+        const source = data?.originalimage?.source || data?.thumbnail?.source || "";
+        if (/^https?:\/\//.test(source)) return source;
+        break;
+      } catch {
+        if (attempt === 0) await waitForImageRequest(400);
+      }
+    }
+    const commonsSource = await fetchCommonsImageSource(candidate);
+    if (commonsSource) return commonsSource;
+  }
+  return "";
+}
+
+async function fetchCommonsImageSource(name) {
+  try {
+    const search = encodeURIComponent(`intitle:${name}`);
+    const endpoint = `https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrsearch=${search}&gsrnamespace=6&gsrlimit=5&prop=imageinfo&iiprop=url|mime&iiurlwidth=720&origin=*`;
+    const response = await fetch(endpoint, { headers: { Accept: "application/json" } });
+    if (!response.ok) return "";
+    const data = await response.json();
+    const pages = Object.values(data?.query?.pages || {}).sort((a, b) => (a.index || 0) - (b.index || 0));
+    for (const page of pages) {
+      const info = page.imageinfo?.[0];
+      const source = info?.thumburl || info?.url || "";
+      if (/^https?:\/\//.test(source) && (!info.mime || info.mime.startsWith("image/"))) return source;
+    }
+  } catch {
+    // The category fallback remains available when both Wikimedia endpoints fail.
+  }
+  return "";
+}
+
 async function resolveOptionImage(photo, status) {
   const name = normalizeImageQuery(photo.dataset.name || "");
   const fallback = fallbackImages[photo.dataset.category] || fallbackImages.all;
@@ -2227,26 +2398,32 @@ async function resolveOptionImage(photo, status) {
   }
   if (optionImageCache.has(name)) {
     photo.src = optionImageCache.get(name) || fallback;
+    if (status) status.textContent = "写真を読み込み中";
     return;
   }
-  try {
-    const response = await fetch(`https://ja.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(name)}`);
-    if (!response.ok) throw new Error("summary not found");
-    const data = await response.json();
-    const source = data?.originalimage?.source || data?.thumbnail?.source || fallback;
+  photo.dataset.imageResolvedName = name;
+  if (status) status.textContent = "写真を検索中";
+  const source = await enqueueImageRequest(name);
+  if (source) {
     optionImageCache.set(name, source);
+    persistImageCache(name, source);
     photo.src = source;
-  } catch {
-    optionImageCache.set(name, fallback);
+  } else {
+    photo.dataset.imageFallback = "true";
     photo.src = fallback;
-  } finally {
-    if (status) status.textContent = "写真を読み込み中";
+    if (status) {
+      status.textContent = "代表写真を表示中（該当写真なし）";
+      status.className = "image-loading fallback-image";
+    }
   }
 }
 
 function normalizeImageQuery(name) {
-  if (/^(A|B|C|D)-/.test(name) || /^図\d$/.test(name) || /^葉\d$/.test(name) || /^シルエット\d$/.test(name)) return "";
-  return name.replace(/（.*?）|\(.*?\)/g, "").replace(/[0-9.]/g, "").trim();
+  const original = String(name || "").trim();
+  if (!original || /^(A|B|C|D)(?:-|$)/.test(original) || /^(図|葉|シルエット|足)\d$/.test(original)) return "";
+  if (original.length > 28 || /[「」。、]/.test(original)) return "";
+  const cleaned = original.replace(/（.*?）|\(.*?\)/g, "").replace(/[0-9.]/g, "").trim();
+  return imageQueryAliases[original] || imageQueryAliases[cleaned] || cleaned;
 }
 
 document.addEventListener("click", (event) => {
