@@ -179,4 +179,12 @@ User-provided photos were used to transcribe visible question text into app data
 
 - Korean translations are blank for newly transcribed book questions. The app already supports Korean display, so translations can be added later without UI changes.
 - The current app is static and online image loading depends on Wikipedia/Wikimedia availability.
+
+## 2026-08-05 Display, Hint, and Image Repair
+
+- Removed visible `?` furigana fallbacks by completing the readings used by the recovered question text and kanji mode; unknown future characters remain readable instead of showing a question mark.
+- Rebuilt study hints around the actual question wording and prepended the question focus so all 300 questions show a relevant hint rather than an unrelated category-only sentence.
+- Added a throttled Wikimedia image queue, retry handling for rate limits, Japanese-name aliases, and persistent successful-image caching. Failed lookups no longer get cached as if they were a correct match.
+- Changed quiz layout to allow vertical scrolling so long Japanese prompts, source diagrams, options, hints, and explanations remain reachable on phones and tablets.
+- Rechecked all 300 questions: unique IDs, non-empty prompts/options, valid answer indexes, renderable question/option markup, and local prompt-image paths.
 - GitHub Pages deployment is intended to use `Deploy from a branch` with `main` and `/root`.

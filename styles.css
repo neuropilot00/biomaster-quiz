@@ -1806,3 +1806,92 @@ body:has(.view-quiz) {
     font-size: 0.5em;
   }
 }
+
+/* A long Japanese prompt must remain reachable on small tablets and phones. */
+html:has(.view-quiz),
+body:has(.view-quiz) {
+  height: auto;
+  min-height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+
+.view-quiz {
+  min-height: 100dvh;
+  height: auto;
+  overflow: visible;
+}
+
+.view-quiz .quiz-panel,
+.view-quiz .quiz-panel.stem-visual-mode {
+  min-height: calc(100dvh - 16px);
+  height: auto;
+  display: block;
+  overflow: visible;
+}
+
+.view-quiz .quiz-head {
+  margin-bottom: 14px;
+}
+
+.view-quiz .question-box.has-stem-visual {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-template-rows: auto auto auto;
+  gap: 10px;
+}
+
+.view-quiz .question-box.has-stem-visual .stem-visual {
+  grid-column: 1;
+  grid-row: auto;
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: 48vh;
+}
+
+.view-quiz .question-box.has-stem-visual .stem-svg,
+.view-quiz .question-box.has-stem-visual .stem-clip,
+.view-quiz .question-box.has-stem-visual .prompt-photo img {
+  width: 100%;
+  height: auto;
+  max-height: 44vh;
+  object-fit: contain;
+}
+
+.view-quiz .option-grid,
+.view-quiz .text-option-mode .option-grid,
+.view-quiz .stem-visual-mode .option-grid {
+  height: auto;
+  min-height: 0;
+  margin-top: 16px;
+  align-items: stretch;
+}
+
+.view-quiz .option-card:not(.text-only) {
+  height: auto;
+  min-height: 220px;
+}
+
+.view-quiz .option-card.text-only,
+.view-quiz .stem-visual-mode .option-card.text-only,
+.view-quiz .text-option-mode .option-card.text-only {
+  min-height: 104px;
+}
+
+.view-quiz .option-image {
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 4 / 3;
+}
+
+.view-quiz .hint-box,
+.view-quiz .explain-box {
+  max-height: none;
+  overflow: visible;
+  margin-top: 14px;
+}
+
+.view-quiz .quiz-actions {
+  margin-top: 16px;
+}
