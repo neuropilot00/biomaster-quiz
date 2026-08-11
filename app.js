@@ -201,7 +201,7 @@ const answerDataByYear = {
   65: [1, "サトイモは栄養繁殖をする植物です。"],
   66: [0, "ネコヤナギは綿毛のある種子が主に風で散布されます。"],
   67: [1, "ホウセンカは熟した果実がはじけて種子を飛ばします。"],
-  68: [0, "ミツマタは常緑低木です。"],
+  68: [0, "ミツマタは落葉低木です。クチナシとジンチョウゲは常緑低木、クヌギは落葉高木なので、落葉低木に当てはまるのはミツマタです。"],
   69: [0, "スミレは多年生（宿根性）の植物です。"],
   70: [0, "ヤマユリは球根で冬を越す植物です。"],
   71: [1, "ヒツジグサは水生植物です。"],
@@ -257,7 +257,7 @@ function makePhotoQuestion(num, category, ja, options, answer = null, note = nul
     addedAt,
     options: options.map((name) => ({ ja: name, kr: "", img: "" })),
     hint: note || buildStudyHint(category, ja),
-    explanation: inferred?.[1] || buildExplanation(num, ja, options, finalAnswer),
+    explanation: inferred?.[1] || buildExplanation(activeQuestionYear, num, ja, options, finalAnswer),
   };
 }
 
@@ -278,19 +278,25 @@ const statementBlocks2023 = {
   ],
 };
 
-function buildExplanation(num, text, options, answer) {
+function buildExplanation(year, num, text, options, answer) {
   const known = {
-    11: "正解はコイです。キンギョはフナの仲間をもとに作られた魚で、コイと同じコイ科にふくまれます。",
-    53: "正解はグッピーです。グッピーは母親の体内で子が育ってから生まれる胎生の魚です。イワナ、タナゴ、ハゼは卵を産む魚です。",
-    55: "正解はサケです。サケは海で大きくなり、産卵のために川へ戻ってくる魚です。",
-    56: "正解はナツミカンです。ナミアゲハの幼虫はミカン科の葉を食べます。ナツミカンはミカン科です。",
-    58: "正解はカマキリです。アリ、シロアリ、ミツバチは集団で生活する社会性昆虫ですが、カマキリは社会性昆虫ではありません。",
+    "2023:11": "正解はコイです。キンギョはフナの仲間をもとに作られた魚で、コイと同じコイ科にふくまれます。",
+    "2023:53": "正解はグッピーです。グッピーは母親の体内で子が育ってから生まれる胎生の魚です。イワナ、タナゴ、ハゼは卵を産む魚です。",
+    "2023:55": "正解はサケです。サケは海で大きくなり、産卵のために川へ戻ってくる魚です。",
+    "2023:56": "正解はナツミカンです。ナミアゲハの幼虫はミカン科の葉を食べます。ナツミカンはミカン科です。",
+    "2023:58": "正解はカマキリです。アリ、シロアリ、ミツバチは集団で生活する社会性昆虫ですが、カマキリは社会性昆虫ではありません。",
+    "2025:11": "正解はウナギです。ウナギは硬骨魚類です。イトマキエイ、ノコギリザメ、ネムリブカは軟骨魚類です。",
+    "2025:53": "正解はモツゴです。モツゴは川や池などの淡水に生息する魚です。キビナゴ、マサバ、サヨリは海水魚です。",
+    "2025:55": "正解はチョウチンアンコウです。チョウチンアンコウは深海に生息する魚です。",
+    "2025:56": "正解はカミキリムシです。カミキリムシの幼虫は木材の中に入り、木を食べて成長します。",
+    "2025:58": "正解はヒトスジシマカです。ヒトスジシマカは雌が産卵のために吸血し、雄は吸血しません。",
   };
-  if (known[num]) return known[num];
+  if (known[`${year}:${num}`]) return known[`${year}:${num}`];
   if (answer === null) {
     return "この問題はまだ正解データを入れていないため採点しません。答え合わせ後に、正解と理由を追加します。";
   }
-  return `正解は${options[answer]}です。この問題は答え合わせ済みです。詳しい理由はあとで追加できます。`;
+  const focus = String(text || "").replace(/[。！？]/g, "").slice(0, 42);
+  return `正解は${options[answer]}です。問題文の「${focus}」の条件に当てはまる選択肢です。`;
 }
 
 function buildFeedback(q, selectedIndex) {
@@ -308,11 +314,188 @@ function buildStudyHint(category, text) {
     const focus = question.replace(/[。！？]/g, "").slice(0, 46);
     return `問題文の「${focus}」が手がかりです。${hint}`;
   };
+  if (question.includes("根粒菌") || question.includes("窒素固定") || question.includes("（ア）固定")) {
+    return focusHint("根粒菌はマメ科植物と共生し、空気中の窒素を利用できる形にする窒素固定を行います。空欄に入る言葉と働きを結びつけます。");
+  }
+  if (question.includes("ファーブル")) {
+    return focusHint("ファーブルが観察記録を残した対象は昆虫です。人名と著作名を手がかりに、身近な生物の分類を比べます。");
+  }
+  if (question.includes("おし葉標本") || (question.includes("標本") && question.includes("ラベル"))) {
+    return focusHint("おし葉標本のラベルには、採集場所・採集者名に加えて採集年月日などの記録を残します。標本そのものの保存方法と混同しないようにします。");
+  }
+  if (question.includes("種子散布") || question.includes("種子を散布") || question.includes("種子をはじ") || question.includes("種子をはじき")) {
+    return focusHint("種子の運ばれ方を比べます。風・動物への付着・動物に食べられる・果実がはじける、のどれが問題文の植物に当てはまるか確認します。");
+  }
+  if (question.includes("次の記述にあてはまる植物")) {
+    return focusHint("文章に出てくる生育場所、におい、葉や花の形を一つずつ拾い、すべての条件に合う植物を選びます。");
+  }
+  if (question.includes("異なる目")) {
+    return focusHint("選択肢を目ごとに分けます。三つが同じ目で、一つだけ別の目になる組み合わせを確認します。");
+  }
+  if (question.includes("甲殻類")) {
+    return focusHint("甲殻類は節足動物のなかまです。体をおおう硬い殻や、頭胸部・脚のつくりを他の無脊椎動物と比べます。");
+  }
+  if (question.includes("軟体動物")) {
+    return focusHint("軟体動物は柔らかい体をもち、貝殻や足などに特徴があります。貝・イカ・タコのなかまかどうかを確認します。");
+  }
+  if (question.includes("（門）") || question.includes("（綱）") || question.includes("（目）") || question.includes("（科）")) {
+    return focusHint("分類階級の順番を確認します。門・綱・目・科など、問題文が求める階級と生物の所属を対応させます。");
+  }
+  if (question.includes("科の植物") || question.includes("科ではない") || question.includes("科の野菜")) {
+    return focusHint("科名を手がかりに選択肢を分類します。見た目や利用法ではなく、問題文に示された植物の科が一致するかを確認します。");
+  }
+  if (question.includes("社会性昆虫")) {
+    return focusHint("社会性昆虫は集団で役割分担して暮らします。単独で生活する昆虫を、アリ・シロアリ・ハチなどと区別します。");
+  }
+  if (question.includes("鳴かない昆虫")) {
+    return focusHint("音を出す器官や行動の有無を比べます。セミやコオロギのように鳴く昆虫と、鳴かない昆虫を区別します。");
+  }
+  if (question.includes("有袋類")) {
+    return focusHint("有袋類は子を早く産み、育児のうで成長させます。育児のうをもつ哺乳類かどうかを確認します。");
+  }
+  if (question.includes("無脊椎動物")) {
+    return focusHint("背骨をもつ脊椎動物か、背骨をもたない無脊椎動物かを分けます。節足動物や軟体動物などの分類も手がかりです。");
+  }
+  if (question.includes("うで（あし）の数") || question.includes("腕の数")) {
+    return focusHint("イカの腕は8本で、触腕2本を合わせて10本です。腕と触腕を別々に数える点に注意します。");
+  }
+  if (question.includes("刺胞")) {
+    return focusHint("刺胞はクラゲなどが餌を捕らえたり身を守ったりする細胞です。刺胞動物の特徴と、他の無脊椎動物の器官を比べます。");
+  }
+  if (question.includes("砂底")) {
+    return focusHint("海底のどこで暮らす魚かに注目します。砂底に身をひそめる魚と、岩場や水面を使う魚を比べます。");
+  }
+  if (question.includes("海に下る")) {
+    return focusHint("川と海を行き来する魚の生活史を確認します。成長場所と産卵場所がどちらかを選択肢と比べます。");
+  }
+  if (question.includes("刺激を受けると丸く") || question.includes("丸くなる動物")) {
+    return focusHint("刺激を受けたときの防御行動に注目します。体を丸めて柔らかい部分を守る動物を選択肢と比べます。");
+  }
+  if (question.includes("陸上生活")) {
+    return focusHint("海ではなく陸上で長く生活できる体のつくりに注目します。水中中心のカニと、陸上へ上がるカニを比べます。");
+  }
+  if (question.includes("タカのあし")) {
+    return focusHint("猛禽類の足は、獲物をつかむ太い指と鋭い爪が特徴です。水鳥や小鳥の足と形を比べます。");
+  }
+  if (question.includes("群れをつくる")) {
+    return focusHint("単独で暮らすか、同じ種の仲間と群れをつくるかを比べます。問題文の生活形態に合う動物を選びます。");
+  }
+  if (question.includes("落ち葉や菌類")) {
+    return focusHint("落ち葉や菌類を食べる分解者に注目します。植物を食べる動物や肉食動物ではなく、土や落ち葉の中で有機物を利用する動物を比べます。");
+  }
+  if (question.includes("巣網")) {
+    return focusHint("幼虫が集団で作る巣網の有無を比べます。卵の産み方ではなく、幼虫期の生活と巣の形に注目します。");
+  }
+  if (question.includes("巣穴")) {
+    return focusHint("巣を作る場所に注目します。土中に自分で掘った巣穴で子を育てる動物かどうかを比べます。");
+  }
+  if (question.includes("砂浜に穴") || question.includes("砂浜で産卵")) {
+    return focusHint("砂浜に穴を掘って産卵する生活を確認します。海から上陸して砂に卵を埋める動物と、淡水や陸上で繁殖する動物を比べます。");
+  }
+  if (question.includes("水底") || question.includes("抽水植物") || question.includes("浮葉植物")) {
+    return focusHint("水中での植物の位置に注目します。根が水底にあり葉や茎が水上に出る抽水植物か、葉を水面に浮かべる浮葉植物かを比べます。");
+  }
+  if (question.includes("食虫植物")) {
+    return focusHint("虫を捕らえる袋や捕虫器の有無を確認します。光合成をしながら不足する養分を昆虫から補う植物を選びます。");
+  }
+  if (question.includes("木本植物")) {
+    return focusHint("茎が木質化する木本か、柔らかい茎の草本かを比べます。木の高さや多年生かどうかも確認します。");
+  }
+  if (question.includes("地中に果実")) {
+    return focusHint("花のあとに果実が地中へ入る植物かを確認します。地上で実る植物ではなく、子房柄などが土中へ伸びる特徴を比べます。");
+  }
+  if (question.includes("海岸林")) {
+    return focusHint("海風や砂に耐えて海岸林をつくる植物に注目します。海岸の防風林に多い樹種と内陸の植物を比べます。");
+  }
+  if (question.includes("春の七草")) {
+    return focusHint("春の七草の名前を思い出し、選択肢の植物と照合します。別の季節の野草や食用植物と混同しないようにします。");
+  }
+  if (question.includes("野生絶滅")) {
+    return focusHint("生息環境ではなく、国内での絶滅状況を確認します。かつて日本で野生絶滅し、保全や再導入の対象になった鳥を選びます。");
+  }
+  if (question.includes("夏の終わりから秋") || question.includes("秋から冬") || question.includes("夕方に開花") || question.includes("開花する植物")) {
+    return focusHint("開花する季節や時間帯を比べます。春・夏・秋冬のどの時期、または夕方に花を開く植物かを確認します。");
+  }
+  if (question.includes("堅果") || question.includes("なんの実")) {
+    return focusHint("実の形と殻のつくりを観察します。堅果やどんぐりの殻斗など、植物ごとの果実の特徴を選択肢と比べます。");
+  }
+  if (question.includes("ひげ状の根")) {
+    return focusHint("根の分かれ方を見ます。枝分かれしないひげ状の根をもつ単子葉植物かどうかを比べます。");
+  }
   if (question.includes("ひげくじら")) {
-    return focusHint("ひげ板をもつハクジラか、歯をもつハクジラかを比べます。体の大きさだけで決めず、口のつくりを確認します。");
+    return focusHint("ひげ板をもつヒゲクジラか、歯をもつハクジラかを比べます。体の大きさだけで決めず、口のつくりを確認します。");
   }
   if (question.includes("紅藻") || question.includes("褐藻") || question.includes("藻類")) {
     return focusHint("海藻の色だけでなく、紅藻・褐藻・緑藻の分類を確認します。選択肢の生物がどの藻類に属するかを比べます。");
+  }
+  if (question.includes("うどんげ") || question.includes("クサカゲロウ")) {
+    return focusHint("クサカゲロウの卵は細い柄の先につき、うどんげの花のように見えます。卵のつき方と昆虫名を結びつけて考えます。");
+  }
+  if (question.includes("耐久型") || question.includes("乾燥や低温") || question.includes("低温に強")) {
+    return focusHint("耐久型は不利な環境をやり過ごす状態です。乾燥や低温に耐えられる動物の性質を選択肢と比べます。");
+  }
+  if (question.includes("硬骨魚類") || question.includes("軟骨魚類")) {
+    return focusHint("骨格が硬い硬骨魚類か、軟骨でできた軟骨魚類かを比べます。えらやひれだけでなく、魚の分類を確認します。");
+  }
+  if (question.includes("寄生植物") || question.includes("腐肉臭")) {
+    return focusHint("寄生植物は自分で光合成せず、他の植物から養分を得ます。地上部の形やにおいなど、問題文の特徴を選択肢と比べます。");
+  }
+  if (question.includes("近縁") || question.includes("同じ仲間") || question.includes("同じなかま") || question.includes("同じ科") || question.includes("同じ目")) {
+    return focusHint("見た目だけでなく、分類上の共通点を比べます。問題文が同じ科・同じ目・近縁のどれを聞いているかを確認します。");
+  }
+  if (question.includes("深海") || question.includes("深海魚")) {
+    return focusHint("深海に適応した魚かどうかを考えます。発光器官や体の形など、深い海で生活する特徴を選択肢と比べます。");
+  }
+  if (question.includes("キノコ") || question.includes("菌類")) {
+    return focusHint("植物に見えても、菌類かどうかを確認します。花や葉をつくる植物と、胞子でふえる菌類を区別します。");
+  }
+  if (question.includes("光合成")) {
+    return focusHint("葉緑素をもち光合成をするかを確認します。光合成をしない植物は、他の生物から養分を得る特徴があります。");
+  }
+  if (question.includes("毒")) {
+    return focusHint("食用かどうかではなく、有毒成分の有無を比べます。強い毒をもつ植物の名前を選択肢から確認します。");
+  }
+  if (question.includes("山菜") || question.includes("新芽") || question.includes("食用")) {
+    return focusHint("植物の利用部位に注目します。新芽や茎など、食用にする部分が問題文の条件と合うか比べます。");
+  }
+  if (question.includes("雌雄異株") || question.includes("雌雄別株") || question.includes("雌花と雄花") || question.includes("巻きひげ")) {
+    return focusHint("雌花・雄花のつき方や、つるを支える巻きひげの有無を比べます。植物の繁殖と体のつくりを確認します。");
+  }
+  if (question.includes("卵の世話") || question.includes("卵塊") || question.includes("卵を産")) {
+    return focusHint("卵をどこに産むか、誰が守るかを確認します。産卵場所や親の世話のしかたが選択肢と合うか比べます。");
+  }
+  if (question.includes("水生") || question.includes("冷温帯") || question.includes("野生絶滅")) {
+    return focusHint("生活する環境を手がかりにします。水辺・森林帯・野生での分布など、問題文の環境条件と選択肢を比べます。");
+  }
+  if (question.includes("共通する") || question.includes("共通する特徴")) {
+    return focusHint("二つの生物に共通する特徴だけを選びます。片方だけに当てはまる形や分類は除いて比べます。");
+  }
+  if (question.includes("全長が短い") || question.includes("もっとも小さい")) {
+    return focusHint("名前の印象ではなく、全長を基準に比べます。選択肢の大きさを同じ基準で確認します。");
+  }
+  if (question.includes("尾が") || question.includes("尾の全体")) {
+    return focusHint("尾の有無と形に注目します。尾がないのか、全体が平たいのかを選択肢の体つきと比べます。");
+  }
+  if (question.includes("樹上") || question.includes("木に登") || question.includes("木の枝")) {
+    return focusHint("生活する高さと巣の場所を確認します。樹上・木の枝・地上のどこを使う動物かを選択肢と比べます。");
+  }
+  if (question.includes("吸盤")) {
+    return focusHint("指先の吸盤の有無と形を確認します。吸盤で葉や壁に張り付くカエルかどうかを選択肢と比べます。");
+  }
+  if (question.includes("木の中") || question.includes("木材の中")) {
+    return focusHint("幼虫が木材の中で成長するかを確認します。成虫の姿だけでなく、幼虫のすみ場所と食べ物を比べます。");
+  }
+  if (question.includes("雌だけ") || question.includes("雌が") && question.includes("吸血")) {
+    return focusHint("雄と雌で食べ物が違うかを確認します。産卵のために雌だけが血を吸う昆虫を選択肢と比べます。");
+  }
+  if (question.includes("関係") || question.includes("共生") || question.includes("寄生") || question.includes("捕食") || question.includes("被食")) {
+    return focusHint("二つの生物のどちらが利益を得るか、害があるかを分けて考えます。食べる・食べられる関係か、共生・寄生かを確認します。");
+  }
+  if (question.includes("学者") || question.includes("提唱") || question.includes("名前を") || question.includes("学名") || question.includes("二名法") || question.includes("命名者") || question.includes("種小名") || question.includes("科名") || question.includes("属名") || question.includes("Temminck") || question.includes("ファーブル") || question.includes("リンネ") || question.includes("ウェゲナー")) {
+    return focusHint("人名・学名・分類名を混同しないようにします。問題文が人物、属名、科名、種小名のどれを聞いているかを先に確認します。");
+  }
+  if (question.includes("陸上で生活") || question.includes("淡水") || question.includes("海水") || question.includes("海浜") || question.includes("湿原") || question.includes("生息") || question.includes("生育") || question.includes("分布") || question.includes("原産") || question.includes("外来") || question.includes("在来")) {
+    return focusHint("すむ場所や分布を手がかりにします。海・淡水・陸のどこで生活するか、原産地や外来種かどうかを選択肢と確認します。");
   }
   if (question.includes("コケ植物") || question.includes("シダ植物") || question.includes("裸子植物") || question.includes("被子植物") || question.includes("種子植物")) {
     return focusHint("種子をつくるか、胞子でふえるか、種子が果実に包まれるかを確認して分類します。");
@@ -320,7 +503,7 @@ function buildStudyHint(category, text) {
   if (question.includes("シルエット") || question.includes("図") || question.includes("形状") || question.includes("検索表")) {
     return focusHint("まず輪郭と配置を見ます。動物は頭・足・尾・ひれ、植物は葉・花・実の形を選択肢と一つずつ比べます。");
   }
-  if (question.includes("近縁") || question.includes("同じ") || question.includes("分類階級") || question.includes("学名") || /(?:門|綱|目|科|属)を/.test(question)) {
+  if (question.includes("検索表") || question.includes("分類階級") || /(?:門|綱|目|科|属)を/.test(question)) {
     return focusHint("名前の似ているものだけで選ばず、同じ科・同じ目など分類上の近さを考えます。写真では体の形、足、くちばし、葉や花のつくりも比べます。");
   }
   if (question.includes("正しい") || question.includes("誤り") || question.includes("記述") || question.includes("組み合わせ")) {
@@ -329,13 +512,13 @@ function buildStudyHint(category, text) {
   if (question.includes("なんですか") || question.includes("和名")) {
     return focusHint("まず大きな形を見ます。魚なら体形とひれ、鳥ならくちばしと足、植物なら葉・花・実の特徴を比べます。");
   }
-  if (question.includes("はばた") || question.includes("飛ぶ") || question.includes("滑空")) {
+  if (question.includes("はばた") || question.includes("飛ぶ") || question.includes("飛びながら") || question.includes("滑空")) {
     return focusHint("飛び方と体のつくりを見ます。翼や飛膜の位置、体の大きさ、飛ぶための特徴が選択肢と合うか比べます。");
   }
   if (question.includes("みずかき") || question.includes("水かき") || question.includes("足") || question.includes("脚")) {
     return focusHint("足の本数と形を確認します。水で泳ぐ動物は水かき、鳥は足指や爪の形も選択肢と比べます。");
   }
-  if (question.includes("翅") || question.includes("鱗") || question.includes("甲羅") || question.includes("歯舌") || question.includes("呼吸") || question.includes("えら") || question.includes("肺") || question.includes("あご") || question.includes("口")) {
+  if (question.includes("翅") || question.includes("鱗") || question.includes("甲羅") || question.includes("歯舌") || question.includes("呼吸") || question.includes("えら") || question.includes("肺") || question.includes("あご") || question.includes("口") || question.includes("吸盤")) {
     return focusHint("問題文で指定された体の部分だけに注目します。昆虫なら翅・口、魚ならえら・ひれ、爬虫類なら鱗・甲羅が一致するか比べます。");
   }
   if (question.includes("餌") || question.includes("食べ") || question.includes("肉食") || question.includes("吸血") || question.includes("食草") || question.includes("捕食")) {
@@ -344,20 +527,17 @@ function buildStudyHint(category, text) {
   if (question.includes("胎生") || question.includes("卵生") || question.includes("産卵") || question.includes("繁殖") || question.includes("越冬") || question.includes("冬眠") || question.includes("夏鳥") || question.includes("冬鳥") || question.includes("巣") || question.includes("育てる")) {
     return focusHint("ふえ方や生活時期を確認します。卵を産むか、子を体内で育てるか、いつ渡来・越冬するかを選択肢と比べます。");
   }
-  if (question.includes("水中") || question.includes("淡水") || question.includes("海") || question.includes("湿原") || question.includes("海浜") || question.includes("生育") || question.includes("分布") || question.includes("原産") || question.includes("外来") || question.includes("在来")) {
-    return focusHint("すむ場所や分布を手がかりにします。海・淡水・陸のどこで生活するか、原産地や外来種かどうかを選択肢と確認します。");
+  if (question.includes("常緑") || question.includes("落葉") || question.includes("一年生") || question.includes("多年")) {
+    return focusHint("一年中葉が残る常緑か、季節に葉を落とす落葉かを確認します。草本・低木・高木の生活形も選択肢と比べます。");
   }
-  if (question.includes("花") || question.includes("葉") || question.includes("果実") || question.includes("種子") || question.includes("根") || question.includes("茎") || question.includes("花弁") || question.includes("葉脈") || question.includes("葉柄") || question.includes("野菜") || question.includes("常緑") || question.includes("落葉") || question.includes("一年生") || question.includes("多年")) {
+  if (question.includes("花") || question.includes("葉") || question.includes("果実") || question.includes("種子") || question.includes("根") || question.includes("茎") || question.includes("花弁") || question.includes("葉脈") || question.includes("葉柄") || question.includes("野菜")) {
     return focusHint("植物のどの部分を聞いているかを先に決めます。花・葉・実・根・茎の形や季節の変化を選択肢と比べます。");
   }
-  if (question.includes("標本") || question.includes("採集") || question.includes("乾燥") || question.includes("固定") || question.includes("解剖")) {
+  if (question.includes("標本") || question.includes("採集") || question.includes("固定") || question.includes("解剖")) {
     return focusHint("標本の目的に合う方法を考えます。形を残すのか液体で保存するのか、採集日や場所を記録するのか確認します。");
   }
   if (question.includes("利用法") || question.includes("原料") || question.includes("用途")) {
     return focusHint("生物の特徴ではなく、問題に出た利用目的を探します。食用・薬用・材料・燃料のどれかを選択肢と対照します。");
-  }
-  if (question.includes("関係") || question.includes("共生") || question.includes("寄生")) {
-    return focusHint("二つの生物のどちらが利益を得るか、害があるかを分けて考えます。双方に利益があるか、一方だけが利益を得るかを確認します。");
   }
   const categoryHints = {
     fish: "魚の問題では、すみか、産卵のしかた、ひれ・えら・体形に注目します。",
@@ -469,7 +649,6 @@ const optionVisuals2023 = {};
 
 const promptPhotos2023 = {
   13: { name: "カツオ", img: img("Katsuwonus_pelamis.jpg") },
-  14: { name: "サケ" },
   22: { name: "タニシ", img: img("Cipangopaludina_japonica_-_Osaka_Museum_of_Natural_History_-_DSC07741.JPG") },
   31: { name: "ハクサイ", img: localImg("q31-hakusai.jpg") },
   32: { name: "ミツバ", img: localImg("q32-mitsuba.jpg") },
@@ -774,7 +953,7 @@ makePhotoQuestion(1, "mammal", "有袋類をひとつ選びなさい。", ["カ�
   makePhotoQuestion(65, "plant", "栄養繁殖をする植物をひとつ選びなさい。", ["エンドウ", "サトイモ", "ナス", "ピーマン"]),
   makePhotoQuestion(66, "plant", "主に風によって種子が散布される植物をひとつ選びなさい。", ["ネコヤナギ", "オニグルミ", "ハイマツ", "マンリョウ"]),
   makePhotoQuestion(67, "plant", "種子をはじき飛ばす植物をひとつ選びなさい。", ["ゲンゲ（レンゲソウ）", "ホウセンカ", "ナズナ", "ハコベ"]),
-  makePhotoQuestion(68, "plant", "常緑低木をひとつ選びなさい。", ["ミツマタ", "クチナシ", "クヌギ", "ジンチョウゲ"]),
+  makePhotoQuestion(68, "plant", "落葉低木をひとつ選びなさい。", ["ミツマタ", "クチナシ", "クヌギ", "ジンチョウゲ"]),
   makePhotoQuestion(69, "plant", "多年生（宿根性）の植物をひとつ選びなさい。", ["スミレ", "ツユクサ", "シソ", "ハコベ"]),
   makePhotoQuestion(70, "plant", "球根で冬を越す植物をひとつ選びなさい。", ["ヤマユリ", "ハハコグサ", "タンポポ", "フクジュソウ"]),
   makePhotoQuestion(71, "plant", "水生植物をひとつ選びなさい。", ["メヒシバ", "ヒツジグサ", "ニリンソウ", "スベリヒユ"]),
@@ -811,7 +990,7 @@ const photoQuestions2025 = [
   makePhotoQuestion(6, "bird", "キジバトのシルエットをひとつ選びなさい。", ["シルエット1", "シルエット2", "シルエット3", "シルエット4"], 2),
   makePhotoQuestion(7, "bird", "タカのあしをひとつ選びなさい。", ["足1", "足2", "足3", "足4"], 3),
   makePhotoQuestion(8, "bird", "もっとも小さい（全長が短い）鳥をひとつ選びなさい。", ["ハシボソガラス", "カルガモ", "カモメ", "ハクセキレイ"], 3),
-  makePhotoQuestion(9, "amphibian", "ヒバカリにもっとも近縁な動物をひとつ選びなさい。", ["ヤモリ", "ツチガエル", "オオサンショウウオ", "ヤマカガシ"], 3),
+  makePhotoQuestion(9, "reptile", "ヒバカリにもっとも近縁な動物をひとつ選びなさい。", ["ヤモリ", "ツチガエル", "オオサンショウウオ", "ヤマカガシ"], 3),
   makePhotoQuestion(10, "reptile", "ニホンイシガメの背側の甲羅の図として、正しいものをひとつ選びなさい。", ["図1", "図2", "図3", "図4"], 1),
   makePhotoQuestion(11, "fish", "硬骨魚類をひとつ選びなさい。", ["イトマキエイ", "ウナギ", "ノコギリザメ", "ネムリブカ"], 1),
   makePhotoQuestion(12, "fish", "グッピーと同じなかま（同じ科）の魚をひとつ選びなさい。", ["イトヨ", "カダヤシ", "ヤマメ", "ギンブナ"], 1),
@@ -863,7 +1042,7 @@ const photoQuestions2025 = [
   makePhotoQuestion(49, "bird", "本州での冬鳥をひとつ選びなさい。", ["オナガ", "スズメ", "ツグミ", "ハクセキレイ"], 2),
   makePhotoQuestion(50, "bird", "地面に巣をつくる鳥をひとつ選びなさい。", ["カワラヒワ", "ヒバリ", "オシドリ", "メジロ"], 1),
   makePhotoQuestion(51, "bird", "渓流で水中を歩きながら餌をとる鳥をひとつ選びなさい。", ["カワガラス", "アカショウビン", "カワセミ", "マヒワ"], 0),
-  makePhotoQuestion(52, "amphibian", "砂浜に穴を掘り、産卵する動物をひとつ選びなさい。", ["アカウミガメ", "シュレーゲルアオガエル", "ニホンヤモリ", "クロサンショウウオ"], 0),
+  makePhotoQuestion(52, "reptile", "砂浜に穴を掘り、産卵する動物をひとつ選びなさい。", ["アカウミガメ", "シュレーゲルアオガエル", "ニホンヤモリ", "クロサンショウウオ"], 0),
   makePhotoQuestion(53, "fish", "淡水に生息する魚をひとつ選びなさい。", ["キビナゴ", "マサバ", "サヨリ", "モツゴ"], 3),
   makePhotoQuestion(54, "fish", "胎生の魚をひとつ選びなさい。", ["アカエイ", "サケ", "スケトウダラ", "ボラ"], 0),
   makePhotoQuestion(55, "fish", "深海魚をひとつ選びなさい。", ["チョウチンアンコウ", "サンマ", "ウツボ", "オオカミウオ"], 0),
@@ -925,6 +1104,7 @@ photoQuestions.forEach((question) => {
   }
   if (stemVisuals[mainNum] && !promptPhotos[key]) {
     question.stemVisual = stemVisuals[mainNum];
+    question.textOnlyOptions = true;
   }
   if (promptPhotos[key] || promptPhotos[mainNum]) {
     const photo = promptPhotos[key] || promptPhotos[mainNum];
@@ -1286,13 +1466,28 @@ Object.assign(kanjiReadings, {
   漢: "かん", 字: "じ", 言: "こと", 味: "あじ", 読: "よ", 縞: "しま", 厚: "あつ", 反: "はん", 返: "かえ", 密: "みつ", 指: "ゆび", 盤: "ばん", 登: "のぼ", 深: "ふか", 叉: "さ", 横: "よこ", 鋏: "はさみ", 角: "かく", 腕: "うで", 触: "ふ", 序: "じょ", 斗: "と", 紫: "むらさき", 冠: "かん", 円: "えん", 披: "ひ", 心: "こころ", 互: "たが", 束: "たば", 堅: "かた", 淡: "たん", 臭: "くさ", 総: "そう", 苞: "ほう", 片: "かた", 椎: "しい", 型: "かた", 黒: "くろ", 斑: "はん", 紋: "もん", 手: "て", 泡: "あわ", 塊: "かたまり", 敵: "てき", 防: "ぼう", 御: "ご", 激: "げき", 受: "う", 常: "じょう", 緑: "みどり", 宿: "しゅく", 冷: "つめ", 湿: "しつ", 秋: "あき", 毒: "どく", 漆: "うるし", 塗: "ぬ", 具: "ぐ", 燃: "も", 羅: "ら", 粉: "こな", 掌: "しょう", 三: "さん", 床: "ゆか", 柱: "はしら", 掘: "ほ", 穴: "あな", 渓: "けい", 流: "なが", 歩: "ある", 浜: "はま", 息: "いき", 潜: "もぐ", 網: "あみ", 血: "ち", 話: "はなし", 耐: "た", 久: "ひさ", 落: "お", 付: "つ", 着: "つ", 終: "お", 般: "はん", 北: "きた", 蝋: "ろう", 殺: "さつ", 剤: "ざい", 仏: "ぶつ", 壇: "だん", 供: "そな", 香: "かお", 辛: "から", 移: "うつ", 提: "てい", 唱: "とな", 相: "あい", 端: "はし"
 });
 
+// Context-specific readings take precedence over the single-kanji fallback.
+// Biology terms such as 花柱 and 鋏角類 cannot be read correctly one character
+// at a time, so keep their natural readings here.
+const rubyContextEntries = [
+  ["問題文", "もんだいぶん"], ["確認", "かくにん"], ["仲間", "なかま"], ["近縁", "きんえん"], ["名前", "なまえ"], ["関係", "かんけい"], ["指定", "してい"], ["部分", "ぶぶん"], ["注目", "ちゅうもく"], ["甲羅", "こうら"], ["一致", "いっち"], ["家禽化", "かきんか"], ["輪郭", "りんかく"], ["細長", "ほそなが"], ["猛禽類", "もうきんるい"], ["発達", "はったつ"], ["本数", "ほんすう"], ["足指", "あしゆび"], ["水辺", "みずべ"], ["無尾類", "むびるい"], ["体形", "たいけい"], ["体側", "たいそく"], ["種類", "しゅるい"], ["時期", "じき"], ["昆虫綱", "こんちゅうこう"], ["原生生物", "げんせいせいぶつ"], ["類線形動物", "るいせんけいどうぶつ"], ["変態", "へんたい"], ["区別", "くべつ"], ["何門", "なんもん"], ["何綱", "なんこう"], ["何目", "なんもく"], ["何科", "なんか"], ["節足動物門", "せっそくどうぶつもん"], ["節足動物", "せっそくどうぶつ"], ["環形動物", "かんけいどうぶつ"], ["線形動物", "せんけいどうぶつ"], ["扁形動物", "へんけいどうぶつ"], ["頭胸部", "とうきょうぶ"], ["腹部", "ふくぶ"], ["頭部", "とうぶ"], ["胸部", "きょうぶ"], ["歯舌", "しぜつ"], ["眼", "め"], ["胞子", "ほうし"], ["季節", "きせつ"], ["変化", "へんか"], ["多数", "たすう"], ["葉先", "はさき"], ["複数", "ふくすう"], ["背中", "せなか"], ["背面", "はいめん"], ["位置", "いち"], ["場所", "ばしょ"], ["説明", "せつめい"], ["生活時期", "せいかつじき"], ["体内", "たいない"], ["渡来", "とらい"], ["母親", "ははおや"], ["水草", "みずくさ"], ["原虫", "げんちゅう"], ["雌雄異株", "しゆういしゅ"], ["雄株", "おかぶ"], ["雌株", "めかぶ"], ["地中", "ちちゅう"], ["一部", "いちぶ"], ["空中", "くうちゅう"], ["水上", "すいじょう"], ["袋状", "たいじょう"], ["捕虫器", "ほちゅうき"], ["構成", "こうせい"], ["分布", "ぶんぷ"], ["淡水", "たんすい"], ["原産地", "げんさんち"], ["海風", "かいふう"], ["夕方", "ゆうがた"], ["多年草", "たねんそう"], ["一年草", "いちねんそう"], ["雌雄別株", "しゆうべっしゅ"], ["食用", "しょくよう"], ["下位", "かい"], ["階級", "かいきゅう"], ["人物", "じんぶつ"], ["目的", "もくてき"], ["方法", "ほうほう"], ["液体", "えきたい"], ["保存", "ほぞん"], ["採集日", "さいしゅうび"], ["液浸標本", "えきしんひょうほん"], ["煮沸", "しゃふつ"], ["狩猟鳥獣", "しゅりょうちょうじゅう"], ["農林業被害", "のうりんぎょうひがい"], ["染料", "せんりょう"], ["薬用", "やくよう"], ["育児", "いくじ"], ["吸盤", "きゅうばん"], ["幼生", "ようせい"], ["成体", "せいたい"], ["有無", "うむ"], ["指先", "ゆびさき"], ["軟骨魚類", "なんこつぎょるい"], ["体高", "たいこう"], ["二叉", "にさ"], ["前翅", "ぜんし"], ["甲虫", "こうちゅう"], ["上翅", "じょうし"], ["直翅目", "ちょくしもく"], ["多足類", "たそくるい"], ["鋏角類", "きょうかくるい"], ["軟体動物", "なんたいどうぶつ"], ["遊泳脚", "ゆうえいきゃく"], ["触腕", "しょくわん"], ["木生", "もくせい"], ["花序", "かじょ"], ["殻斗", "かくと"], ["紫色", "むらさきいろ"], ["頭花", "とうか"], ["合弁花冠", "ごうべんかかん"], ["科植物", "かしょくぶつ"], ["円形", "えんけい"], ["線形", "せんけい"], ["披針形", "ひしんけい"], ["心形", "しんけい"], ["平行脈", "へいこうみゃく"], ["対生", "たいせい"], ["互生", "ごせい"], ["束生", "そくせい"], ["輪生", "りんせい"], ["枝分かれ", "えだわかれ"], ["単子葉植物", "たんしようしょくぶつ"], ["堅果", "けんか"], ["植物全体", "しょくぶつぜんたい"], ["特異", "とくい"], ["臭気", "しゅうき"], ["総苞片", "そうほうへん"], ["特有", "とくゆう"], ["無脊椎動物", "むせきついどうぶつ"], ["和名", "わめい"], ["大型", "おおがた"], ["斑紋", "はんもん"], ["触手", "しょくしゅ"], ["胞子茎", "ほうしけい"], ["針葉樹", "しんようじゅ"], ["樹上", "じゅじょう"], ["得意", "とくい"], ["泡状", "ほうじょう"], ["卵塊", "らんかい"], ["砂底", "さてい"], ["刺胞", "しほう"], ["外敵", "がいてき"], ["防御", "ぼうぎょ"], ["二枚貝", "にまいがい"], ["刺激", "しげき"], ["両性花", "りょうせいか"], ["栄養繁殖", "えいようはんしょく"], ["落葉", "らくよう"], ["常緑低木", "じょうりょくていぼく"], ["多年生", "たねんせい"], ["宿根性", "しゅっこんせい"], ["球", "きゅう"], ["球大", "きゅうだい"], ["球根", "きゅうこん"], ["球形果", "きゅうけいか"], ["葉緑素", "ようりょくそ"], ["冷温帯林", "れいおんたいりん"], ["代表", "だいひょう"], ["属名", "ぞくめい"], ["科名", "かめい"], ["命名者", "めいめいしゃ"], ["種小名", "しゅしょうめい"], ["採集場所", "さいしゅうばしょ"], ["採集者名", "さいしゅうしゃめい"], ["記入", "きにゅう"], ["採集年月日", "さいしゅうねんがっぴ"], ["標本作製年月日", "ひょうほんさくせいねんがっぴ"], ["日本在来", "にほんざいらい"], ["野生絶滅", "やせいぜつめつ"], ["山菜", "さんさい"], ["新芽", "しんめ"], ["利用法", "りようほう"], ["利用目的", "りようもくてき"], ["材料", "ざいりょう"], ["燃料", "ねんりょう"], ["対照", "たいしょう"], ["漆器", "しっき"], ["塗料", "とりょう"], ["農具", "のうぐ"], ["共生", "きょうせい"], ["根粒菌", "こんりゅうきん"], ["窒素固定", "ちっそこてい"], ["窒素", "ちっそ"], ["様子", "ようす"], ["裏面", "りめん"], ["単葉", "たんよう"], ["追加", "ついか"], ["全体", "ぜんたい"], ["硬骨魚類", "こうこつぎょるい"], ["鱗粉", "りんぷん"], ["管状", "かんじょう"], ["一枚", "いちまい"], ["形状", "けいじょう"], ["掌状複葉", "しょうじょうふくよう"], ["三出複葉", "さんしゅつふくよう"], ["花茎", "かけい"], ["花床", "かしょう"], ["子房", "しぼう"], ["花柱", "かちゅう"], ["共通", "きょうつう"], ["繁殖", "はんしょく"], ["検索表", "けんさくひょう"], ["土中", "どちゅう"], ["巣穴", "すあな"], ["冬鳥", "ふゆどり"], ["地面", "じめん"], ["渓流", "けいりゅう"], ["砂浜", "すなはま"], ["生息", "せいそく"], ["深海魚", "しんかいぎょ"], ["成長", "せいちょう"], ["巣網", "そうもう"], ["吸血", "きゅうけつ"], ["世話", "せわ"], ["耐久型", "たいきゅうがた"], ["低温", "ていおん"], ["陸上", "りくじょう"], ["雌花", "めばな"], ["雄花", "おばな"], ["両方", "りょうほう"], ["種子散布", "しゅしさんぷ"], ["付着", "ふちゃく"], ["落葉高木", "らくようこうぼく"], ["常緑広葉樹", "じょうりょくこうようじゅ"], ["一年生植物", "いちねんせいしょくぶつ"], ["寄生植物", "きせいしょくぶつ"], ["地上部", "ちじょうぶ"], ["腐肉臭", "ふにくしゅう"], ["海浜", "かいひん"], ["日本原産", "にほんげんさん"], ["落葉樹", "らくようじゅ"], ["高木", "こうぼく"], ["上位", "じょうい"], ["一般", "いっぱん"], ["在来種", "ざいらいしゅ"], ["殺虫剤", "さっちゅうざい"], ["仏壇", "ぶつだん"], ["香辛料", "こうしんりょう"], ["大陸移動説", "たいりくいどうせつ"], ["提唱", "ていしょう"], ["学者", "がくしゃ"], ["言葉", "ことば"], ["捕食", "ほしょく"], ["被食", "ひしょく"], ["相利共生", "そうりきょうせい"], ["片利共生", "へんりきょうせい"], ["先端", "せんたん"], ["葉脈上", "ようみゃくじょう"], ["実写", "じっしゃ"], ["実", "み"], ["小さな", "ちいさな"], ["表されます", "あらわされます"], ["表した", "あらわした"]
+];
+
+const rubyHintEntries = [
+  ["求める", "もとめる"], ["拾い", "ひろい"], ["暮らします", "くらします"], ["暮らす", "くらす"], ["単独", "たんどく"], ["伸びる", "のびる"], ["柔らかい", "やわらかい"], ["樹種", "じゅしゅ"], ["照合", "しょうごう"], ["対象", "たいしょう"], ["早く", "はやく"], ["守ったり", "まもったり"], ["空欄", "くうらん"], ["働き", "はたらき"], ["埋める", "うめる"]
+];
+
+const rubyContextEntriesExtra = [
+  ["文章", "ぶんしょう"], ["属する", "ぞくする"], ["役割分担", "やくわりぶんたん"], ["木質化", "もくしつか"], ["海岸林", "かいがんりん"], ["防風林", "ぼうふうりん"], ["内陸", "ないりく"], ["著作名", "ちょさくめい"], ["脊椎動物", "せきついどうぶつ"], ["脊椎", "せきつい"], ["背骨", "せぼね"], ["海底", "かいてい"], ["岩場", "いわば"], ["生活史", "せいかつし"], ["行き来", "いきき"], ["下る", "くだる"], ["細胞", "さいぼう"], ["器官", "きかん"], ["国内", "こくない"], ["状況", "じょうきょう"], ["保全", "ほぜん"], ["再導入", "さいどうにゅう"], ["結びつけます", "むすびつけます"], ["貝殻", "かいがら"], ["生活形態", "せいかつけいたい"], ["上陸", "じょうりく"], ["卵", "たまご"], ["落ち葉", "おちば"], ["分解者", "ぶんかいしゃ"], ["肉食動物", "にくしょくどうぶつ"], ["有機物", "ゆうきぶつ"], ["近い", "ちかい"], ["分類上近い", "ぶんるいじょうちかい"], ["多数集まって", "たすうあつまって"], ["表面", "ひょうめん"], ["小葉", "しょうよう"], ["緑藻", "りょくそう"], ["本州", "ほんしゅう"], ["生活", "せいかつ"], ["消化管内", "しょうかかんない"], ["人名", "じんめい"], ["分類名", "ぶんるいめい"], ["混同", "こんどう"], ["肺呼吸", "はいこきゅう"], ["体表", "たいひょう"], ["密生", "みっせい"], ["落葉低木", "らくようていぼく"], ["湿原", "しつげん"], ["海水魚", "かいすいぎょ"], ["深海", "しんかい"], ["木材", "もくざい"], ["不利", "ふり"], ["環境", "かんきょう"], ["状態", "じょうたい"], ["性質", "せいしつ"], ["配置", "はいち"], ["条件", "じょうけん"], ["利益", "りえき"], ["理由", "りゆう"], ["殻板", "かくばん"], ["背側", "はいそく"], ["昆虫記", "こんちゅうき"], ["長毛", "ちょうもう"], ["有袋類", "ゆうたいるい"], ["葉標本", "はひょうほん"], ["おし葉標本", "おしばひょうほん"], ["昆虫名", "こんちゅうめい"], ["寄生植物地上部", "きせいしょくぶつちじょうぶ"], ["腐肉", "ふにく"], ["低木", "ていぼく"], ["印象", "いんしょう"], ["基準", "きじゅん"], ["除いて", "のぞいて"], ["自分", "じぶん"], ["支える", "ささえる"], ["守る", "まもる"], ["誰", "だれ"], ["決", "き"], ["飛", "と"], ["短", "みじか"], ["広", "ひろ"], ["甲", "こう"], ["殻", "から"], ["洞", "ほら"], ["越", "こ"], ["探", "さが"], ["柄", "え"], ["詳", "くわ"], ["強", "つよ"], ["貝", "かい"], ["当", "あ"], ["点", "てん"], ["森", "もり"], ["腐", "くさ"]
+];
+
 function withRuby(text) {
   if (!text) return "";
   const cacheKey = String(text);
   if (rubyCache.has(cacheKey)) return rubyCache.get(cacheKey);
   const placeholders = [];
   let output = escapeHtml(text);
-  const entries = [...rubyEntries, ...kanjiTerms.map((term) => [term.term, term.reading])];
+  const entries = [...rubyContextEntries, ...rubyHintEntries, ...rubyContextEntriesExtra, ...rubyEntries, ...kanjiTerms.map((term) => [term.term, term.reading])];
   entries
     .slice()
     .sort((a, b) => b[0].length - a[0].length)
@@ -2047,7 +2242,7 @@ function renderQuiz() {
           ? ""
           : `<div class="option-image">
               <span class="image-loading">写真を読み込み中</span>
-              <img src="${option.img || ""}" alt="${option.ja}の実写写真" loading="eager" data-photo data-name="${option.ja}" data-category="${q.category}" />
+              <img ${option.img ? `src="${option.img}"` : ""} alt="${option.ja}の実写写真" loading="eager" data-photo data-name="${option.ja}" data-category="${q.category}" />
             </div>`;
       return `
         <button class="option-card ${cardState} ${option.visual ? "has-diagram" : ""} ${q.textOnlyOptions ? "text-only" : ""}" data-choice="${i}" ${answered ? "disabled" : ""}>

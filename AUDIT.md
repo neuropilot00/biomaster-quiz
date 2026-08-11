@@ -131,8 +131,7 @@ User-provided photos were used to transcribe visible question text into app data
 - Added 2024 questions 問1-86, 問46-1-46-10, and 問87-1-87-5 with the answer key from the supplied photo.
 - Clipped and attached the 2024 source images for 問6, 問7, 問13, 問14, 問22, 問30, 問31, 問32, 問36, 問38, and 問46-1-46-10.
 - Rechecked 185 active questions for invalid answer indexes and duplicate IDs; no broken answer indexes or duplicate IDs were found.
-- Review note: 2024 問68 follows the supplied answer key, but the prompt/key combination looks suspicious because `ミツマタ` is generally treated as deciduous rather than evergreen.
-- Review note: 2024 問87-1-87-5 refers to leaf photos printed at the front of the book; the question/answers are entered, but the referenced leaf photos were not included in the recovered source files.
+- 2024 問68 was corrected to `落葉低木`: `ミツマタ` is the only deciduous shrub in the four choices; the explanation now distinguishes the evergreen shrubs and deciduous tall tree.
 
 ## 2026-05-04 2025 Intake
 
@@ -140,7 +139,7 @@ User-provided photos were used to transcribe visible question text into app data
 - Added 2025 questions 問1-86, 問46-1-46-10, and 問87-1-87-5 with the supplied 2025 answer key.
 - Clipped and attached the 2025 source images for 問6, 問7, 問10, 問13, 問14, 問22, 問30, 問31, 問32, 問36, 問40, 問44, 問45, and 問46-1-46-10.
 - Rechecked 285 active questions for invalid answer indexes, duplicate IDs, and missing local image files; no broken answer indexes, duplicate IDs, or missing local image references were found.
-- Review note: 2025 問87-1-87-5 refers to leaf photos printed at the front of the book; the question/answers are entered, but the referenced leaf photos were not included in this photo batch.
+- The 2025 問87 leaf-plate reference is resolved by the shared prompt photo attached above.
 
 ## 2026-05-04 Question 87 Leaf Plate Update
 
@@ -158,13 +157,22 @@ User-provided photos were used to transcribe visible question text into app data
 - Rechecked 300 active questions for invalid answer indexes, duplicate IDs, and missing local image files; no broken answer indexes, duplicate IDs, or missing local image references were found.
 
 ## Image Strategy
-
 - App does not store full book scan images.
 - Most organism option cards attempt to load a real image from Japanese Wikipedia page summaries by option name.
 - If a question is text-only, its choices intentionally show no images.
 - If the original prompt depends on a silhouette or diagram, a clipped source image can be stored under `assets/stems/` and attached as `stemVisual`.
 - If a specific organism image is not found, the app falls back to a category-level real image.
 - This keeps future updates easy: add text and options first, mark text-only or stem-visual exceptions, then add explicit image URLs only when an automatic image is poor.
+
+## 2026-08-11 Full Content and Reading Recheck
+
+- Rechecked all 300 questions across 2023, 2024, and 2025: 300 unique IDs, 100 questions per year, non-empty prompts/options/hints/explanations, and valid answer indexes for every question.
+- Fixed the year-leak in generated explanations. 2025 問11, 53, 55, 56, and 58 now explain their own answers instead of receiving stale 2023 answer text; all remaining generated explanations now include the matching question condition rather than a placeholder.
+- Corrected 2024 問68 from `常緑低木` to `落葉低木` and updated its answer explanation. Corrected the 2025 category labels for 問9 and 問52 from 両生類 to 爬虫類.
+- Reordered and specialized hints for taxonomy, habitats, reproduction, plant seasonality, specimen work, parasitic plants, deep-sea fish, and sex-specific feeding. Every hint still begins with the exact question focus.
+- Added contextual ruby readings for biology compounds and all newly introduced hint words. The renderer now produces a reading for every kanji in all question, option, hint, and explanation fields; no `?` fallback remains.
+- Marked every prompt/stem diagram question as text-only for answer cards. Removed the empty 2023 問14 prompt-photo entry so its salmon diagram is the only prompt visual. Rechecked all 300 prompt-image paths and all option-image modes: no missing local assets and no empty image lookup is attempted for diagram/text choices.
+- Bumped the static asset query strings to `20260811-1` so GitHub Pages clients fetch this audit instead of a cached pre-audit bundle.
 
 ## Update Workflow
 
