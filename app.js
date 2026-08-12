@@ -667,7 +667,7 @@ const promptPhotos2023 = {
 };
 
 
-const textOnlyQuestionNums2024 = new Set([19, 20, 23, 41, 51, 63, 77, 78, 79, 81, 84, 85]);
+const textOnlyQuestionNums2024 = new Set([19, 20, 23, 41, 51, 63, 77, 78, 79, 81, 85]);
 
 const statementBlocks2024 = {};
 
@@ -700,7 +700,7 @@ const promptPhotos2024 = {
   87: { name: "2024年度 問87 葉の観察写真", img: localImg("q87-2024-leaf-plate.jpg") },
 };
 
-const textOnlyQuestionNums2025 = new Set([6, 7, 10, 19, 20, 23, 36, 40, 41, 44, 45, 66, 67, 68, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87]);
+const textOnlyQuestionNums2025 = new Set([6, 7, 10, 19, 20, 23, 36, 40, 41, 44, 45, 66, 67, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87]);
 
 const statementBlocks2025 = {
   23: [
@@ -741,6 +741,24 @@ const promptPhotos2025 = {
   "46-9": { name: "サザンカ", img: localImg("q46-9-2025-sazanka.jpg") },
   "46-10": { name: "ウメ", img: localImg("q46-10-2025-ume.jpg") },
   87: { name: "2025年度 問87 葉の観察写真", img: localImg("q87-2025-leaf-plate.jpg") },
+};
+
+// Keep these as image-choice questions. Their labels describe a use or an
+// abbreviated plant name, so pin context-checked images instead of guessing
+// from the raw label with the organism-name resolver.
+const questionOptionImages = {
+  "book-2024-84": [
+    img("Hoe handle, wood - Museo Egizio, Turin S 7524 p02.jpg"),
+    img("Washi(Sugihara paper).JPG"),
+    img("Lacquer (8237571740).jpg"),
+    img("Firewood in Russia.jpg"),
+  ],
+  "book-2025-68": [
+    img("(ms) Paulownia tomentosa 1.jpg"),
+    img("Jasminum mesnyi.jpg"),
+    img("Kerria japonica Japanese Rose Waterperry Gardens Oxfordshire England 01.jpg"),
+    img("Cinnamomum camphora.jpg"),
+  ],
 };
 
 const textOnlyQuestionNumsByYear = {
@@ -1095,6 +1113,12 @@ photoQuestions.forEach((question) => {
   const stemVisuals = stemVisualsByYear[year] || {};
   const promptPhotos = promptPhotosByYear[year] || {};
   const optionVisuals = optionVisualsByYear[year] || {};
+  const explicitOptionImages = questionOptionImages[question.id];
+  if (explicitOptionImages) {
+    question.options.forEach((option, index) => {
+      option.img = explicitOptionImages[index] || "";
+    });
+  }
   if (textOnlyQuestionNums.has(mainNum)) {
     question.textOnlyOptions = true;
   }

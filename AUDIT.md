@@ -177,10 +177,11 @@ User-provided photos were used to transcribe visible question text into app data
 ## 2026-08-12 Image-to-Question Matching Recheck
 
 - Rechecked all 300 questions, 1,176 answer choices, 28 stem diagrams, and 50 prompt-photo entries. Every local stem/prompt asset still resolves, and every non-text-only choice has a non-empty normalized image query.
+- The corrected render audit now reports 121 intentional text-only questions and 179 image-choice questions; all 716 image-mode option slots emit an image element, and no text-only option slot emits one.
 - Corrected 2024 問61 choice `アオフラシ` to the valid organism name `アメフラシ`. The question now requests the matching organism photo instead of silently falling back from an invalid lookup.
-- Changed 2024 問84 (ウルシの利用法) and 2025 問68 (the ambiguous `ウンナン` choice) to text-only choices. These choices describe a use/classification or an incomplete name, so attaching organism photos would mislead the learner.
+- Restored 2024 問84 (ウルシの利用法) and 2025 問68 (the abbreviated `ウンナン` choice) as image-choice questions. Added explicit context-checked images for all eight choices: hoe handle, washi paper, lacquer, firewood; paulownia, Jasminum mesnyi, Kerria japonica, and camphor tree.
 - Removed the category-photo fallback for option and prompt images. When an exact Wikimedia/Commons match cannot be loaded, the card now shows a clear “exact photo unavailable” state instead of displaying an unrelated plant, bird, fish, or insect.
-- The static render audit found no phrase-like choice labels in image mode after these fixes; text-only choices render without `<img>` elements. Asset query strings are now `20260812-1`.
+- The static render audit found no phrase-like choice labels in image mode after these fixes; restored image-mode questions render four choice images, while intentional text-only choices render without `<img>` elements. Asset query strings are now `20260812-2`.
 
 ## Update Workflow
 
