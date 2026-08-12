@@ -667,7 +667,7 @@ const promptPhotos2023 = {
 };
 
 
-const textOnlyQuestionNums2024 = new Set([19, 20, 23, 41, 51, 63, 77, 78, 79, 81, 85]);
+const textOnlyQuestionNums2024 = new Set([19, 20, 23, 41, 51, 63, 77, 78, 79, 81, 84, 85]);
 
 const statementBlocks2024 = {};
 
@@ -700,7 +700,7 @@ const promptPhotos2024 = {
   87: { name: "2024年度 問87 葉の観察写真", img: localImg("q87-2024-leaf-plate.jpg") },
 };
 
-const textOnlyQuestionNums2025 = new Set([6, 7, 10, 19, 20, 23, 36, 40, 41, 44, 45, 66, 67, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87]);
+const textOnlyQuestionNums2025 = new Set([6, 7, 10, 19, 20, 23, 36, 40, 41, 44, 45, 66, 67, 68, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87]);
 
 const statementBlocks2025 = {
   23: [
@@ -946,7 +946,7 @@ makePhotoQuestion(1, "mammal", "有袋類をひとつ選びなさい。", ["カ�
   makePhotoQuestion(58, "insect", "他の昆虫に卵を産みつけて寄生する昆虫をひとつ選びなさい。", ["アオムシコマユバチ", "キアシナガバチ", "クロスズメバチ", "セイヨウミツバチ"]),
   makePhotoQuestion(59, "insect", "木の枝に卵塊で卵を産む昆虫をひとつ選びなさい。", ["オビカレハ", "カラスアゲハ", "キタテハ", "モンキチョウ"]),
   makePhotoQuestion(60, "all", "刺胞によって餌を捕えたり、外敵から防御する動物をひとつ選びなさい。", ["クラゲ", "イカ", "ナマコ", "タコ"]),
-  makePhotoQuestion(61, "all", "二枚貝を食べる動物をひとつ選びなさい。", ["アオフラシ", "ヒトデ", "フジツボ", "ホヤ"]),
+  makePhotoQuestion(61, "all", "二枚貝を食べる動物をひとつ選びなさい。", ["アメフラシ", "ヒトデ", "フジツボ", "ホヤ"]),
   makePhotoQuestion(62, "all", "刺激を受けると丸くなる動物をひとつ選びなさい。", ["タマムシ", "オカダンゴムシ", "フナムシ", "ワラジムシ"]),
   makePhotoQuestion(63, "mammal", "次の特徴をもつ動物をひとつ選びなさい。足に水かきがあり、体には毛が生えている。卵生であるが乳で子を育てる。", ["ウミガメ", "カモノハシ", "ペンギン", "ラッコ"]),
   makePhotoQuestion(64, "plant", "ひとつの花におしべとめしべのある両性花をつける植物をひとつ選びなさい。", ["ズッキーニ", "ソテツ", "トウモロコシ", "ユリ"]),
@@ -1118,17 +1118,6 @@ photoQuestions.forEach((question) => {
     });
   }
 });
-
-const fallbackImages = {
-  all: img("Biodiversity_of_Colombia.jpg"),
-  fish: img("Guppy_pho_0048.jpg"),
-  insect: "https://upload.wikimedia.org/wikipedia/commons/b/b7/Papilio_xuthus_front_view_2011-07-16.jpg",
-  plant: img("Taraxacum_officinale_001.JPG"),
-  bird: img("Eastern_spot-billed_duck_in_Tokyo.jpg"),
-  mammal: img("Macropus_giganteus_-_Brunkerville.jpg"),
-  amphibian: img("Hyla_japonica_001.jpg"),
-  reptile: img("Takydromus_tachydromoides_200705.jpg"),
-};
 
 const optionImageOverrides = {
   ガン: img("Greater white-fronted goose (Anser albifrons) in flight.jpg"),
@@ -2190,7 +2179,7 @@ function renderHome() {
       <div class="hero-copy">
         <p class="eyebrow">PHOTO QUIZ · ${withRuby("生き物分類")}</p>
         <h2>${withRuby("写真を見て、分類の特徴で答える練習アプリ")}</h2>
-        <p class="support">${withRuby("問題文は日本語、必要なら韓国語の補助文も表示します。選択肢はすべて実写画像なので、名前暗記だけでなく姿を見て分類できるように作っています。")}</p>
+        <p class="support">${withRuby("問題文は日本語、必要なら韓国語の補助文も表示します。画像問題には問題に合う実写写真を使い、文章や分類を問う問題は読みやすいテキストで表示します。")}</p>
         <div class="controls">
           <div class="segmented" aria-label="grade">
             <button class="${grade4Active}" data-grade="4">4${withRuby("級")}</button>
@@ -2205,7 +2194,7 @@ function renderHome() {
       </div>
       <div class="hero-photo">
         <img src="https://upload.wikimedia.org/wikipedia/commons/b/b7/Papilio_xuthus_front_view_2011-07-16.jpg" alt="実写のアゲハチョウ" />
-        <span>${withRuby("全選択肢に実写画像を使用")}</span>
+        <span>${withRuby("問題に合う実写写真を使用")}</span>
       </div>
     </section>
     <section class="study-panel">
@@ -2481,35 +2470,23 @@ function wireImages() {
   document.querySelectorAll("[data-photo]").forEach((photo) => {
     const status = photo.previousElementSibling;
     photo.addEventListener("load", () => {
-      if (photo.dataset.imageFallback === "true") {
-        if (status) {
-          status.textContent = "代表写真（正確な一致写真なし）";
-          status.className = "image-loading fallback-image";
-        }
-        return;
-      }
       status?.classList.add("hidden");
     });
     photo.addEventListener("error", () => {
-      const fallback = fallbackImages[photo.dataset.category] || fallbackImages.all;
-      if (photo.dataset.imageFallback !== "true" && photo.src !== fallback) {
-        photo.dataset.imageFallback = "true";
-        photo.src = fallback;
-        if (status) {
-          status.textContent = "代表写真を表示中（該当写真なし）";
-          status.className = "image-loading fallback-image";
-        }
-        return;
-      }
-      if (status) {
-        status.textContent = "画像を読み込めません";
-        status.className = "image-error";
-      }
-      photo.classList.add("hidden");
+      markImageUnavailable(photo, status, "正確に一致する写真を読み込めません");
     });
     if (!photo.getAttribute("src")) resolveOptionImage(photo, status);
     if (photo.complete && photo.naturalWidth > 0) status?.classList.add("hidden");
   });
+}
+
+function markImageUnavailable(photo, status, message = "正確に一致する写真がありません") {
+  photo.dataset.imageMissing = "true";
+  photo.classList.add("hidden");
+  if (status) {
+    status.textContent = message;
+    status.className = "image-error";
+  }
 }
 
 function waitForImageRequest(milliseconds) {
@@ -2579,20 +2556,19 @@ async function fetchCommonsImageSource(name) {
       if (/^https?:\/\//.test(source) && (!info.mime || info.mime.startsWith("image/"))) return source;
     }
   } catch {
-    // The category fallback remains available when both Wikimedia endpoints fail.
+    // A missing Commons result must not be replaced with an unrelated category photo.
   }
   return "";
 }
 
 async function resolveOptionImage(photo, status) {
   const name = normalizeImageQuery(photo.dataset.name || "");
-  const fallback = fallbackImages[photo.dataset.category] || fallbackImages.all;
   if (!name) {
-    photo.src = fallback;
+    markImageUnavailable(photo, status);
     return;
   }
   if (optionImageCache.has(name)) {
-    photo.src = optionImageCache.get(name) || fallback;
+    photo.src = optionImageCache.get(name);
     if (status) status.textContent = "写真を読み込み中";
     return;
   }
@@ -2604,12 +2580,7 @@ async function resolveOptionImage(photo, status) {
     persistImageCache(name, source);
     photo.src = source;
   } else {
-    photo.dataset.imageFallback = "true";
-    photo.src = fallback;
-    if (status) {
-      status.textContent = "代表写真を表示中（該当写真なし）";
-      status.className = "image-loading fallback-image";
-    }
+    markImageUnavailable(photo, status);
   }
 }
 
