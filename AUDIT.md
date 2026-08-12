@@ -161,7 +161,7 @@ User-provided photos were used to transcribe visible question text into app data
 - Most organism option cards attempt to load a real image from Japanese Wikipedia page summaries by option name.
 - If a question is text-only, its choices intentionally show no images.
 - If the original prompt depends on a silhouette or diagram, a clipped source image can be stored under `assets/stems/` and attached as `stemVisual`.
-- If a specific organism image is not found, the app falls back to a category-level real image.
+- If a specific organism image is not found, the option card keeps its text and shows an explicit exact-photo-unavailable state; it never substitutes a category-level photo.
 - This keeps future updates easy: add text and options first, mark text-only or stem-visual exceptions, then add explicit image URLs only when an automatic image is poor.
 
 ## 2026-08-11 Full Content and Reading Recheck
@@ -173,6 +173,14 @@ User-provided photos were used to transcribe visible question text into app data
 - Added contextual ruby readings for biology compounds and all newly introduced hint words. The renderer now produces a reading for every kanji in all question, option, hint, and explanation fields; no `?` fallback remains.
 - Marked every prompt/stem diagram question as text-only for answer cards. Removed the empty 2023 問14 prompt-photo entry so its salmon diagram is the only prompt visual. Rechecked all 300 prompt-image paths and all option-image modes: no missing local assets and no empty image lookup is attempted for diagram/text choices.
 - Bumped the static asset query strings to `20260811-1` so GitHub Pages clients fetch this audit instead of a cached pre-audit bundle.
+
+## 2026-08-12 Image-to-Question Matching Recheck
+
+- Rechecked all 300 questions, 1,176 answer choices, 28 stem diagrams, and 50 prompt-photo entries. Every local stem/prompt asset still resolves, and every non-text-only choice has a non-empty normalized image query.
+- Corrected 2024 問61 choice `アオフラシ` to the valid organism name `アメフラシ`. The question now requests the matching organism photo instead of silently falling back from an invalid lookup.
+- Changed 2024 問84 (ウルシの利用法) and 2025 問68 (the ambiguous `ウンナン` choice) to text-only choices. These choices describe a use/classification or an incomplete name, so attaching organism photos would mislead the learner.
+- Removed the category-photo fallback for option and prompt images. When an exact Wikimedia/Commons match cannot be loaded, the card now shows a clear “exact photo unavailable” state instead of displaying an unrelated plant, bird, fish, or insect.
+- The static render audit found no phrase-like choice labels in image mode after these fixes; text-only choices render without `<img>` elements. Asset query strings are now `20260812-1`.
 
 ## Update Workflow
 
